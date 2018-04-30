@@ -8,7 +8,7 @@ const generateError = require('./genError')
 // showMessage: <false> - Fieldset level error shown
 // noChildren: <false> - No children errors (field level)
 // fieldClass: 'field' - Child 'Field' className
-// validationStrategy: null - Func Algorithm that decides if fields are valid
+//
 
 const VPFieldset = function (element, strategy, options, message = null) {
   if (!(element instanceof Element)) {
@@ -16,17 +16,19 @@ const VPFieldset = function (element, strategy, options, message = null) {
     return null
   }
 
-  this.strategy = strategy || null
+  if (typeof strategy !== 'function') debug('[Fieldset] Validation strategy passed is invalid.')
+  this.strategy = strategy
   this.element = element
-  this.message = message || ''
-  this.fields = null
+  this.message = message
+  this.fields = []
+
   this.error = null
   this._isValid = true
+
   this.options = Object.assign({
     showMessage: false,
     showChildren: false,
-    fieldClass: 'field',
-    strategy: null
+    fieldClass: 'field'
   }, options, {
     showMessage: options.showMessage === true
       ? typeof message === 'string' ? true : false : false,
@@ -48,12 +50,9 @@ VPFieldset.prototype.validate = function () {
     return status
   }, [])
 
-  if (typeof this.options.strategy === 'function') {
-    this._isValid = this.options.strategy(fieldSetStatus)
-    if (this.options.showMessage) this.appendError(this._isValid)
-  } else {
-    debug('[VPFieldset] Invalid validation strategy.')
-  }
+  // Strategy is expected to return true or false
+  this._isValid = this.options.strategy(fieldSetStatus)
+  if (this.options.showMessage) this.appendError(this._isValid)
 }
 
 VPFieldset.prototype.appendError = function (valid) {
