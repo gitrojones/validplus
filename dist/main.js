@@ -1911,6 +1911,54 @@ eval("var g;\r\n\r\n// This works in non-strict mode\r\ng = (function() {\r\n\tr
 
 /***/ }),
 
+/***/ "./src/Field.js":
+/*!**********************!*\
+  !*** ./src/Field.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nvar VPField = function VPField(element, showsErrors) {\n  this.element = element;\n  this.showsErrors = showsErrors;\n  this.errors = [];\n  this.input = null;\n\n  this.getInput();\n};\n\nVPField.prototype.getInput = function () {\n  var input = this.element.getElementsByTagName('input');\n  var select = this.element.getElementsByTagName('select');\n  var textarea = this.element.getElementsByTagName('textarea');\n\n  this.input = Array.concat(Array.from(input), Array.from(select), Array.from(textarea))[0];\n};\n\nVPField.prototype.parseInput = function () {\n  var attr = this.input.attributes;\n\n  return {\n    value: this.input.value,\n    checked: this.input.checked,\n    message: (attr.getNamedItem('data-error-message') || {}).value,\n    type: (attr.getNamedItem('type') || {}).value,\n    name: (attr.getNamedItem('name') || {}).value,\n    rules: {\n      min: (attr.getNamedItem('min') || {}).value,\n      minLength: (attr.getNamedItem('minlength') || {}).value,\n      max: (attr.getNamedItem('max') || {}).value,\n      maxLength: (attr.getNamedItem('maxlength') || {}).value,\n      pattern: (attr.getNamedItem('pattern') || {}).value,\n      required: (attr.getNamedItem('required') || {}).specified || false\n    }\n  };\n};\n\nVPField.prototype.validate = function () {\n  var _parseInput = this.parseInput(),\n      value = _parseInput.value,\n      checked = _parseInput.checked,\n      message = _parseInput.message,\n      type = _parseInput.type,\n      name = _parseInput.name,\n      rules = _parseInput.rules;\n\n  if (rules.min) {\n    this.errors.push(+value >= +rules.min ? true : name + ' must be more than ' + rules.min + '.');\n  }\n  if (rules.max) {\n    this.errors.push(+value <= +rules.max ? true : name + ' must be less than ' + rules.max + '.');\n  }\n  if (rules.minLength) {\n    this.errors.push(value.length <= +rules.minLength ? true : name + ' must be longer than ' + rules.minLength + ' characters.');\n  }\n  if (rules.maxLength) {\n    this.errors.push(value.length >= +rules.maxLength ? true : name + ' must be shorter than ' + rules.maxLength + ' characters.');\n  }\n  if (rules.pattern) {\n    this.errors.push(new RegExp(rules.pattern).test(value) ? true : name + ' is incorrectly formatted.');\n  }\n\n  switch (type) {\n    case 'checkbox':\n      if (rules.required) {\n        this.errors.push(checked ? true : name + ' is required.');\n      }\n      break;\n    case 'radio':\n      // One should always be selected\n      this.errors.push(checked);\n      break;\n    default:\n      if (rules.required) {\n        this.errors.push(value.length > 0 ? true : name + ' is required.');\n      }\n  }\n\n  var status = this.errors.every(function (v) {\n    return v === true;\n  });\n  if (this.showErrors) this.appendErrors(status, message);\n\n  return status;\n};\n\nFieldVP.prototype.appendErrors = function (valid, optionalMessage) {};\n\n//# sourceURL=webpack:///./src/Field.js?");
+
+/***/ }),
+
+/***/ "./src/Fieldset.js":
+/*!*************************!*\
+  !*** ./src/Fieldset.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nvar _Field = __webpack_require__(/*! ./Field */ \"./src/Field.js\");\n\nvar _Field2 = _interopRequireDefault(_Field);\n\nvar _debug = __webpack_require__(/*! ./debug */ \"./src/debug.js\");\n\nvar _debug2 = _interopRequireDefault(_debug);\n\nvar _genError = __webpack_require__(/*! ./genError */ \"./src/genError.js\");\n\nvar _genError2 = _interopRequireDefault(_genError);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n// Options include\n// ---------------\n// showMessage: <false> - Fieldset level error shown\n// noChildren: <false> - No children errors (field level)\n// fieldClass: 'field' - Child 'Field' className\n//\n\nvar VPFieldset = function VPFieldset(element, strategy, options) {\n  var message = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;\n\n  if (!(element instanceof Element)) {\n    (0, _debug2.default)('[Fieldset] Valid Element is required.');\n    return null;\n  }\n\n  if (typeof strategy !== 'function') (0, _debug2.default)('[Fieldset] Validation strategy passed is invalid.');\n  this.strategy = strategy;\n  this.element = element;\n  this.message = message;\n  this.fields = [];\n\n  this.error = null;\n  this._isValid = true;\n\n  this.options = Object.assign({\n    showMessage: false,\n    showChildren: false,\n    fieldClass: 'field'\n  }, options, {\n    showMessage: options.showMessage === true ? typeof message === 'string' ? true : false : false\n  });\n\n  this.findFields();\n};\n\nVPFieldset.prototype.isValid = function () {\n  this.validate();\n  return this._isValid;\n};\n\nVPFieldset.prototype.validate = function () {\n  var fieldSetStatus = this.fields.reduce(function (status, field) {\n    var fieldStatus = field.validate();\n    status.push(fieldStatus);\n\n    return status;\n  }, []);\n\n  // Strategy is expected to return true or false\n  this._isValid = this.options.strategy(fieldSetStatus);\n  if (this.options.showMessage) this.appendError(this._isValid);\n};\n\nVPFieldset.prototype.appendError = function (valid) {\n  if (valid) {\n    if (this.error === null) return;\n\n    this.element.removeChild(this.error);\n  } else {\n    var errors = (0, _genError2.default)('', 'errors');\n    errors.appendChild((0, _genError2.default)(this.message));\n\n    this.element.appendChild(errors);\n    this.error = errors;\n  }\n};\n\nVPFieldset.prototype.findFields = function () {\n  var _this = this;\n\n  this.fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass)).map(function (field) {\n    return new _Field2.default(field, _this.options.showChildren);\n  });\n};\n\n//# sourceURL=webpack:///./src/Fieldset.js?");
+
+/***/ }),
+
+/***/ "./src/Validator.js":
+/*!**************************!*\
+  !*** ./src/Validator.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _Fieldset = __webpack_require__(/*! ./Fieldset */ \"./src/Fieldset.js\");\n\nvar _Fieldset2 = _interopRequireDefault(_Fieldset);\n\nvar _debug = __webpack_require__(/*! ./debug */ \"./src/debug.js\");\n\nvar _debug2 = _interopRequireDefault(_debug);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nvar Validator = function Validator() {\n  var form = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;\n\n  if (form === null) {\n    (0, _debug2.default)('[Validator] Non-strict fieldset matching.', 'Provide a form Element or ID to enable strict matching.');\n    this._form = null;\n    this._strict = false;\n  } else {\n    this._form = ElementOrID(form);\n    this._strict = true;\n  }\n\n  this._strategies = {\n    'all': function all(fields) {\n      return fields.every(function (field) {\n        return field === true;\n      });\n    },\n    'some': function some(fields) {\n      return fields.some(function (field) {\n        return field === true;\n      });\n    },\n    'one': function one(fields) {\n      return fields.filter(function (field) {\n        return field === true;\n      }).length === 1;\n    }\n\n    // Fieldsets being tracked by Validator\n  };this._fieldsets = [];\n};\n\nValidator.prototype.ElementOrID = function (ElorID) {\n  if (ElorID instanceof Element) return ElorID;\n  if (typeof ElorID === 'string') {\n    var f = void 0;\n    if (this._form === null) {\n      f = document.getElementById(ElorID);\n    } else {\n      f = this._form.getElementById(ElorID);\n    }\n\n    if (f instanceof Element) return f;\n  }\n\n  return null;\n};\n\nValidator.prototype.isValid = function () {\n  return this._fieldsets.every(function (fieldset) {\n    return fieldset.isValid();\n  });\n};\n\n// TODO: Append Predefined Fields w/ CB logic\nValidator.prototype.addFieldset = function (fs, options) {\n  var message = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;\n\n  var fieldset = this.ElementOrID(fs);\n  if (fieldset === null) {\n    (0, _debug2.default)('[Validator] Requires a valid fieldset HTMLElement.');\n    return false;\n  }\n\n  var strategy = this._strategies[options.strategy] || function () {\n    (0, _debug2.default)('[Validator] Invalid Validation Strategy');\n  };\n  this._fieldsets.push(new _Fieldset2.default(fieldset, strategy, options, message));\n};\n\nvar removeError = function removeError(el, errorMsg) {\n  if (!(el instanceof Element)) {\n    (0, _debug2.default)('[Validator] Element must be an HTMLElement.');\n    return;\n  }\n\n  var errors = Array.from(el.getElementsByClassName('error'));\n  errors.forEach(function (err) {\n    if (err.innerHTML === errorMsg) {\n      el.removeChild(err);\n    }\n  });\n};\n\nvar appendError = function appendError(el, msg) {\n  if (!(el instanceof Element)) {\n    (0, _debug2.default)('[Validator] Element must be an HTMLElement.');\n    return;\n  }\n\n  var error = generateError(msg);\n  var errors = el.getElementsByClassName('errors');\n\n  if (errors.length === 0) {\n    var _errors = generateError('', 'errors');\n    _errors.appendChild(error);\n    el.appendChild(_errors);\n  } else {\n    if (Array.from(errors[0].children).every(function (err) {\n      return err.innerHTML !== error.innerHTML;\n    })) {\n      errors[0].appendChild(error);\n    }\n  }\n};\n\nexports.default = Validator;\n\n//# sourceURL=webpack:///./src/Validator.js?");
+
+/***/ }),
+
+/***/ "./src/debug.js":
+/*!**********************!*\
+  !*** ./src/debug.js ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("/* WEBPACK VAR INJECTION */(function(process) {\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar env = ((process || {}).env || {}).NODE_ENV || 'production';\n\nexports.default = env === 'development' ? function () {\n  var _console;\n\n  for (var _len = arguments.length, msg = Array(_len), _key = 0; _key < _len; _key++) {\n    msg[_key] = arguments[_key];\n  }\n\n  return (_console = console).log.apply(_console, ['[Debug]'].concat(msg));\n} : function () {\n  return null;\n};\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/process/browser.js */ \"./node_modules/process/browser.js\")))\n\n//# sourceURL=webpack:///./src/debug.js?");
+
+/***/ }),
+
 /***/ "./src/entry.js":
 /*!**********************!*\
   !*** ./src/entry.js ***!
@@ -1920,6 +1968,18 @@ eval("var g;\r\n\r\n// This works in non-strict mode\r\ng = (function() {\r\n\tr
 
 "use strict";
 eval("\n\nvar _vue = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.runtime.esm.js\");\n\nvar _vue2 = _interopRequireDefault(_vue);\n\nvar _elementUi = __webpack_require__(/*! element-ui */ \"./node_modules/element-ui/lib/element-ui.common.js\");\n\nvar _elementUi2 = _interopRequireDefault(_elementUi);\n\n__webpack_require__(/*! element-ui/lib/theme-chalk/index.css */ \"./node_modules/element-ui/lib/theme-chalk/index.css\");\n\nvar _test = __webpack_require__(/*! ./test.vue */ \"./src/test.vue\");\n\nvar _test2 = _interopRequireDefault(_test);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\n_vue2.default.use(_elementUi2.default);\n\nnew _vue2.default({\n  el: '#app',\n  render: function render(h) {\n    return h(_test2.default);\n  }\n});\n\n//# sourceURL=webpack:///./src/entry.js?");
+
+/***/ }),
+
+/***/ "./src/genError.js":
+/*!*************************!*\
+  !*** ./src/genError.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nexports.default = function (msg) {\n  var className = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'error';\n\n  var error = document.createElement('div');\n  error.className = className;\n  error.innerHTML = msg;\n\n  return error;\n};\n\n//# sourceURL=webpack:///./src/genError.js?");
 
 /***/ }),
 
@@ -1959,14 +2019,26 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 
 /***/ }),
 
-/***/ 0:
-/*!****************************!*\
-  !*** multi ./src/entry.js ***!
-  \****************************/
+/***/ "./validplus.js":
+/*!**********************!*\
+  !*** ./validplus.js ***!
+  \**********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("module.exports = __webpack_require__(/*! ./src/entry.js */\"./src/entry.js\");\n\n\n//# sourceURL=webpack:///multi_./src/entry.js?");
+"use strict";
+eval("\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\n\nvar _Validator = __webpack_require__(/*! @/Validator */ \"./src/Validator.js\");\n\nvar _Validator2 = _interopRequireDefault(_Validator);\n\nfunction _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }\n\nexports.default = {\n  Validator: _Validator2.default\n};\n\n//# sourceURL=webpack:///./validplus.js?");
+
+/***/ }),
+
+/***/ 0:
+/*!*******************************************!*\
+  !*** multi ./src/entry.js ./validplus.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+eval("__webpack_require__(/*! ./src/entry.js */\"./src/entry.js\");\nmodule.exports = __webpack_require__(/*! ./validplus.js */\"./validplus.js\");\n\n\n//# sourceURL=webpack:///multi_./src/entry.js_./validplus.js?");
 
 /***/ })
 

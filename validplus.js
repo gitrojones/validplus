@@ -1,5 +1,11 @@
 import Validator from '@/Validator'
+import Fieldset from '@/Fieldset'
+import Field from '@/Field'
 
-export default {
-  Validator
+const ValidPlus = {
+  Validator,
+  Fieldset,
+  Field
 }
+
+export default ValidPlus

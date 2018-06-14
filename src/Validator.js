@@ -1,6 +1,5 @@
 import VPFieldset from './Fieldset'
-
-const debug = require('./debug')
+import debug from './debug'
 
 const Validator = function (form = null) {
   if (form === null) {
@@ -10,6 +9,8 @@ const Validator = function (form = null) {
     this._strict = false
   } else {
     this._form = this.ElementOrID(form)
+
+    // TODO: Add strict support (can only add elements contained within the field)
     this._strict = true
   }
 
@@ -25,7 +26,7 @@ const Validator = function (form = null) {
 
 Validator.prototype.ElementOrID = function (ElorID) {
   if (ElorID instanceof Element) return ElorID
-  if (ElorID typeof 'string') {
+  if (typeof ElorID === 'string') {
     let f
     if (this._form === null) {
       f = document.getElementById(ElorID)
@@ -51,7 +52,7 @@ Validator.prototype.addFieldset = function (fs, options, message = null) {
     return false
   }
 
-  let strategy = this._strategies[options.strategy] || () => debug('[Validator] Invalid Validation Strategy')
+  let strategy = this._strategies[options.strategy] || function () { debug('[Validator] Invalid Validation Strategy') }
   this._fieldsets.push(new VPFieldset(fieldset, strategy, options, message))
 }
 

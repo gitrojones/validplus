@@ -1,34 +1,29 @@
 const path = require('path')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const HtmlWebpackPlugin = require('vue-html-webpack-plugin')
 
 module.exports = {
-  entry: [
-    './src/entry.js',
-    // './validplus.js'
-  ],
+  entry: path.resolve(__dirname, './validplus.js'),
+
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    path: path.resolve(__dirname, './dist'),
+    filename: 'ValidPlus.js',
+    library: 'ValidPlus',
+    libraryTarget: 'umd'
   },
+
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '@': path.resolve(__dirname, './src')
     }
   },
+
   mode: process.env.NODE_ENV || 'production',
+
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
-    ...(process.env.TEST === true ? [
-      {
-        test: /\.test\.js$/,
+        test: /\.js$/,
         exclude: /node_modules/,
         use: [
-          'mocha-loader',
           {
             loader: 'babel-loader',
             options: {
@@ -36,45 +31,7 @@ module.exports = {
             }
           }
         ]
-      },
-    ] : [
-    ]),
-      {
-        test: /\.js?$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['babel-preset-env']
-          }
-        },
-        exclude: (file) => (
-            /node_modules/.test(file) &&
-            !/\.vue\.js/.test(file)
-        )
-      },
-      {
-        test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader'
-        ]
-      },
-      {
-        test: /\.(ttf|woff|png|jpg|gif|svg)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[path][name].[ext]',
-            context: ''
-          }
-        }
       }
     ]
-  },
-  plugins: [
-    new VueLoaderPlugin(),
-    new HtmlWebpackPlugin({
-      vue: true
-    })
-  ]
+  }
 }

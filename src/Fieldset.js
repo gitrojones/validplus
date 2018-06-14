@@ -1,7 +1,6 @@
 import VPField from './Field'
-
-const debug = require('./debug')
-const generateError = require('./genError')
+import debug from './debug'
+import generateError from './genError'
 
 // Options include
 // ---------------
@@ -51,7 +50,7 @@ VPFieldset.prototype.validate = function () {
   }, [])
 
   // Strategy is expected to return true or false
-  this._isValid = this.options.strategy(fieldSetStatus)
+  this._isValid = this.strategy(fieldSetStatus)
   if (this.options.showMessage) this.appendError(this._isValid)
 }
 
@@ -75,3 +74,5 @@ VPFieldset.prototype.findFields = function () {
       return new VPField(field, this.options.showChildren)
     })
 }
+
+export default VPFieldset

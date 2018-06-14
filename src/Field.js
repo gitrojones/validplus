@@ -12,7 +12,7 @@ VPField.prototype.getInput = function () {
   let select = this.element.getElementsByTagName('select')
   let textarea = this.element.getElementsByTagName('textarea')
 
-  this.input = Array.concat(
+  this.input = [].concat(
     Array.from(input),
     Array.from(select),
     Array.from(textarea)
@@ -97,5 +97,7 @@ VPField.prototype.validate = function () {
   return status
 }
 
-FieldVP.prototype.appendErrors = function (valid, optionalMessage) {
+VPField.prototype.appendErrors = function (valid, optionalMessage) {
 }
+
+export default VPField
