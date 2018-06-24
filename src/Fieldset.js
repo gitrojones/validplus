@@ -11,11 +11,12 @@ import generateError from './genError'
 
 const VPFieldset = function (element, strategy, options, message = null) {
   if (!(element instanceof Element)) {
-    debug(`[Fieldset] Valid Element is required.`)
-    return null
+    throw new Error(`[Fieldset] Valid Element is required.`)
+  }
+  if (typeof strategy !== 'function') {
+    throw new Error('[Fieldset] Validation strategy passed is invalid.')
   }
 
-  if (typeof strategy !== 'function') debug('[Fieldset] Validation strategy passed is invalid.')
   this.strategy = strategy
   this.element = element
   this.message = message
@@ -43,9 +44,7 @@ VPFieldset.prototype.isValid = function () {
 
 VPFieldset.prototype.validate = function () {
   let fieldSetStatus = this.fields.reduce((status, field) => {
-    let fieldStatus = field.validate()
-    status.push(fieldStatus)
-
+    status.push(field.validate())
     return status
   }, [])
 
@@ -69,10 +68,10 @@ VPFieldset.prototype.appendError = function (valid) {
 }
 
 VPFieldset.prototype.findFields = function () {
-  this.fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass))
-    .map(field => {
-      return new VPField(field, this.options.showChildren)
-    })
+  const vm = this
+  let fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass))
+  this.fields = fields.map(field => new VPField(field, vm.options.showChildren))
+  console.log(fields, this.fields)
 }
 
 export default VPFieldset

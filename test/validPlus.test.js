@@ -11,11 +11,7 @@ const _ValidPlus = fs.readFileSync(path.resolve(__dirname, '../dist/ValidPlus.js
 describe('ValidPlus', function () {
   let DOM
   let virtualConsole
-
   let ValidPlus
-  let Fieldset
-  let testForm
-  let testFieldset
 
   beforeEach(done => {
     virtualConsole = new VirtualConsole()
@@ -25,12 +21,6 @@ describe('ValidPlus', function () {
     DOM.window.eval(_ValidPlus)
     ValidPlus = DOM.window.ValidPlus.default
 
-    testForm = DOM.window.document.createElement('form')
-    testForm.className = 'form'
-
-    testFieldset = DOM.window.document.createElement('div')
-    testFieldset.className = 'fieldset'
-
     done()
   })
 
@@ -39,6 +29,15 @@ describe('ValidPlus', function () {
   })
 
   describe('ValidPlus.Validator', function () {
+    let testForm
+
+    beforeEach(done => {
+      testForm = DOM.window.document.createElement('form')
+      testForm.className = 'form'
+
+      done()
+    })
+
     describe('Validator Properties', function () {
       it('Validator instance should contain "addFieldset"', function () {
         let validator = new ValidPlus.Validator()
@@ -58,29 +57,95 @@ describe('ValidPlus', function () {
 
     it('Validator should track new fieldsets', function () {
       let validator = new ValidPlus.Validator(testForm)
+      let testFieldset = DOM.window.document.createElement('div')
+      testFieldset.className = 'fieldset'
+
       let success = validator.addFieldset(testFieldset, { strategy: 'one' })
 
       expect(success).to.not.be.false
       expect(validator._fieldsets.length).to.equal(1)
       expect(validator._fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset)
     })
+  })
 
-    it('Validator Fieldset should find children fields', function () {
-      let validator = new ValidPlus.Validator(testForm)
+  describe('ValidPlus.Fieldset', function () {
+    let testFieldset
+
+    beforeEach(done => {
+      testFieldset = DOM.window.document.createElement('div')
+      testFieldset.className = 'fieldset'
+
+      done()
+    })
+
+    it('Fieldset should throw an error if missing an element', function () {
+      expect(() => new ValidPlus.Fieldset(null, () => null, {})).to.throw()
+    })
+    it('Fieldset should throw an error if missing a strategy', function () {
+      expect(() => new ValidPlus.Fieldset(testFieldset, null, {})).to.throw()
+    })
+    it('Fieldset should find children fields', function () {
       let testField = DOM.window.document.createElement('div')
       testField.className = 'field'
       testFieldset.append(testField)
 
-      validator.addFieldset(testFieldset, { strategy: 'one' })
-      expect(validator._fieldsets[0].fields.length).to.equal(1)
-      expect(validator._fieldsets[0].fields[0]).to.be.instanceof(ValidPlus.Field)
+      let fieldset = new ValidPlus.Fieldset(testFieldset, () => null, {})
+      expect(fieldset.fields.length).to.equal(1)
+      expect(fieldset.fields[0]).to.be.instanceof(ValidPlus.Field)
     })
 
-    it('Validator should validate fieldsets', function () {
-      let validator = new ValidPlus.Validator(testForm)
-      validator.addFieldset(testFieldset, { strategy: 'one' })
+    it('Fieldset should validate', function () {
+      let testField = DOM.window.document.createElement('div')
+      testField.className = 'field'
+      testFieldset.append(testField)
 
-      expect(validator.isValid()).to.be.true
+      let testInput = DOM.window.document.createElement('input')
+      testInput.className = 'input'
+      testField.append(testInput)
+
+      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
+      expect(fieldset.isValid()).to.be.true
     })
+
+    it('Fieldset should validate fields', function () {
+      let testField = DOM.window.document.createElement('div')
+      testFieldset.append(testField)
+      testFieldset.append(testField)
+
+      let testInput = DOM.window.document.createElement('input')
+      testInput.className = 'input'
+      testField.append(testInput)
+      testField.append(testInput)
+
+      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
+      expect(fieldset.fields.length).to.equal(2)
+      expect(fieldset.isValid()).to.be.true
+    })
+  })
+
+  describe('ValidPlus.Field', function () {
+    let validator
+    let testField
+    let testInput
+
+    beforeEach(done => {
+      validator = new ValidPlus.Validator(testForm)
+
+      testField = DOM.window.document.createElement('div')
+      testField.className = 'field'
+      testFieldset.append(testField)
+
+      testInput = DOM.window.document.createElement('input')
+      testInput.className = 'input'
+      testField.append(testInput)
+
+      done()
+    })
+
+    describe('Fields Properties', function () {
+      it('Field errors returns methods', function () {
+      })
+    })
+
   })
 })

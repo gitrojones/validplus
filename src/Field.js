@@ -1,16 +1,53 @@
+import debug from './debug'
+import generateError from './genError'
+
 const VPField = function (element, showsErrors) {
   this.element = element
   this.showsErrors = showsErrors
-  this.errors = []
-  this.input = null
 
+  this.errors = {
+    _fields: [],
+    _messages: [],
+    remove (index) {
+      if (index < this._fields.length && index < this._messages.length) {
+        this._fields.splice(index, 1)
+        this._messages.splice(index, 1)
+      }
+    },
+    valid () {
+      console.log(this)
+      return this._messages.length === 0 && this._fields.length === 0
+    },
+    message (index) {
+      if (index < this._messages.length) return this._messages[index]
+      return null
+    },
+    field (index) {
+      if (index < this._fields.length) return this._fields[index]
+      return null
+    },
+    push (msg) {
+      if (typeof msg === 'string' && msg.length > 0) {
+        this._messages.push(msg)
+        this._fields.push(generateError(msg))
+      }
+    }
+  }
+
+  this.input = null
   this.getInput()
 }
 
 VPField.prototype.getInput = function () {
+  console.log('[VPField] Querying inputs')
+
   let input = this.element.getElementsByTagName('input')
   let select = this.element.getElementsByTagName('select')
   let textarea = this.element.getElementsByTagName('textarea')
+
+  if (input.length > 0) console.log('[VPField] Found', input)
+  if (select.length > 0) console.log('[VPField] Found', select)
+  if (textarea.length > 0) console.log('[VPField] Found', textarea)
 
   this.input = [].concat(
     Array.from(input),
@@ -20,6 +57,10 @@ VPField.prototype.getInput = function () {
 }
 
 VPField.prototype.parseInput = function () {
+  if (!(this.input instanceof Element)) {
+    throw new Error('[VPField] Input must be an instance of Element')
+  }
+
   let attr = this.input.attributes
 
   return {
@@ -91,13 +132,22 @@ VPField.prototype.validate = function () {
     }
   }
 
-  let status = this.errors.every(v => v === true)
-  if (this.showErrors) this.appendErrors(status, message)
+  let status = this.errors.valid()
+  if (status !== true) {
+    // If message is defined, it overrides child messages, unless flagged to do otherwise
+    // TODO: Implement flag
+    if (typeof message === 'string' && message.length > 0) {
+    }
+
+    if (this.showsErrors) this.appendError(this.status)
+  }
 
   return status
 }
 
-VPField.prototype.appendErrors = function (valid, optionalMessage) {
+VPField.prototype.appendError = function (valid) {
+  if (valid) {
+  }
 }
 
 export default VPField
