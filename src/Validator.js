@@ -1,6 +1,8 @@
 import VPFieldset from './Fieldset'
-import generateElement from './generateElement'
-import debug from './debug'
+
+import debug from './lib/debug'
+import generateElement from './lib/generateElement'
+import mergeDeep from './lib/mergeDeep'
 
 const Validator = function (options, form = null) {
   if (form === null) {
@@ -30,7 +32,7 @@ const Validator = function (options, form = null) {
 
   // TODO: Validate options
   // TODO: Allow toggling options on whether to show messages or fire callbacks
-  this._onValidation = Object.assign({
+  this._onValidation = mergeDeep({
     isValid: {
       cb: null,
       message: null
@@ -118,11 +120,11 @@ Validator.prototype.createFieldset = function (fs, options, onValidate = {
   this._fieldsets.push(new VPFieldset(fieldset, strategy, options, onValidate))
 }
 
-Validator.prototype.clearMessages = () => {
+Validator.prototype.clearMessages = function () {
   this._form.removeChild(this._messageNode)
 }
 
-Validator.prototype.removeMessage = (message) => {
+Validator.prototype.removeMessage = function (message) {
   if (!(this._messageNode instanceof Element)) {
     console.log('[Validator] MessageNode isn\'t set')
     return
@@ -135,7 +137,7 @@ Validator.prototype.removeMessage = (message) => {
   })
 }
 
-Validator.prototype.appendMessage = (message, status) => {
+Validator.prototype.appendMessage = function (message, status) {
   let msg = generateElement(message, 'VPMessage ' + status)
   let messages = this._messageNode
 

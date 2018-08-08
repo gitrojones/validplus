@@ -137,6 +137,34 @@ describe('ValidPlus', function () {
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset.isValid()).to.be.true
     })
+
+    it('Fieldset should append onValid Message and message should be correct', function () {
+      let testField = DOM.window.document.createElement('div')
+      testField.className = 'VPField'
+
+      let testInput = DOM.window.document.createElement('input')
+      testInput.value = 10
+      testInput.setAttribute('type', 'number')
+      testInput.setAttribute('min', 1)
+      testInput.setAttribute('max', 15)
+
+      testField.append(testInput)
+      testFieldset.append(testField)
+
+      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {}, {
+        isValid: {
+          message: 'Hello, World'
+        }
+      })
+      fieldset.addNewField(new ValidPlus.Field(testField, {}))
+
+      expect(fieldset.isValid()).to.be.true
+      expect(testFieldset.children.length).to.equal(2)
+      expect((testFieldset.children)[1].className).to.equal('VPMessages')
+      expect((testFieldset.children)[1].children.length).to.equal(1)
+      expect(((testFieldset.children)[1].children)[0].className).to.equal('VPMessage -isValid')
+      expect(((testFieldset.children)[1].children)[0].innerHTML).to.equal('Hello, World')
+    })
   })
 
   describe('ValidPlus.Field', function () {
@@ -158,7 +186,7 @@ describe('ValidPlus', function () {
     })
 
     describe('Fields Properties', function () {
-      it('Should populate actions and messages.')
+      it('Should append Message.')
     })
 
   })

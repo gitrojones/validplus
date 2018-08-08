@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('vue-html-webpack-plugin')
 
 module.exports = {
   entry: [
-    './src/entry.js',
+    './src/example/entry.js',
     './validplus.js'
   ],
   output: {

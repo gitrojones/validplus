@@ -1,25 +1,26 @@
-import debug from './debug'
-import generateElement from './generateElement'
+import debug from './lib/debug'
+import mergeDeep from './lib/mergeDeep'
+import generateElement from './lib/generateElement'
 
-const VPField = function (element, options, onValidate = {
-  isValid: {
-    message: null,
-    cb: null
-  },
-  isInvalid: {
-    message: null,
-    cb: null
-  }
-}) {
+const VPField = function (element, options, onValidate = {}) {
   this.input = null
   this.element = element
   this.options = Object.assign({
     showFieldErrors: false
   }, options)
-  this._onValidation = onValidate
+  this._onValidation = mergeDeep({
+    isValid: {
+      message: null,
+      cb: null
+    },
+    isInvalid: {
+      message: null,
+      cb: null
+    }
+  }, onValidate)
 
-  this.messageNode = null
-  this.messages = []
+  this._messageNode = null
+  this._messages = []
 
   this.getInput()
 }
@@ -148,11 +149,11 @@ VPField.prototype.isValid = function () {
   return isValid
 }
 
-VPField.prototype.clearMessages = () => {
+VPField.prototype.clearMessages = function () {
   this.element.removeChild(this._messageNode)
 }
 
-VPField.prototype.removeMessage = (message) => {
+VPField.prototype.removeMessage = function (message) {
   if (!(this._messageNode instanceof Element)) {
     console.log('[VPField] MessageNode isn\'t set')
     return
@@ -165,7 +166,7 @@ VPField.prototype.removeMessage = (message) => {
   })
 }
 
-VPField.prototype.appendMessage = (message, status) => {
+VPField.prototype.appendMessage = function (message, status) {
   let msg = generateElement(message, 'VPMessage ' + status)
   let messages = this._messageNode
 

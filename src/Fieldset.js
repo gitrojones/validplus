@@ -1,6 +1,8 @@
 import VPField from './Field'
-import debug from './debug'
-import generateElement from './generateElement'
+
+import debug from './lib/debug'
+import mergeDeep from './lib/mergeDeep'
+import generateElement from './lib/generateElement'
 
 // Options include
 // ---------------
@@ -9,16 +11,7 @@ import generateElement from './generateElement'
 // fieldClass: 'field' - Child 'Field' className
 //
 
-const VPFieldset = function (element, strategy, options, onValidate = {
-  isValid: {
-    message: null,
-    cb: null
-  },
-  isInvalid: {
-    message: null,
-    cb: null
-  }
-}) {
+const VPFieldset = function (element, strategy, options, onValidate = {}) {
   if (!(element instanceof Element)) {
     throw new Error(`[VPFieldset] Valid Element is required.`)
   }
@@ -28,7 +21,16 @@ const VPFieldset = function (element, strategy, options, onValidate = {
 
   this.strategy = strategy
   this.element = element
-  this._onValidation = onValidate
+  this._onValidation = mergeDeep({
+    isValid: {
+      message: null,
+      cb: null
+    },
+    isInvalid: {
+      message: null,
+      cb: null
+    }
+  }, onValidate)
   this._fields = []
 
   this._messageNode = null
@@ -70,11 +72,11 @@ VPFieldset.prototype.isValid = function () {
   return isValid
 }
 
-VPFieldset.prototype.clearMessages = () => {
+VPFieldset.prototype.clearMessages = function () {
   this.element.removeChild(this._messageNode)
 }
 
-VPFieldset.prototype.removeMessage = (message) => {
+VPFieldset.prototype.removeMessage = function (message) {
   if (!(this._messageNode instanceof Element)) {
     console.log('[VPFieldset] MessageNode isn\'t set')
     return
@@ -87,7 +89,7 @@ VPFieldset.prototype.removeMessage = (message) => {
   })
 }
 
-VPFieldset.prototype.appendMessage = (message, status) => {
+VPFieldset.prototype.appendMessage = function (message, status) {
   let msg = generateElement(message, 'VPMessage ' + status)
   let messages = this._messageNode
 
