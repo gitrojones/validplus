@@ -118,7 +118,7 @@ VPFieldset.prototype.removeField = function (field) {
   }
 }
 
-VPFieldset.prototype.addNewField = function (field) {
+VPFieldset.prototype.addField = function (field) {
   if (!(field instanceof VPField)) {
     throw new Error('[VPFieldset] Field must be an instanceof VPField')
   }
@@ -126,7 +126,7 @@ VPFieldset.prototype.addNewField = function (field) {
 }
 
 // TODO: Enforce onValidate structure
-VPFieldset.prototype.createNewField = function (el, options, onValidate) {
+VPFieldset.prototype.createField = function (el, options, onValidate) {
   if (!(el instanceof Element)) {
     throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
   }

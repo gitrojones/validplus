@@ -96,28 +96,23 @@ Validator.prototype.removeFieldset = function (fieldset) {
 // TODO: Append Predefined Fields w/ CB logic
 // TODO: Validate onValidate structure
 // TODO: Add MutationObserver on children
-Validator.prototype.createFieldset = function (fs, options, onValidate = {
-  isValid: {
-    cb: null,
-    message: null
-  },
-  isInvalid: {
-    cb: null,
-    message: null
-  }
-}) {
-  let fieldset = ElementOrID(fs, this._form)
+Validator.prototype.createFieldset = function (fs, strategy, options, fields, onValidate = null) {
+  const fieldset = ElementOrID(fs, this._form)
 
   if (fieldset === null) {
     debug('[Validator] Requires a valid fieldset HTMLElement.')
     return false
   }
 
-  let strategy = this._strategies[options.strategy] || function () {
+  const _strategy = this._strategies[strategy] || function () {
     throw new Error('[Validator] Invalid Validation Strategy')
   }
+  const _fieldset = new VPFieldset(fieldset, _strategy, options, onValidate)
+  fields.forEach(field => {
+    _fieldset.addField(field)
+  })
 
-  this._fieldsets.push(new VPFieldset(fieldset, strategy, options, onValidate))
+  this._fieldsets.push(_fieldset)
 }
 
 Validator.prototype.clearMessages = function () {
