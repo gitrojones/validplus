@@ -66,11 +66,29 @@ describe('ValidPlus', function () {
       let testFieldset = DOM.window.document.createElement('div')
       testFieldset.className = 'fieldset'
 
-      let success = validator.createFieldset(testFieldset, { strategy: 'one' })
+      let success = validator.createFieldset(testFieldset, 'one', {}, [])
 
       expect(success).to.not.be.false
       expect(validator._fieldsets.length).to.equal(1)
       expect(validator._fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset)
+    })
+
+    it('Validator should allowing adding fieldsets and their fields', function () {
+      let validator = new ValidPlus.Validator({}, testForm)
+      let testFieldset = DOM.window.document.createElement('div')
+      testFieldset.className = 'fieldset'
+
+      let testField = DOM.window.document.createElement('div')
+      testField.className = 'VPField'
+
+      testFieldset.append(testField)
+
+      const fieldset = validator.createFieldset(testFieldset, 'all', {}, [
+        new ValidPlus.Field(testField, {}, {})
+      ])
+
+      console.log('fieldset', fieldset)
+      expect(fieldset._fields.length).to.equal(1)
     })
   })
 
@@ -96,7 +114,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       let fieldset = new ValidPlus.Fieldset(testFieldset, () => null, { fieldClass: 'field' })
-      fieldset.createNewField(testField, {})
+      fieldset.createField(testField, {})
 
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset._fields[0]).to.be.instanceof(ValidPlus.Field)
@@ -112,7 +130,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
-      fieldset.createNewField(testField, {})
+      fieldset.createField(testField, {})
 
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset.isValid()).to.be.true
@@ -132,7 +150,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
-      fieldset.addNewField(new ValidPlus.Field(testField, {}))
+      fieldset.addField(new ValidPlus.Field(testField, {}))
 
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset.isValid()).to.be.true
@@ -156,7 +174,7 @@ describe('ValidPlus', function () {
           message: 'Hello, World'
         }
       })
-      fieldset.addNewField(new ValidPlus.Field(testField, {}))
+      fieldset.addField(new ValidPlus.Field(testField, {}))
 
       expect(fieldset.isValid()).to.be.true
       expect(testFieldset.children.length).to.equal(2)

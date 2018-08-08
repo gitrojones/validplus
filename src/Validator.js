@@ -113,6 +113,7 @@ Validator.prototype.createFieldset = function (fs, strategy, options, fields, on
   })
 
   this._fieldsets.push(_fieldset)
+  return _fieldset
 }
 
 Validator.prototype.clearMessages = function () {

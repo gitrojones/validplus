@@ -4,7 +4,7 @@ module.exports = {
   entry: path.resolve(__dirname, './validplus.js'),
 
   output: {
-    path: path.resolve(__dirname, './'),
+    path: path.resolve(__dirname, './dist'),
     filename: 'ValidPlus.js',
     library: 'ValidPlus',
     libraryTarget: 'umd'

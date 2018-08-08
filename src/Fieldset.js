@@ -122,6 +122,7 @@ VPFieldset.prototype.addField = function (field) {
   if (!(field instanceof VPField)) {
     throw new Error('[VPFieldset] Field must be an instanceof VPField')
   }
+  console.log('[VPFieldset] Adding field')
   this._fields.push(field)
 }
 
