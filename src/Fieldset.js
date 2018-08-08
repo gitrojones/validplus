@@ -1,6 +1,6 @@
 import VPField from './Field'
 import debug from './debug'
-import generateError from './genError'
+import generateElement from './generateElement'
 
 // Options include
 // ---------------
@@ -9,69 +9,133 @@ import generateError from './genError'
 // fieldClass: 'field' - Child 'Field' className
 //
 
-const VPFieldset = function (element, strategy, options, message = null) {
+const VPFieldset = function (element, strategy, options, onValidate = {
+  isValid: {
+    message: null,
+    cb: null
+  },
+  isInvalid: {
+    message: null,
+    cb: null
+  }
+}) {
   if (!(element instanceof Element)) {
-    throw new Error(`[Fieldset] Valid Element is required.`)
+    throw new Error(`[VPFieldset] Valid Element is required.`)
   }
   if (typeof strategy !== 'function') {
-    throw new Error('[Fieldset] Validation strategy passed is invalid.')
+    throw new Error('[VPFieldset] Validation strategy passed is invalid.')
   }
 
   this.strategy = strategy
   this.element = element
-  this.message = message
-  this.fields = []
+  this._onValidation = onValidate
+  this._fields = []
 
-  this.error = null
-  this._isValid = true
+  this._messageNode = null
+  this._messages = []
 
   this.options = Object.assign({
     showMessage: false,
     showChildren: false,
-    fieldClass: 'field'
-  }, options, {
-    showMessage: options.showMessage === true
-      ? typeof message === 'string' ? true : false : false,
-  })
+    fieldClass: 'VPField'
+  }, options)
 
-  this.findFields()
+  // this.findFields()
 }
 
 VPFieldset.prototype.isValid = function () {
-  this.validate()
-  return this._isValid
-}
-
-VPFieldset.prototype.validate = function () {
-  let fieldSetStatus = this.fields.reduce((status, field) => {
-    status.push(field.validate())
+  const fieldSetStatus = this._fields.reduce((status, field, index) => {
+    console.log('[VPFieldset] Validating field', index)
+    status.push(field.isValid())
     return status
   }, [])
 
-  // Strategy is expected to return true or false
-  this._isValid = this.strategy(fieldSetStatus)
-  if (this.options.showMessage) this.appendError(this._isValid)
+  const isValid = this.strategy(fieldSetStatus)
+  if (isValid) {
+    if (typeof this._onValidation.isValid.cb === 'function') {
+      this._onValidation.isValid.cb()
+    }
+    if (typeof this._onValidation.isValid.message === 'string') {
+      this.appendMessage(this._onValidation.isValid.message, '-isValid')
+    }
+  } else {
+    if (typeof this._onValidation.isInvalid.cb === 'function') {
+      this._onValidation.isInvalid.cb()
+    }
+    if (typeof this._onValidation.isInvalid.message === 'string') {
+      this.appendMessage(this._onValidation.isInvalid.message, '-isError')
+    }
+  }
+
+  return isValid
 }
 
-VPFieldset.prototype.appendError = function (valid) {
-  if (valid) {
-    if (this.error === null) return
+VPFieldset.prototype.clearMessages = () => {
+  this.element.removeChild(this._messageNode)
+}
 
-    this.element.removeChild(this.error)
+VPFieldset.prototype.removeMessage = (message) => {
+  if (!(this._messageNode instanceof Element)) {
+    console.log('[VPFieldset] MessageNode isn\'t set')
+    return
+  }
+
+  Array.from(this._messageNode.children).forEach(child => {
+    if (child.innerHTML === message) {
+      this._messageNode.removeChild(child)
+    }
+  })
+}
+
+VPFieldset.prototype.appendMessage = (message, status) => {
+  let msg = generateElement(message, 'VPMessage ' + status)
+  let messages = this._messageNode
+
+  if (messages === null) {
+    let _messages = generateElement('', 'VPMessages')
+    _messages.appendChild(msg)
+
+    this.element.appendChild(_messages)
+    this._messageNode = _messages
   } else {
-    let errors = generateError('', 'errors')
-    errors.appendChild(generateError(this.message))
-
-    this.element.appendChild(errors)
-    this.error = errors
+    if (Array.from(this._messageNode.children)
+      .every(m => m.innerHTML !== msg.innerHTML)) {
+      this._messageNode.appendChild(msg)
+    }
   }
 }
 
+VPFieldset.prototype.removeField = function (field) {
+  if (!(field instanceof VPField)) {
+    throw new Error('[VPFieldset] Field must be an instanceof VPField')
+  }
+
+  const index = this._fields.indexOf(field)
+  if (index !== -1) {
+    this._fields = this._fields.splice(index, 1)
+  }
+}
+
+VPFieldset.prototype.addNewField = function (field) {
+  if (!(field instanceof VPField)) {
+    throw new Error('[VPFieldset] Field must be an instanceof VPField')
+  }
+  this._fields.push(field)
+}
+
+// TODO: Enforce onValidate structure
+VPFieldset.prototype.createNewField = function (el, options, onValidate) {
+  if (!(el instanceof Element)) {
+    throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
+  }
+
+  this._fields.push(new VPField(el, options, onValidate))
+}
 VPFieldset.prototype.findFields = function () {
   const vm = this
   let fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass))
-  this.fields = fields.map(field => new VPField(field, vm.options.showChildren))
-  console.log(fields, this.fields)
+  // TODO: Attribute parsing to fill in the gaps
+  this._fields = fields.map(field => new VPField(field, {}))
 }
 
 export default VPFieldset

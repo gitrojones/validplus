@@ -9,7 +9,7 @@
   "scripts": {
     "build": "NODE_ENV=development node build.js",
     "build:prod": "NODE_ENV=production node build.js",
-    "test": "NODE_ENV=development TEST=true node build.js"
+    "test": "NODE_ENV=development TEST=true node --inspect build.js"
   },
   "repository": {
     "type": "git",
