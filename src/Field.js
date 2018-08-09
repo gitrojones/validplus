@@ -8,6 +8,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
   this.element = element
   this.listeners = {}
+  this.canValidate = true
   this.options = Object.assign({
     errorClass: '-isError',
     formatter: {
@@ -42,24 +43,28 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
       // Not guarenteed to fire w/ inputs
       this.input.addEventListener('change', () => {
-        // Avoid emiting on the first pass of validation
-        const emit = this._isValid !== null
+        if (this.canValidate === true) {
+          // Avoid emiting on the first pass of validation
+          const emit = this._isValid !== null
 
-        let valid = this.isValid()
-        if (emit) {
-          this.dispatchEvent(new Event('onValidate', {
-            bubbles: false, cancelable: false }), valid)
+          let valid = this.isValid()
+          if (emit) {
+            this.dispatchEvent(new Event('onValidate', {
+              bubbles: false, cancelable: false }), valid)
+          }
         }
       })
     } else {
       this.input.addEventListener('input', () => {
-        // Avoid emiting on the first pass of validation
-        const emit = this._isValid !== null
+        if (this.canValidate === true) {
+          // Avoid emiting on the first pass of validation
+          const emit = this._isValid !== null
 
-        let valid = this.isValid()
-        if (emit) {
-          this.dispatchEvent(new Event('onValidate', {
-            bubbles: false, cancelable: false }), valid)
+          let valid = this.isValid()
+          if (emit) {
+            this.dispatchEvent(new Event('onValidate', {
+              bubbles: false, cancelable: false }), valid)
+          }
         }
       })
     }
@@ -108,6 +113,7 @@ VPField.prototype.parseInput = function () {
 }
 
 VPField.prototype.isValid = function () {
+  this.canValidate = false
   if (typeof this.options.formatter.pre === 'function') {
     this.options.formatter.pre(this.input)
   }
@@ -215,6 +221,7 @@ VPField.prototype.isValid = function () {
     this.options.formatter.post(this.input)
   }
 
+  this.canValidate = true
   return this._isValid
 }
 
