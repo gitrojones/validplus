@@ -70,7 +70,9 @@ Validator.prototype.isValid = function () {
   this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
 
   if (this._isValid) {
-    this._form.classList.remove(this.options.errorClass)
+    if (this.element instanceof Element) {
+      this.element.classList.remove(this.options.errorClass)
+    }
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
@@ -79,7 +81,9 @@ Validator.prototype.isValid = function () {
       this.addMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
-    this._form.classList.add(this.options.errorClass)
+    if (this.element instanceof Element) {
+      this.element.classList.add(this.options.errorClass)
+    }
 
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()

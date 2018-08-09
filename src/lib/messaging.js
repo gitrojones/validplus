@@ -26,9 +26,8 @@ const addMessage = function (base) {
 
     if (messages === null) {
       let _messages = generateElement('', `${base}s`)
-      let anchor = this.options.messageAnchor instanceof Element
-        ? this.options.messageAnchor
-        : this.element
+      let anchor = this.options.messageAnchor || this.element
+      if (!(anchor instanceof Element)) return
 
       _messages.appendChild(msg)
       switch (this.options.messagePOS) {
