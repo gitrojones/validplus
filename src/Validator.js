@@ -100,7 +100,7 @@ Validator.prototype.watchFieldset = function (fieldset) {
 
   // TODO: Optimize by tracking state and only revalidating
   // if internal state changes. Currently wasteful
-  fieldset.addEventListener('onValidation', (e, isValid) => {
+  fieldset.addEventListener('onValidate', (e, isValid) => {
     this.isValid()
   })
 }

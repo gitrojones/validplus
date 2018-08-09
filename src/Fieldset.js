@@ -93,7 +93,7 @@ VPFieldset.prototype.watchField = function (field) {
   field.addEventListener('onValidate', (e, isValid) => {
     const valid = this.isValid()
 
-    this.dispatchEvent(new Event('onValidation', {
+    this.dispatchEvent(new Event('onValidate', {
         bubbles: false, cancelable: false
     }), valid)
   })

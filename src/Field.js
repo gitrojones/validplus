@@ -34,13 +34,13 @@ const VPField = function (element, options, customRules, onValidate = {}) {
       // Not guarenteed to fire w/ inputs
       this.input.addEventListener('change', () => {
         let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidation', {
+        this.dispatchEvent(new Event('onValidate', {
           bubbles: false, cancelable: false }), valid)
       })
     } else {
       this.input.addEventListener('input', () => {
         let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidation', {
+        this.dispatchEvent(new Event('onValidate', {
           bubbles: false, cancelable: false }), valid)
       })
     }
