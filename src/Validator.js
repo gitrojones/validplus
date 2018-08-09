@@ -34,6 +34,7 @@ const Validator = function (options, form = null) {
     messageAnchor: null,
     messagePOS: 'bottom',
     watch: false,
+    scrollAnchor: null,
     scrollTo: true
   }, options)
   this.validationInputs = [
@@ -86,8 +87,12 @@ Validator.prototype.isValid = function () {
       this.element.classList.add(this.options.errorClass)
     }
     if (this.options.scrollTo === true) {
-      const firstElement = this._fieldsets.filter(f => f._isValid === false)[0]
-      firstElement.element.scrollIntoView()
+      if (this.options.scrollAnchor instanceof Element) {
+        this.options.scrollAnchor.scrollIntoView()
+      } else {
+        const firstElement = this._fieldsets.filter(f => f._isValid === false)[0]
+        firstElement.element.scrollIntoView()
+      }
     }
 
     if (typeof this._onValidation.isInvalid.cb === 'function') {

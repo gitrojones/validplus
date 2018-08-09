@@ -63,15 +63,15 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 }
 
 VPField.prototype.getInput = function () {
-  console.log('[VPField] Querying inputs')
+  debug('[VPField] Querying inputs')
 
   let input = this.element.getElementsByTagName('input')
   let select = this.element.getElementsByTagName('select')
   let textarea = this.element.getElementsByTagName('textarea')
 
-  if (input.length > 0) console.log('[VPField] Found input', input)
-  if (select.length > 0) console.log('[VPField] Found select', select)
-  if (textarea.length > 0) console.log('[VPField] Found textarea', textarea)
+  if (input.length > 0) debug('[VPField] Found input', input)
+  if (select.length > 0) debug('[VPField] Found select', select)
+  if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
 
   this.input = [].concat(
     Array.from(input),
