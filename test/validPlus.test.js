@@ -204,8 +204,8 @@ describe('ValidPlus', function () {
     })
 
     describe('Fields Properties', function () {
-      it('Should append Message.')
     })
 
+    it('Should call supplied callbacks')
   })
 })

@@ -2,12 +2,13 @@ import debug from './lib/debug'
 import mergeDeep from './lib/mergeDeep'
 import generateElement from './lib/generateElement'
 
-const VPField = function (element, options, onValidate = {}) {
+const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
   this.element = element
   this.options = Object.assign({
     showFieldErrors: false
   }, options)
+
   this._onValidation = mergeDeep({
     isValid: {
       message: null,
@@ -18,6 +19,7 @@ const VPField = function (element, options, onValidate = {}) {
       cb: null
     }
   }, onValidate)
+  this._customRules = customRules
 
   this._messageNode = null
   this._messages = []
@@ -53,8 +55,6 @@ VPField.prototype.parseInput = function () {
   return {
     value: this.input.value,
     checked: this.input.checked,
-    message: (attr.getNamedItem('data-error-message') || {}).value,
-    action: (attr.getNamedItem('data-callback') || {}).value,
     type: (attr.getNamedItem('type') || {}).value,
     name: (attr.getNamedItem('name') || {}).value,
     rules: {
@@ -69,6 +69,7 @@ VPField.prototype.parseInput = function () {
 }
 
 VPField.prototype.isValid = function () {
+  let attributes = this.parseInput()
   const {
     value,
     checked,
@@ -77,9 +78,21 @@ VPField.prototype.isValid = function () {
     type,
     name,
     rules
-  } = this.parseInput()
+  } = attributes
 
   let errors = []
+  if (typeof this._customRules === 'function') {
+    errors.push(this._customRules(attributes, this.element, this.input))
+  } else if (Array.isArray(this._customRules)) {
+    errors = errors.concat(this._customRules.map(rule => {
+      if (typeof rule === 'function') {
+        return rule(attributes, this.element, this.input)
+      }
+
+      return true
+    }))
+  }
+
   if (rules.min) {
     errors.push(+value >= +rules.min
                ? true
@@ -123,6 +136,10 @@ VPField.prototype.isValid = function () {
   }
 
   const isValid = errors.every(err => err === true)
+  if (typeof pre === 'string') {
+    this.appendMessage(pre, '-isInfo')
+  }
+
   if (isValid) {
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
