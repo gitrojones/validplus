@@ -1,6 +1,7 @@
-import debug from './lib/debug'
+import debug from './util/debug'
+import mergeDeep from './util/mergeDeep'
+
 import events from './lib/events'
-import mergeDeep from './lib/mergeDeep'
 import messaging from './lib/messaging'
 
 const VPField = function (element, options, customRules, onValidate = {}) {
@@ -8,6 +9,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.element = element
   this.listeners = {}
   this.options = Object.assign({
+    messagePOS: 'bottom',
     showFieldErrors: false,
     watch: true
   }, options)

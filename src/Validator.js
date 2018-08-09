@@ -1,9 +1,10 @@
 import VPFieldset from './Fieldset'
 
-import debug from './lib/debug'
+import debug from './util/debug'
+import mergeDeep from './util/mergeDeep'
+
 import events from './lib/events'
 import messaging from './lib/messaging'
-import mergeDeep from './lib/mergeDeep'
 
 const Validator = function (options, form = null) {
   if (form === null) {
@@ -26,6 +27,8 @@ const Validator = function (options, form = null) {
 
   this.listeners = {}
   this.options = mergeDeep({
+    fieldsetClass: 'VPFieldset',
+    messagePOS: 'bottom',
     watch: false
   }, options)
   this.validationInputs = [

@@ -1,8 +1,9 @@
 import VPField from './Field'
 
-import debug from './lib/debug'
+import debug from './util/debug'
+import mergeDeep from './util/mergeDeep'
+
 import events from './lib/events'
-import mergeDeep from './lib/mergeDeep'
 import messaging from './lib/messaging'
 
 // Options include
@@ -25,6 +26,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   this.listeners = {}
   this.options = Object.assign({
     fieldClass: 'VPField',
+    messagePOS: 'bottom',
     watch: true
   }, options)
 
