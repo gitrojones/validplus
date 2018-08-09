@@ -9,6 +9,8 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.element = element
   this.listeners = {}
   this.options = Object.assign({
+    errorClass: '-isError',
+    messageAnchor: null,
     messagePOS: 'bottom',
     showFieldErrors: false,
     watch: true
@@ -165,6 +167,8 @@ VPField.prototype.isValid = function () {
   }
 
   if (isValid) {
+    this.element.classList.remove(this.options.errorClass)
+
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
@@ -172,6 +176,8 @@ VPField.prototype.isValid = function () {
       this.appendMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
+    this.element.classList.add(this.options.errorClass)
+
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()
     }

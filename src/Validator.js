@@ -28,6 +28,8 @@ const Validator = function (options, form = null) {
   this.listeners = {}
   this.options = mergeDeep({
     fieldsetClass: 'VPFieldset',
+    errorClass: '-isError',
+    messageAnchor: null,
     messagePOS: 'bottom',
     watch: false
   }, options)
@@ -65,6 +67,8 @@ Validator.prototype.isValid = function () {
   const isValid = this._fieldsets.every(fieldset => fieldset.isValid())
 
   if (isValid) {
+    this.element.classList.remove(this.options.errorClass)
+
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
@@ -72,6 +76,8 @@ Validator.prototype.isValid = function () {
       this.appendMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
+    this.element.classList.add(this.options.errorClass)
+
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()
     }

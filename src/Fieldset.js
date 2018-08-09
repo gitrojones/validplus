@@ -26,6 +26,8 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   this.listeners = {}
   this.options = Object.assign({
     fieldClass: 'VPField',
+    errorClass: '-isError',
+    messageAnchor: null,
     messagePOS: 'bottom',
     watch: true
   }, options)
@@ -56,6 +58,8 @@ VPFieldset.prototype.isValid = function () {
   this.clearMessages()
   const isValid = this.strategy(fieldSetStatus)
   if (isValid) {
+    this.element.classList.remove(this.options.errorClass)
+
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
@@ -63,6 +67,8 @@ VPFieldset.prototype.isValid = function () {
       this.appendMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
+    this.element.classList.add(this.options.errorClass)
+
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()
     }
