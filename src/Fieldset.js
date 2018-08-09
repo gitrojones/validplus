@@ -43,6 +43,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
     }
   }, onValidate)
   this._fields = []
+  this._isValid = null
 
   this._messageNode = null
   this._messages = []
@@ -50,21 +51,21 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
 
 VPFieldset.prototype.isValid = function () {
   const fieldSetStatus = this._fields.reduce((status, field, index) => {
-    console.log('[VPFieldset] Validating field', index)
+    debug('[VPFieldset] Validating field', index)
     status.push(field.isValid())
     return status
   }, [])
 
   this.clearMessages()
-  const isValid = this.strategy(fieldSetStatus)
-  if (isValid) {
+  this._isValid = this.strategy(fieldSetStatus)
+  if (this._isValid) {
     this.element.classList.remove(this.options.errorClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.appendMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
     this.element.classList.add(this.options.errorClass)
@@ -73,11 +74,11 @@ VPFieldset.prototype.isValid = function () {
       this._onValidation.isInvalid.cb()
     }
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.appendMessage(this._onValidation.isInvalid.message, '-isError')
+      this.addMessage(this._onValidation.isInvalid.message, '-isError')
     }
   }
 
-  return isValid
+  return this._isValid
 }
 
 VPFieldset.prototype.removeField = function (field) {
@@ -100,10 +101,13 @@ VPFieldset.prototype.watchField = function (field) {
   // if internal state changes. Currently wasteful
   field.addEventListener('onValidate', (e, isValid) => {
     const valid = this.isValid()
+    const emit = this._isValid !== null
 
-    this.dispatchEvent(new Event('onValidate', {
+    if (emit) {
+      this.dispatchEvent(new Event('onValidate', {
         bubbles: false, cancelable: false
-    }), valid)
+      }), valid)
+    }
   })
 }
 
@@ -151,6 +155,6 @@ VPFieldset.prototype.dispatchEvent = events.dispatchEvent
 // DOM Messaging
 VPFieldset.prototype.clearMessages = messaging.clearMessages
 VPFieldset.prototype.removeMessage = messaging.removeMessage
-VPFieldset.prototype.appendMessage = messaging.appendMessage('VPMessage')
+VPFieldset.prototype.addMessage = messaging.addMessage('VPMessage')
 
 export default VPFieldset

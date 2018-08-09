@@ -16,7 +16,6 @@ const removeEventListener = function (type, callback) {
   }
 }
 const dispatchEvent = function (event, data) {
-  console.log('Called', event, data)
   if (!(event.type in this.listeners)) return true
 
   let stack = this.listeners[event.type].slice()

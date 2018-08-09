@@ -19,7 +19,7 @@ const removeMessage = function (message) {
 }
 
 // Externally expects element, messageNode as instance
-const appendMessage = function (base) {
+const addMessage = function (base) {
   return function (message, status) {
     let msg = generateElement(message, `${base} ${status}`)
     let messages = this._messageNode
@@ -53,5 +53,5 @@ const appendMessage = function (base) {
 export default {
   clearMessages,
   removeMessage,
-  appendMessage
+  addMessage
 }

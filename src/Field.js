@@ -30,6 +30,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
   this._messageNode = null
   this._messages = []
+  this._isValid = null
 
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
@@ -37,15 +38,25 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
       // Not guarenteed to fire w/ inputs
       this.input.addEventListener('change', () => {
+        // Avoid emiting on the first pass of validation
+        const emit = this._isValid !== null
+
         let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidate', {
-          bubbles: false, cancelable: false }), valid)
+        if (emit) {
+          this.dispatchEvent(new Event('onValidate', {
+            bubbles: false, cancelable: false }), valid)
+        }
       })
     } else {
       this.input.addEventListener('input', () => {
+        // Avoid emiting on the first pass of validation
+        const emit = this._isValid !== null
+
         let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidate', {
-          bubbles: false, cancelable: false }), valid)
+        if (emit) {
+          this.dispatchEvent(new Event('onValidate', {
+            bubbles: false, cancelable: false }), valid)
+        }
       })
     }
   }
@@ -161,19 +172,19 @@ VPField.prototype.isValid = function () {
   }
 
   this.clearMessages()
-  const isValid = errors.every(err => err === true)
+  this._isValid = errors.every(err => err === true)
   if (typeof pre === 'string') {
-    this.appendMessage(pre, '-isInfo')
+    this.addMessage(pre, '-isInfo')
   }
 
-  if (isValid) {
+  if (this._isValid) {
     this.element.classList.remove(this.options.errorClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.appendMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
     this.element.classList.add(this.options.errorClass)
@@ -184,16 +195,16 @@ VPField.prototype.isValid = function () {
 
     if (this.options.showFieldErrors) {
       errors.filter(err => typeof err === 'string').forEach(err => {
-        this.appendMessage(err, '-isError')
+        this.addMessage(err, '-isError')
       })
     }
 
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.appendMessage(this._onValidation.isInvalid.message, '-isError')
+      this.addMessage(this._onValidation.isInvalid.message, '-isError')
     }
   }
 
-  return isValid
+  return this._isValid
 }
 
 // EventTarget
@@ -205,6 +216,6 @@ VPField.prototype.dispatchEvent = events.dispatchEvent
 // DOM Messaging
 VPField.prototype.clearMessages = messaging.clearMessages
 VPField.prototype.removeMessage = messaging.removeMessage
-VPField.prototype.appendMessage = messaging.appendMessage('VPMessage')
+VPField.prototype.addMessage = messaging.addMessage('VPMessage')
 
 export default VPField

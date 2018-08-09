@@ -49,7 +49,7 @@ describe('ValidPlus', function () {
         expect(validator).to.have.property('createFieldset')
         expect(validator).to.have.property('clearMessages')
         expect(validator).to.have.property('removeMessage')
-        expect(validator).to.have.property('appendMessage')
+        expect(validator).to.have.property('addMessage')
         expect(validator).to.have.property('isValid')
       })
     })

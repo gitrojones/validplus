@@ -52,6 +52,7 @@ const Validator = function (options, form = null) {
       message: null
     }
   }, options.onValidation)
+  this._isValid = null
 
   this._messageNode = null
   this._messages = []
@@ -64,16 +65,16 @@ const Validator = function (options, form = null) {
 }
 
 Validator.prototype.isValid = function () {
-  const isValid = this._fieldsets.every(fieldset => fieldset.isValid())
+  this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
 
-  if (isValid) {
+  if (this._isValid) {
     this.element.classList.remove(this.options.errorClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.appendMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
     this.element.classList.add(this.options.errorClass)
@@ -82,11 +83,11 @@ Validator.prototype.isValid = function () {
       this._onValidation.isInvalid.cb()
     }
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.appendMessage(this._onValidation.isInvalid.message, '-isValid')
+      this.addMessage(this._onValidation.isInvalid.message, '-isValid')
     }
   }
 
-  return isValid
+  return this._isValid
 }
 
 // TODO: Child state checks
@@ -110,6 +111,7 @@ Validator.prototype.watchFieldset = function (fieldset) {
   // TODO: Optimize by tracking state and only revalidating
   // if internal state changes. Currently wasteful
   fieldset.addEventListener('onValidate', (e, isValid) => {
+    const emit = this._isValid !== null
     this.isValid()
   })
 }
@@ -158,7 +160,7 @@ Validator.prototype.dispatchEvent = events.dispatchEvent
 // DOM Messaging
 Validator.prototype.clearMessages = messaging.clearMessages
 Validator.prototype.removeMessage = messaging.removeMessage
-Validator.prototype.appendMessage = messaging.appendMessage('VPMessage')
+Validator.prototype.addMessage = messaging.addMessage('VPMessage')
 
 // TODO: Strict enforcement
 const ElementOrID = function (ElorID, form = null) {
