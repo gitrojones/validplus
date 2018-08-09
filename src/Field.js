@@ -25,7 +25,6 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
   this._messageNode = null
   this._messages = []
-  this._listeners = {}
 
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
@@ -190,7 +189,7 @@ VPField.prototype.isValid = function () {
 }
 
 // EventTarget
-VPField.prototype.listeners = null
+VPField.prototype.listeners = {}
 VPField.prototype.addEventListener = events.addEventListener
 VPField.prototype.removeEventListener = events.removeEventListener
 VPField.prototype.dispatchEvent = events.dispatchEvent

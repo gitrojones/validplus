@@ -129,7 +129,7 @@ Validator.prototype.createFieldset = function (fs, strategy, options, fields, on
 }
 
 // EventTarget
-Validator.prototype.listeners = null
+Validator.prototype.listeners = {}
 Validator.prototype.addEventListener = events.addEventListener
 Validator.prototype.removeEventListener = events.removeEventListener
 Validator.prototype.dispatchEvent = events.dispatchEvent

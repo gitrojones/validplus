@@ -123,7 +123,7 @@ VPFieldset.prototype.findFields = function () {
 
 
 // EventTarget
-VPFieldset.prototype.listeners = null
+VPFieldset.prototype.listeners = {}
 VPFieldset.prototype.addEventListener = events.addEventListener
 VPFieldset.prototype.removeEventListener = events.removeEventListener
 VPFieldset.prototype.dispatchEvent = events.dispatchEvent
