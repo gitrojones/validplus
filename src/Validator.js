@@ -24,6 +24,9 @@ const Validator = function (options, form = null) {
     this._fieldsets = [] // GetChildFieldsets
   }
 
+  this.options = mergeDeep({
+    watch: false
+  }, options)
   this.validationInputs = [
     'input', 'messagebox', 'select'
   ]
@@ -79,11 +82,15 @@ Validator.prototype.isValid = function () {
 // TODO: Child state checks
 // TODO: Add MutationObserver on children
 Validator.prototype.addFieldset = function (fieldset) {
-  if (fieldset instanceof VPFieldset) {
-    this._fieldsets.push(fieldset)
-  } else {
+  if (!(fieldset instanceof VPFieldset)) {
     throw new Error('[Validator] Fieldset must be an instanceof VPFieldset')
   }
+
+  this._fieldsets.push(fieldset)
+  if (this.options.watch === true) {
+    this.watchFieldset(_fieldset)
+  }
+
 }
 
 // TODO: method to remove watchers
@@ -125,6 +132,10 @@ Validator.prototype.createFieldset = function (fs, strategy, options, fields, on
   })
 
   this._fieldsets.push(_fieldset)
+  if (this.options.watch === true) {
+    this.watchFieldset(_fieldset)
+  }
+
   return _fieldset
 }
 

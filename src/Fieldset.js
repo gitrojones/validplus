@@ -38,7 +38,8 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   this._messages = []
 
   this.options = Object.assign({
-    fieldClass: 'VPField'
+    fieldClass: 'VPField',
+    watch: true
   }, options)
 }
 
@@ -81,14 +82,14 @@ VPFieldset.prototype.removeField = function (field) {
   }
 }
 
-VPFieldset.prototype.watchChild = function (child) {
-  if (!(child instanceof VPField)) {
-    throw new Error('Child must be an instance of VPField')
+VPFieldset.prototype.watchField = function (field) {
+  if (!(field instanceof VPField)) {
+    throw new Error('Field must be an instance of VPField')
   }
 
   // TODO: Optimize by tracking state and only revalidating
   // if internal state changes. Currently wasteful
-  child.addEventListener('onValidate', (e, isValid) => {
+  field.addEventListener('onValidate', (e, isValid) => {
     const valid = this.isValid()
 
     this.dispatchEvent(new Event('onValidation', {
@@ -102,7 +103,11 @@ VPFieldset.prototype.addField = function (field) {
     throw new Error('[VPFieldset] Field must be an instanceof VPField')
   }
   console.log('[VPFieldset] Adding field')
+
   this._fields.push(field)
+  if (this.options.watch === true) {
+    this.watchField(field)
+  }
 }
 
 // TODO: Enforce onValidate structure
@@ -111,7 +116,13 @@ VPFieldset.prototype.createField = function (el, options, customRules, onValidat
     throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
   }
 
-  this._fields.push(new VPField(el, options, customRules, onValidate))
+  const field = new VPField(el, options, customRules, onValidate)
+  this._fields.push(field)
+  if (this.options.watch === true) {
+    this.watchField(field)
+  }
+
+  return field
 }
 
 VPFieldset.prototype.findFields = function () {
