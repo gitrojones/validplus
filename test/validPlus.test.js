@@ -212,7 +212,7 @@ describe('ValidPlus', function () {
     })
 
     it('Should call supplied callbacks')
-    it('Should listen for changes on input/change by default', function () {
+    it('(FAILS JSDOM) Should listen for changes on input/change by default', function () {
       let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
           message: 'Hello, World'
@@ -220,9 +220,7 @@ describe('ValidPlus', function () {
       })
       const spyIsValid = sinon.spy(field, 'isValid')
 
-      console.log('b', testInput.value)
       testInput.value = 'Foo, Bar'
-      console.log('a', testInput.value)
       expect(spyIsValid.calledOnce).to.be.true
     })
   })

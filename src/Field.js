@@ -1,6 +1,7 @@
 import debug from './lib/debug'
+import events from './lib/events'
 import mergeDeep from './lib/mergeDeep'
-import generateElement from './lib/generateElement'
+import messaging from './lib/messaging'
 
 const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
@@ -24,15 +25,24 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
   this._messageNode = null
   this._messages = []
+  this._listeners = {}
 
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
+    let onValidation = new Event('onValidation', {
+      bubbles: false, cancelable: false
+    })
+
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
       // Not guarenteed to fire w/ inputs
-      this.input.addEventListener('change', () => this.isValid())
+      this.input.addEventListener('change', () => {
+        let valid = this.isValid()
+        this.dispatchEvent(onValidation, valid)
+      })
     } else {
       this.input.addEventListener('input', () => {
-        this.isValid()
+        let valid = this.isValid()
+        this.dispatchEvent(onValidation, valid)
       })
     }
   }
@@ -81,7 +91,7 @@ VPField.prototype.parseInput = function () {
 
 VPField.prototype.isValid = function () {
   let attributes = this.parseInput()
-  console.log('fire')
+
   const {
     value,
     checked,
@@ -179,43 +189,15 @@ VPField.prototype.isValid = function () {
   return isValid
 }
 
-VPField.prototype.clearMessages = function () {
-  if (!(this._messageNode instanceof Element)) return
+// EventTarget
+VPField.prototype.listeners = null
+VPField.prototype.addEventListener = events.addEventListener
+VPField.prototype.removeEventListener = events.removeEventListener
+VPField.prototype.dispatchEvent = events.dispatchEvent
 
-  while(this._messageNode.firstChild) {
-    this._messageNode.removeChild(this._messageNode.firstChild)
-  }
-}
-
-VPField.prototype.removeMessage = function (message) {
-  if (!(this._messageNode instanceof Element)) {
-    console.log('[VPField] MessageNode isn\'t set')
-    return
-  }
-
-  Array.from(this._messageNode.children).forEach(child => {
-    if (child.innerHTML === message) {
-      this._messageNode.removeChild(child)
-    }
-  })
-}
-
-VPField.prototype.appendMessage = function (message, status) {
-  let msg = generateElement(message, 'VPMessage ' + status)
-  let messages = this._messageNode
-
-  if (messages === null) {
-    let _messages = generateElement('', 'VPMessages')
-    _messages.appendChild(msg)
-
-    this.element.appendChild(_messages)
-    this._messageNode = _messages
-  } else {
-    if (Array.from(this._messageNode.children)
-      .every(m => m.innerHTML !== msg.innerHTML)) {
-      this._messageNode.appendChild(msg)
-    }
-  }
-}
+// DOM Messaging
+VPField.prototype.clearMessages = messaging.clearMessages
+VPField.prototype.removeMessage = messaging.removeMessage
+VPField.prototype.appendMessage = messaging.appendMessage('VPMessage')
 
 export default VPField

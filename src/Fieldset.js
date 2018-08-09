@@ -1,8 +1,9 @@
 import VPField from './Field'
 
 import debug from './lib/debug'
+import events from './lib/events'
 import mergeDeep from './lib/mergeDeep'
-import generateElement from './lib/generateElement'
+import messaging from './lib/messaging'
 
 // Options include
 // ---------------
@@ -37,12 +38,8 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   this._messages = []
 
   this.options = Object.assign({
-    showMessage: false,
-    showChildren: false,
     fieldClass: 'VPField'
   }, options)
-
-  // this.findFields()
 }
 
 VPFieldset.prototype.isValid = function () {
@@ -52,6 +49,7 @@ VPFieldset.prototype.isValid = function () {
     return status
   }, [])
 
+  this.clearMessages()
   const isValid = this.strategy(fieldSetStatus)
   if (isValid) {
     if (typeof this._onValidation.isValid.cb === 'function') {
@@ -72,41 +70,6 @@ VPFieldset.prototype.isValid = function () {
   return isValid
 }
 
-VPFieldset.prototype.clearMessages = function () {
-  this.element.removeChild(this._messageNode)
-}
-
-VPFieldset.prototype.removeMessage = function (message) {
-  if (!(this._messageNode instanceof Element)) {
-    console.log('[VPFieldset] MessageNode isn\'t set')
-    return
-  }
-
-  Array.from(this._messageNode.children).forEach(child => {
-    if (child.innerHTML === message) {
-      this._messageNode.removeChild(child)
-    }
-  })
-}
-
-VPFieldset.prototype.appendMessage = function (message, status) {
-  let msg = generateElement(message, 'VPMessage ' + status)
-  let messages = this._messageNode
-
-  if (messages === null) {
-    let _messages = generateElement('', 'VPMessages')
-    _messages.appendChild(msg)
-
-    this.element.appendChild(_messages)
-    this._messageNode = _messages
-  } else {
-    if (Array.from(this._messageNode.children)
-      .every(m => m.innerHTML !== msg.innerHTML)) {
-      this._messageNode.appendChild(msg)
-    }
-  }
-}
-
 VPFieldset.prototype.removeField = function (field) {
   if (!(field instanceof VPField)) {
     throw new Error('[VPFieldset] Field must be an instanceof VPField')
@@ -116,6 +79,22 @@ VPFieldset.prototype.removeField = function (field) {
   if (index !== -1) {
     this._fields = this._fields.splice(index, 1)
   }
+}
+
+VPFieldset.prototype.watchChild = function (child) {
+  if (!(child instanceof VPField)) {
+    throw new Error('Child must be an instance of VPField')
+  }
+
+  // TODO: Optimize by tracking state and only revalidating
+  // if internal state changes. Currently wasteful
+  child.addEventListener('onValidate', (e, isValid) => {
+    const valid = this.isValid()
+
+    this.dispatchEvent(new Event('onValidation', {
+        bubbles: false, cancelable: false
+    }), valid)
+  })
 }
 
 VPFieldset.prototype.addField = function (field) {
@@ -134,11 +113,24 @@ VPFieldset.prototype.createField = function (el, options, customRules, onValidat
 
   this._fields.push(new VPField(el, options, customRules, onValidate))
 }
+
 VPFieldset.prototype.findFields = function () {
   const vm = this
   let fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass))
   // TODO: Attribute parsing to fill in the gaps
   this._fields = fields.map(field => new VPField(field, {}))
 }
+
+
+// EventTarget
+VPFieldset.prototype.listeners = null
+VPFieldset.prototype.addEventListener = events.addEventListener
+VPFieldset.prototype.removeEventListener = events.removeEventListener
+VPFieldset.prototype.dispatchEvent = events.dispatchEvent
+
+// DOM Messaging
+VPFieldset.prototype.clearMessages = messaging.clearMessages
+VPFieldset.prototype.removeMessage = messaging.removeMessage
+VPFieldset.prototype.appendMessage = messaging.appendMessage('VPMessage')
 
 export default VPFieldset

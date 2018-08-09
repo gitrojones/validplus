@@ -1,7 +1,8 @@
 import VPFieldset from './Fieldset'
 
 import debug from './lib/debug'
-import generateElement from './lib/generateElement'
+import events from './lib/events'
+import messaging from './lib/messaging'
 import mergeDeep from './lib/mergeDeep'
 
 const Validator = function (options, form = null) {
@@ -85,6 +86,17 @@ Validator.prototype.addFieldset = function (fieldset) {
   }
 }
 
+// TODO: method to remove watchers
+Validator.prototype.watchFieldset = function (fieldset) {
+  if (!(fieldset instanceof VPFieldset)) return
+
+  // TODO: Optimize by tracking state and only revalidating
+  // if internal state changes. Currently wasteful
+  fieldset.addEventListener('onValidation', (e, isValid) => {
+    this.isValid()
+  })
+}
+
 // TODO: Remove MutationObserver on children
 Validator.prototype.removeFieldset = function (fieldset) {
   const index = this._fieldsets.indexOf(fieldset)
@@ -116,40 +128,16 @@ Validator.prototype.createFieldset = function (fs, strategy, options, fields, on
   return _fieldset
 }
 
-Validator.prototype.clearMessages = function () {
-  this._form.removeChild(this._messageNode)
-}
+// EventTarget
+Validator.prototype.listeners = null
+Validator.prototype.addEventListener = events.addEventListener
+Validator.prototype.removeEventListener = events.removeEventListener
+Validator.prototype.dispatchEvent = events.dispatchEvent
 
-Validator.prototype.removeMessage = function (message) {
-  if (!(this._messageNode instanceof Element)) {
-    console.log('[Validator] MessageNode isn\'t set')
-    return
-  }
-
-  Array.from(this._messageNode.children).forEach(child => {
-    if (child.innerHTML === message) {
-      this._messageNode.removeChild(child)
-    }
-  })
-}
-
-Validator.prototype.appendMessage = function (message, status) {
-  let msg = generateElement(message, 'VPMessage ' + status)
-  let messages = this._messageNode
-
-  if (messages === null) {
-    let _messages = generateElement('', 'VPMessages')
-    _messages.appendChild(msg)
-
-    this._form.appendChild(_messages)
-    this._messageNode = _messages
-  } else {
-    if (Array.from(this._messageNode.children)
-      .every(m => m.innerHTML !== msg.innerHTML)) {
-      this._messageNode.appendChild(msg)
-    }
-  }
-}
+// DOM Messaging
+Validator.prototype.clearMessages = messaging.clearMessages
+Validator.prototype.removeMessage = messaging.removeMessage
+Validator.prototype.appendMessage = messaging.appendMessage('VPMessage')
 
 // TODO: Strict enforcement
 const ElementOrID = function (ElorID, form = null) {
