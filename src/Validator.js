@@ -26,6 +26,8 @@ const Validator = function (options, form = null) {
   }
 
   this.listeners = {}
+  // Conform to the child interfaces for messaging
+  this.element = this._form
   this.options = mergeDeep({
     fieldsetClass: 'VPFieldset',
     errorClass: '-isError',
@@ -68,7 +70,7 @@ Validator.prototype.isValid = function () {
   this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
 
   if (this._isValid) {
-    this.element.classList.remove(this.options.errorClass)
+    this._form.classList.remove(this.options.errorClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
@@ -77,7 +79,7 @@ Validator.prototype.isValid = function () {
       this.addMessage(this._onValidation.isValid.message, '-isValid')
     }
   } else {
-    this.element.classList.add(this.options.errorClass)
+    this._form.classList.add(this.options.errorClass)
 
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()
