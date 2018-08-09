@@ -127,12 +127,12 @@ VPFieldset.prototype.addField = function (field) {
 }
 
 // TODO: Enforce onValidate structure
-VPFieldset.prototype.createField = function (el, options, onValidate) {
+VPFieldset.prototype.createField = function (el, options, customRules, onValidate) {
   if (!(el instanceof Element)) {
     throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
   }
 
-  this._fields.push(new VPField(el, options, onValidate))
+  this._fields.push(new VPField(el, options, customRules, onValidate))
 }
 VPFieldset.prototype.findFields = function () {
   const vm = this

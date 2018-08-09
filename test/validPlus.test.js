@@ -3,8 +3,11 @@ const path = require('path')
 
 const _ = require('lodash')
 const expect = require('chai').expect
+const sinon = require('sinon')
 const { JSDOM, VirtualConsole } = require('jsdom')
-const jsdom = new JSDOM()
+const jsdom = new JSDOM('', {
+  runScripts: 'dangerously'
+})
 
 const _ValidPlus = fs.readFileSync(path.resolve(__dirname, '../dist/ValidPlus.js'), 'utf-8')
 
@@ -84,7 +87,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       const fieldset = validator.createFieldset(testFieldset, 'all', {}, [
-        new ValidPlus.Field(testField, {}, {})
+        new ValidPlus.Field(testField, {}, [], {})
       ])
 
       console.log('fieldset', fieldset)
@@ -114,7 +117,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       let fieldset = new ValidPlus.Fieldset(testFieldset, () => null, { fieldClass: 'field' })
-      fieldset.createField(testField, {})
+      fieldset.createField(testField, [], {})
 
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset._fields[0]).to.be.instanceof(ValidPlus.Field)
@@ -130,7 +133,7 @@ describe('ValidPlus', function () {
       testFieldset.append(testField)
 
       let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
-      fieldset.createField(testField, {})
+      fieldset.createField(testField, [], {})
 
       expect(fieldset._fields.length).to.equal(1)
       expect(fieldset.isValid()).to.be.true
@@ -187,17 +190,19 @@ describe('ValidPlus', function () {
 
   describe('ValidPlus.Field', function () {
     let validator
+    let testFieldset
     let testField
     let testInput
 
     beforeEach(done => {
-      let testFieldset = DOM.window.document.createElement('div')
-      let testField = DOM.window.document.createElement('div')
+      testFieldset = DOM.window.document.createElement('div')
+      testField = DOM.window.document.createElement('div')
       testField.className = 'field'
       testFieldset.append(testField)
 
-      let testInput = DOM.window.document.createElement('input')
+      testInput = DOM.window.document.createElement('input')
       testInput.className = 'input'
+      testInput.value = 'Hello, World'
       testField.append(testInput)
 
       done()
@@ -207,5 +212,18 @@ describe('ValidPlus', function () {
     })
 
     it('Should call supplied callbacks')
+    it('Should listen for changes on input/change by default', function () {
+      let field = new ValidPlus.Field(testField, {}, [], {
+        isInvalid: {
+          message: 'Hello, World'
+        }
+      })
+      const spyIsValid = sinon.spy(field, 'isValid')
+
+      console.log('b', testInput.value)
+      testInput.value = 'Foo, Bar'
+      console.log('a', testInput.value)
+      expect(spyIsValid.calledOnce).to.be.true
+    })
   })
 })

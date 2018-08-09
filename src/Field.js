@@ -6,7 +6,8 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
   this.element = element
   this.options = Object.assign({
-    showFieldErrors: false
+    showFieldErrors: false,
+    watch: true
   }, options)
 
   this._onValidation = mergeDeep({
@@ -25,6 +26,16 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this._messages = []
 
   this.getInput()
+  if (this.options.watch === true && this.input instanceof Element) {
+    if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
+      // Not guarenteed to fire w/ inputs
+      this.input.addEventListener('change', () => this.isValid())
+    } else {
+      this.input.addEventListener('input', () => {
+        this.isValid()
+      })
+    }
+  }
 }
 
 VPField.prototype.getInput = function () {
@@ -70,6 +81,7 @@ VPField.prototype.parseInput = function () {
 
 VPField.prototype.isValid = function () {
   let attributes = this.parseInput()
+  console.log('fire')
   const {
     value,
     checked,
@@ -135,6 +147,7 @@ VPField.prototype.isValid = function () {
     }
   }
 
+  this.clearMessages()
   const isValid = errors.every(err => err === true)
   if (typeof pre === 'string') {
     this.appendMessage(pre, '-isInfo')
@@ -167,7 +180,11 @@ VPField.prototype.isValid = function () {
 }
 
 VPField.prototype.clearMessages = function () {
-  this.element.removeChild(this._messageNode)
+  if (!(this._messageNode instanceof Element)) return
+
+  while(this._messageNode.firstChild) {
+    this._messageNode.removeChild(this._messageNode.firstChild)
+  }
 }
 
 VPField.prototype.removeMessage = function (message) {
