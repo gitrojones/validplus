@@ -10,6 +10,10 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.listeners = {}
   this.options = Object.assign({
     errorClass: '-isError',
+    formatter: {
+      pre: null,
+      post: null
+    },
     messageAnchor: null,
     messagePOS: 'bottom',
     showFieldErrors: false,
@@ -104,8 +108,11 @@ VPField.prototype.parseInput = function () {
 }
 
 VPField.prototype.isValid = function () {
-  let attributes = this.parseInput()
+  if (typeof this.options.formatter.pre === 'function') {
+    this.options.formatter.pre(this.input)
+  }
 
+  let attributes = this.parseInput()
   const {
     value,
     checked,
@@ -142,12 +149,12 @@ VPField.prototype.isValid = function () {
   if (rules.minLength) {
     errors.push(value.length <= +rules.minLength
                ? true
-               : `${name} must be longer than ${rules.minLength} characters.`)
+               : `${name} must be ${rules.minLength} characters or more.`)
   }
   if (rules.maxLength) {
     errors.push(value.length >= +rules.maxLength
                ? true
-               : `${name} must be shorter than ${rules.maxLength} characters.`)
+               : `${name} must be ${rules.maxLength} characters or less.`)
   }
   if (rules.pattern) {
     errors.push(new RegExp(rules.pattern).test(value)
@@ -202,6 +209,10 @@ VPField.prototype.isValid = function () {
     if (typeof this._onValidation.isInvalid.message === 'string') {
       this.addMessage(this._onValidation.isInvalid.message, '-isError')
     }
+  }
+
+  if (typeof this.options.formatter.post === 'function') {
+    this.options.formatter.post(this.input)
   }
 
   return this._isValid
