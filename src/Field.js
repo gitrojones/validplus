@@ -114,12 +114,9 @@ VPField.prototype.parseInput = function () {
 
 VPField.prototype.isValid = function () {
   this.canValidate = false
-  if (typeof this.options.formatter.pre === 'function') {
-    this.options.formatter.pre(this.input)
-  }
 
   let attributes = this.parseInput()
-  const {
+  let {
     value,
     checked,
     message,
@@ -128,6 +125,10 @@ VPField.prototype.isValid = function () {
     name,
     rules
   } = attributes
+
+  if (typeof this.options.formatter.pre === 'function') {
+    value = this.options.formatter.pre(this.input)
+  }
 
   let errors = []
   if (typeof this._customRules === 'function') {
@@ -218,7 +219,7 @@ VPField.prototype.isValid = function () {
   }
 
   if (typeof this.options.formatter.post === 'function') {
-    this.options.formatter.post(this.input)
+    this.options.formatter.post(this.input, value)
   }
 
   this.canValidate = true
