@@ -20,6 +20,7 @@ const dispatchEvent = function (event, data) {
 
   let stack = this.listeners[event.type].slice()
   for (let i = 0, l = stack.length; i < l; i++) {
+    console.log('called', event.type)
     stack[i].call(this, event, data)
   }
 
