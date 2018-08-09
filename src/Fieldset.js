@@ -22,6 +22,12 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
 
   this.strategy = strategy
   this.element = element
+  this.listeners = {}
+  this.options = Object.assign({
+    fieldClass: 'VPField',
+    watch: true
+  }, options)
+
   this._onValidation = mergeDeep({
     isValid: {
       message: null,
@@ -36,11 +42,6 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
 
   this._messageNode = null
   this._messages = []
-
-  this.options = Object.assign({
-    fieldClass: 'VPField',
-    watch: true
-  }, options)
 }
 
 VPFieldset.prototype.isValid = function () {
@@ -134,7 +135,7 @@ VPFieldset.prototype.findFields = function () {
 
 
 // EventTarget
-VPFieldset.prototype.listeners = {}
+VPFieldset.prototype.listeners = null
 VPFieldset.prototype.addEventListener = events.addEventListener
 VPFieldset.prototype.removeEventListener = events.removeEventListener
 VPFieldset.prototype.dispatchEvent = events.dispatchEvent

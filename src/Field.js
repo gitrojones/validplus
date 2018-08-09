@@ -6,6 +6,7 @@ import messaging from './lib/messaging'
 const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
   this.element = element
+  this.listeners = {}
   this.options = Object.assign({
     showFieldErrors: false,
     watch: true
@@ -31,6 +32,8 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     let onValidation = new Event('onValidation', {
       bubbles: false, cancelable: false
     })
+
+    console.log('onValidation', onValidation.type)
 
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
       // Not guarenteed to fire w/ inputs
@@ -189,7 +192,7 @@ VPField.prototype.isValid = function () {
 }
 
 // EventTarget
-VPField.prototype.listeners = {}
+VPField.prototype.listeners = null
 VPField.prototype.addEventListener = events.addEventListener
 VPField.prototype.removeEventListener = events.removeEventListener
 VPField.prototype.dispatchEvent = events.dispatchEvent

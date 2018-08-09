@@ -24,6 +24,7 @@ const Validator = function (options, form = null) {
     this._fieldsets = [] // GetChildFieldsets
   }
 
+  this.listeners = {}
   this.options = mergeDeep({
     watch: false
   }, options)
@@ -140,7 +141,7 @@ Validator.prototype.createFieldset = function (fs, strategy, options, fields, on
 }
 
 // EventTarget
-Validator.prototype.listeners = {}
+Validator.prototype.listeners = null
 Validator.prototype.addEventListener = events.addEventListener
 Validator.prototype.removeEventListener = events.removeEventListener
 Validator.prototype.dispatchEvent = events.dispatchEvent
