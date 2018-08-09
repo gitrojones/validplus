@@ -29,22 +29,19 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
-    let onValidation = new Event('onValidation', {
-      bubbles: false, cancelable: false
-    })
-
-    console.log('onValidation', onValidation.type)
 
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
       // Not guarenteed to fire w/ inputs
       this.input.addEventListener('change', () => {
         let valid = this.isValid()
-        this.dispatchEvent(onValidation, valid)
+        this.dispatchEvent(new Event('onValidation', {
+          bubbles: false, cancelable: false }), valid)
       })
     } else {
       this.input.addEventListener('input', () => {
         let valid = this.isValid()
-        this.dispatchEvent(onValidation, valid)
+        this.dispatchEvent(new Event('onValidation', {
+          bubbles: false, cancelable: false }), valid)
       })
     }
   }
