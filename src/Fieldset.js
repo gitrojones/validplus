@@ -29,6 +29,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
     errorClass: '-isError',
     messageAnchor: null,
     messagePOS: 'bottom',
+    scrollTo: true,
     watch: true
   }, options)
 
@@ -69,6 +70,11 @@ VPFieldset.prototype.isValid = function () {
     }
   } else {
     this.element.classList.add(this.options.errorClass)
+    if (this.options.scrollTo === true) {
+      // Scroll to the first error
+      const firstElement = this._fields.filter(f => f._isValid === false)[0]
+      firstElement.element.scrollIntoView()
+    }
 
     if (typeof this._onValidation.isInvalid.cb === 'function') {
       this._onValidation.isInvalid.cb()
@@ -115,7 +121,7 @@ VPFieldset.prototype.addField = function (field) {
   if (!(field instanceof VPField)) {
     throw new Error('[VPFieldset] Field must be an instanceof VPField')
   }
-  console.log('[VPFieldset] Adding field')
+  debug('[VPFieldset] Adding field')
 
   this._fields.push(field)
   if (this.options.watch === true) {
