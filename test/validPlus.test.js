@@ -310,14 +310,20 @@ describe('ValidPlus', function () {
       inputEvent.initEvent('input', false, false)
 
       testInput.value = 'Foo, Bar'
+      testInput.dispatchEvent(inputEvent)
+
       expect(spyIsValid.calledOnce).to.be.true
     })
 
     it('Should fire update events on pre/post formatters', function () {
+      let inputEvent = DOM.window.document.createEvent('Event')
+      inputEvent.initEvent('input', false, false)
+
       let field = new ValidPlus.Field(testField, {
         formatter: {
           pre: (input) => {
             input.value = 'Foo Bar'
+            input.dispatchEvent(inputEvent)
           }
         }
       }, [], {
