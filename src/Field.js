@@ -76,19 +76,13 @@ const VPField = function (element, options, customRules, onValidate = {}) {
       })
     }
 
-    if (this.options.dirtyOnBlur === true) {
-      // Once
-      const toggleDirty = () => {
-        this._dirty = true
-        let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidate', {
-          bubbles: false, cancelable: false }), valid)
+    this.input.addEventListener('blur', () => {
+      this._dirty = true
 
-        this.input.removeEventListener('blur', toggleDirty)
-      }
-
-      this.input.addEventListener('blur', toggleDirty)
-    }
+      let valid = this.isValid()
+      this.dispatchEvent(new Event('onValidate', {
+        bubbles: false, cancelable: false }), valid)
+    })
   }
 }
 
