@@ -10,14 +10,15 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.listeners = {}
   this.canValidate = true
   this.options = Object.assign({
-    errorClass: '-isError',
     formatter: {
       pre: null,
       post: null
     },
+    errorClass: '-isError',
     messageAnchor: null,
     messagePOS: 'bottom',
     showFieldErrors: false,
+    dirtyOnBlur: false,
     watch: true
   }, options)
 
@@ -36,15 +37,18 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this._messageNode = null
   this._messages = []
   this._isValid = null
+  this._dirty = false
 
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
 
     if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
-      // Not guarenteed to fire w/ inputs
       this.input.addEventListener('change', () => {
-        if (this.canValidate === true) {
-          // Avoid emiting on the first pass of validation
+        if (this.options.dirtyOnBlur === false) {
+          this._dirty = true
+        }
+
+        if (this.canValidate === true && this._dirty === true) {
           const emit = this._isValid !== null
 
           let valid = this.isValid()
@@ -56,8 +60,11 @@ const VPField = function (element, options, customRules, onValidate = {}) {
       })
     } else {
       this.input.addEventListener('input', () => {
-        if (this.canValidate === true) {
-          // Avoid emiting on the first pass of validation
+        if (this.options.dirtyOnBlur === false) {
+          this._dirty = true
+        }
+
+        if (this.canValidate === true && this._dirty === true) {
           const emit = this._isValid !== null
 
           let valid = this.isValid()
@@ -67,6 +74,20 @@ const VPField = function (element, options, customRules, onValidate = {}) {
           }
         }
       })
+    }
+
+    if (this.options.dirtyOnBlur === true) {
+      // Once
+      const toggleDirty = () => {
+        this._dirty = true
+        let valid = this.isValid()
+        this.dispatchEvent(new Event('onValidate', {
+          bubbles: false, cancelable: false }), valid)
+
+        this.input.removeEventListener('blur', toggleDirty)
+      }
+
+      this.input.addEventListener('blur', toggleDirty)
     }
   }
 }

@@ -6,6 +6,7 @@ const expect = require('chai').expect
 const sinon = require('sinon')
 const { JSDOM, VirtualConsole } = require('jsdom')
 const jsdom = new JSDOM('', {
+  includeNodeLocations: true,
   runScripts: 'dangerously'
 })
 
@@ -90,7 +91,6 @@ describe('ValidPlus', function () {
         new ValidPlus.Field(testField, {}, [], {})
       ])
 
-      console.log('fieldset', fieldset)
       expect(fieldset._fields.length).to.equal(1)
     })
   })
@@ -211,17 +211,48 @@ describe('ValidPlus', function () {
     describe('Fields Properties', function () {
     })
 
-    it('Should call supplied callbacks')
-    it('(FAILS JSDOM) Should listen for changes on input/change by default', function () {
+    it('Should listen for changes on input/change by default', function () {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
           message: 'Hello, World'
         }
       })
-      const spyIsValid = sinon.spy(field, 'isValid')
+      let inputEvent = DOM.window.document.createEvent('Event')
+      inputEvent.initEvent('input', false, false)
 
       testInput.value = 'Foo, Bar'
+      testInput.dispatchEvent(inputEvent)
+
       expect(spyIsValid.calledOnce).to.be.true
+    })
+
+    it('Should only validate onBlur w/ dirtyOnBlur', function () {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
+      let field = new ValidPlus.Field(testField, {
+        dirtyOnBlur: true
+      }, [], {
+        isInvalid: {
+          message: 'Hello, World'
+        }
+      })
+
+      let inputEvent = DOM.window.document.createEvent('Event')
+      let blurEvent = DOM.window.document.createEvent('Event')
+      inputEvent.initEvent('input', false, false)
+      blurEvent.initEvent('blur', false, false)
+
+      const string = 'FooBar'
+      for(let i = 0, l = string.length; i < l; i++) {
+        testInput.value = testInput.value + string[i]
+        testInput.dispatchEvent(inputEvent)
+      }
+      expect(field._dirty).to.be.false
+      expect(spyIsValid.calledOnce).to.be.false
+
+      testInput.dispatchEvent(blurEvent)
+      expect(spyIsValid.calledOnce).to.be.true
+      expect(field._dirty).to.be.true
     })
   })
 })

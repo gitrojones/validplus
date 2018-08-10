@@ -27,10 +27,6 @@ builder.run((err, stats) => {
   console.log('Output Successful!')
 
   if (process.env.TEST === 'true') {
-    let colors = require('mocha/lib/reporters/base').colors
-    colors['diff added'] = 32
-    colors['diff removed'] = 31
-
     const tests = path.resolve('./test')
     let mocha = new Mocha();
 
