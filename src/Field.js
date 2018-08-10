@@ -19,6 +19,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     messagePOS: 'bottom',
     showFieldErrors: false,
     dirtyOnBlur: false,
+    validateOnBlur: true,
     watch: true
   }, options)
 
@@ -79,9 +80,11 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     this.input.addEventListener('blur', () => {
       this._dirty = true
 
-      let valid = this.isValid()
-      this.dispatchEvent(new Event('onValidate', {
-        bubbles: false, cancelable: false }), valid)
+      if (this.options.validateOnBlur) {
+        let valid = this.isValid()
+        this.dispatchEvent(new Event('onValidate', {
+          bubbles: false, cancelable: false }), valid)
+      }
     })
   }
 }
