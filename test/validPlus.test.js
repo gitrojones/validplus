@@ -211,6 +211,94 @@ describe('ValidPlus', function () {
     describe('Fields Properties', function () {
     })
 
+    describe('Fields Default Validation Types', function () {
+      it('Should validate required', function () {
+        testInput.setAttribute('required', true)
+        testInput.value = null
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 'hello'
+        expect(field.isValid()).to.be.true
+      })
+
+      it('Should validate min', function () {
+        testInput.setAttribute('min', 5)
+        testInput.value = 3
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 6
+        expect(field.isValid()).to.be.true
+      })
+      it('Should validate max', function () {
+        testInput.setAttribute('max', 5)
+        testInput.value = 3
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = 6
+        expect(field.isValid()).to.be.false
+      })
+      it('Should validate maxLength', function () {
+        testInput.setAttribute('maxlength', 5)
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = ''
+        expect(field.isValid()).to.be.true
+        testInput.value = 'hello world'
+        expect(field.isValid()).to.be.false
+      })
+      it('Should validate minLength', function () {
+        testInput.setAttribute('minlength', 5)
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = ''
+        expect(field.isValid()).to.be.false
+        testInput.value = 'hello world'
+        expect(field.isValid()).to.be.true
+      })
+      it('Should validate pattern', function () {
+        testInput.setAttribute('pattern', '[0-9]{5}')
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 1245
+        expect(field.isValid()).to.be.false
+        testInput.value = '12345'
+        expect(field.isValid()).to.be.true
+      })
+    })
+
     it('Should listen for changes on input/change by default', function () {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       let field = new ValidPlus.Field(testField, {}, [], {
@@ -222,9 +310,27 @@ describe('ValidPlus', function () {
       inputEvent.initEvent('input', false, false)
 
       testInput.value = 'Foo, Bar'
-      testInput.dispatchEvent(inputEvent)
-
       expect(spyIsValid.calledOnce).to.be.true
+    })
+
+    it('Should fire update events on pre/post formatters', function () {
+      let field = new ValidPlus.Field(testField, {
+        formatter: {
+          pre: (input) => {
+            input.value = 'Foo Bar'
+          }
+        }
+      }, [], {
+        isInvalid: {
+          message: 'Hello, World'
+        }
+      })
+
+      let inputSpy = sinon.spy(field.input, 'dispatchEvent')
+
+      field.isValid()
+      expect(testInput.value).to.equal('Foo Bar')
+      expect(inputSpy.called).to.be.true
     })
 
     it('Should only validate onBlur w/ dirtyOnBlur', function () {
@@ -253,6 +359,32 @@ describe('ValidPlus', function () {
       testInput.dispatchEvent(blurEvent)
       expect(spyIsValid.calledOnce).to.be.true
       expect(field._dirty).to.be.true
+    })
+
+    it('Should validate input based on pattern attribute', function () {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
+      testInput.setAttribute('pattern', '[0-9]{5}')
+
+      let field = new ValidPlus.Field(testField, { }, [], {
+        isInvalid: {
+          message: 'Hello, World'
+        }
+      })
+
+      let inputEvent = DOM.window.document.createEvent('Event')
+      inputEvent.initEvent('input', false, false)
+
+      testInput.value = 'notanumber'
+      testInput.dispatchEvent(inputEvent)
+      expect(field._isValid).to.be.false
+
+      testInput.value = '09101'
+      testInput.dispatchEvent(inputEvent)
+      expect(field._isValid).to.be.true
+
+      testInput.value = '00'
+      testInput.dispatchEvent(inputEvent)
+      expect(field._isValid).to.be.false
     })
   })
 })

@@ -92,6 +92,29 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   }
 }
 
+VPField.prototype.parseInput = function () {
+  if (!(this.input instanceof Element)) {
+    throw new Error('[VPField] Input must be an instance of Element')
+  }
+
+  let attr = this.input.attributes
+
+  return {
+    value: this.input.value,
+    checked: this.input.checked,
+    type: this.input.getAttribute('type'),
+    name: this.input.getAttribute('data-name') || this.input.getAttribute('name'),
+    rules: {
+      min: this.input.getAttribute('min'),
+      minLength: this.input.getAttribute('minlength'),
+      max: this.input.getAttribute('max'),
+      maxLength: this.input.getAttribute('maxlength'),
+      pattern: this.input.getAttribute('pattern'),
+      required: this.input.getAttribute('required') || false
+    }
+  }
+}
+
 VPField.prototype.getInput = function () {
   debug('[VPField] Querying inputs')
 
@@ -108,33 +131,33 @@ VPField.prototype.getInput = function () {
     Array.from(select),
     Array.from(textarea)
   )[0]
-}
 
-VPField.prototype.parseInput = function () {
-  if (!(this.input instanceof Element)) {
-    throw new Error('[VPField] Input must be an instance of Element')
-  }
+  if (this.input instanceof Element) {
+    this.input.setAttribute('value', this.input.value)
+    Object.defineProperty(this.input, 'value', {
+      enumerable: true,
+      configurable: true,
+      get: function () {
+        return this.getAttribute('value')
+      },
+      set: function (val) {
+        this.setAttribute('value', val)
 
-  let attr = this.input.attributes
-
-  return {
-    value: this.input.value,
-    checked: this.input.checked,
-    type: (attr.getNamedItem('type') || {}).value,
-    name: (attr.getNamedItem('name') || {}).value,
-    rules: {
-      min: (attr.getNamedItem('min') || {}).value,
-      minLength: (attr.getNamedItem('minlength') || {}).value,
-      max: (attr.getNamedItem('max') || {}).value,
-      maxLength: (attr.getNamedItem('maxlength') || {}).value,
-      pattern: (attr.getNamedItem('pattern') || {}).value,
-      required: (attr.getNamedItem('required') || {}).specified || false
-    }
+        if (this.tagName.toLowerCase() === 'input' && ['radio', 'checkbox'].includes(this.getAttribute('type'))) {
+          this.dispatchEvent(new Event('change'))
+        } else {
+          this.dispatchEvent(new Event('input'))
+        }
+      }
+    })
   }
 }
 
 VPField.prototype.isValid = function () {
   this.canValidate = false
+  if (typeof this.options.formatter.pre === 'function') {
+    this.options.formatter.pre(this.input)
+  }
 
   let attributes = this.parseInput()
   let {
@@ -146,10 +169,6 @@ VPField.prototype.isValid = function () {
     name,
     rules
   } = attributes
-
-  if (typeof this.options.formatter.pre === 'function') {
-    value = this.options.formatter.pre(this.input)
-  }
 
   let errors = []
   if (typeof this._customRules === 'function') {
@@ -175,12 +194,12 @@ VPField.prototype.isValid = function () {
                : `${name} must be less than ${rules.max}.`)
   }
   if (rules.minLength) {
-    errors.push(value.length <= +rules.minLength
+    errors.push(value.length >= +rules.minLength
                ? true
                : `${name} must be ${rules.minLength} characters or more.`)
   }
   if (rules.maxLength) {
-    errors.push(value.length >= +rules.maxLength
+    errors.push(value.length <= +rules.maxLength
                ? true
                : `${name} must be ${rules.maxLength} characters or less.`)
   }
