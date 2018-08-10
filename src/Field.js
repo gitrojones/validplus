@@ -133,15 +133,15 @@ VPField.prototype.getInput = function () {
   )[0]
 
   if (this.input instanceof Element) {
-    this.input.setAttribute('value', this.input.value)
+    this.input.setAttribute('__value', this.input.value)
     Object.defineProperty(this.input, 'value', {
-      enumerable: true,
       configurable: true,
+      enumerable: true,
       get: function () {
-        return this.getAttribute('value')
+        return this.getAttribute('__value')
       },
       set: function (val) {
-        this.setAttribute('value', val)
+        this.setAttribute('__value', val)
 
         if (this.tagName.toLowerCase() === 'input' && ['radio', 'checkbox'].includes(this.getAttribute('type'))) {
           this.dispatchEvent(new Event('change'))
