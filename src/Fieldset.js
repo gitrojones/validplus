@@ -31,7 +31,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
     messagePOS: 'bottom',
     scrollAnchor: null,
     scrollTo: true,
-    watch: false
+    watch: true
   }, options)
 
   this._onValidation = mergeDeep({
