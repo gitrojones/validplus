@@ -299,6 +299,131 @@ describe('ValidPlus', function () {
       })
     })
 
+    describe('Validate programmically', function () {
+      it('Should validate required', function () {
+        testInput.value = null
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            required: true
+          },
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 'hello'
+        expect(field.isValid()).to.be.true
+      })
+
+      it('Should validate min', function () {
+        testInput.value = 3
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            min: 5
+          },
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 6
+        expect(field.isValid()).to.be.true
+      })
+      it('Should validate max', function () {
+        testInput.value = 3
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            max: 5
+          }
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = 6
+        expect(field.isValid()).to.be.false
+      })
+      it('Should validate maxLength', function () {
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            maxLength: 5
+          }
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = ''
+        expect(field.isValid()).to.be.true
+        testInput.value = 'hello world'
+        expect(field.isValid()).to.be.false
+      })
+      it('Should validate minLength', function () {
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            minLength: 5
+          }
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.true
+        testInput.value = ''
+        expect(field.isValid()).to.be.false
+        testInput.value = 'hello world'
+        expect(field.isValid()).to.be.true
+      })
+      it('Should validate pattern', function () {
+        testInput.value = 'hello'
+        let field = new ValidPlus.Field(testField, {
+          rules: {
+            pattern: /[0-9]{5}/
+          }
+        }, [], {
+          isInvalid: {
+            message: 'Hello, World'
+          }
+        })
+
+        expect(field.isValid()).to.be.false
+        testInput.value = 1245
+        expect(field.isValid()).to.be.false
+        testInput.value = '12345'
+        expect(field.isValid()).to.be.true
+      })
+    })
+
+
+    it('Should validate rules over attribute if force is set', function () {
+      testInput.setAttribute('maxlength', 3)
+      testInput.value = 'hello'
+      let field = new ValidPlus.Field(testField, {
+        rules: {
+          maxLength: 5
+        }
+      }, [], {
+        isInvalid: {
+          message: 'Hello, World'
+        }
+      })
+
+      expect(field.isValid()).to.be.false
+      field.options.forceRules = true
+      expect(field.isValid()).to.be.true
+    })
+
     it('Should listen for changes on input/change by default', function () {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       let field = new ValidPlus.Field(testField, {}, [], {

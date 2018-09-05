@@ -4,12 +4,37 @@ import mergeDeep from './util/mergeDeep'
 import events from './lib/events'
 import messaging from './lib/messaging'
 
+const filterNullObj = (obj) => {
+  return Object.keys(obj).reduce((newObj, key) => {
+    const value = obj[key]
+
+    if (value !== null &&
+      typeof value !== 'undefined') {
+      newObj[key] = value
+    }
+
+    return newObj
+  }, {})
+}
+const isValidRule = (rule) => {
+  return typeof rule !== 'undefined' && rule !== null
+}
+
 const VPField = function (element, options, customRules, onValidate = {}) {
   this.input = null
   this.element = element
   this.listeners = {}
   this.canValidate = true
   this.options = Object.assign({
+    forceRules: false,
+    rules: {
+      required: null,
+      min: null,
+      max: null,
+      minLength: null,
+      maxLength: null,
+      pattern: null
+    },
     formatter: {
       pre: null,
       post: null
@@ -94,21 +119,25 @@ VPField.prototype.parseInput = function () {
     throw new Error('[VPField] Input must be an instance of Element')
   }
 
-  let attr = this.input.attributes
+  const inputRules = filterNullObj({
+    min: this.input.getAttribute('min'),
+    minLength: this.input.getAttribute('minlength'),
+    max: this.input.getAttribute('max'),
+    maxLength: this.input.getAttribute('maxlength'),
+    pattern: this.input.getAttribute('pattern'),
+    required: this.input.getAttribute('required')
+  })
+
+  const rules = this.options.forceRules
+    ? Object.assign({}, inputRules, this.options.rules)
+    : Object.assign({}, this.options.rules, inputRules)
 
   return {
     value: this.input.value,
     checked: this.input.checked,
     type: this.input.getAttribute('type'),
-    name: this.input.getAttribute('data-name') || this.input.getAttribute('name'),
-    rules: {
-      min: this.input.getAttribute('min'),
-      minLength: this.input.getAttribute('minlength'),
-      max: this.input.getAttribute('max'),
-      maxLength: this.input.getAttribute('maxlength'),
-      pattern: this.input.getAttribute('pattern'),
-      required: this.input.getAttribute('required') || false
-    }
+    name: this.input.getAttribute('data-name') || this.input.getAttribute('name') || this.input.tagName,
+    rules
   }
 }
 
@@ -130,25 +159,25 @@ VPField.prototype.getInput = function () {
   )[0]
 
   // if (this.input instanceof Element) {
-    // TODO: Clobber w/ VueJS, figure out how to support
-    // this.input.setAttribute('__value', this.input.value)
+  // TODO: Clobber w/ VueJS, figure out how to support
+  // this.input.setAttribute('__value', this.input.value)
 
-    // Object.defineProperty(this.input, 'value', {
-    //   configurable: true,
-    //   enumerable: true,
-    //   get: function () {
-    //     return this.getAttribute('__value')
-    //   },
-    //   set: function (val) {
-    //     this.setAttribute('__value', val)
+  // Object.defineProperty(this.input, 'value', {
+  //   configurable: true,
+  //   enumerable: true,
+  //   get: function () {
+  //     return this.getAttribute('__value')
+  //   },
+  //   set: function (val) {
+  //     this.setAttribute('__value', val)
 
-    //     if (this.tagName.toLowerCase() === 'input' && ['radio', 'checkbox'].includes(this.getAttribute('type'))) {
-    //       this.dispatchEvent(new Event('change'))
-    //     } else {
-    //       this.dispatchEvent(new Event('input'))
-    //     }
-    //   }
-    // })
+  //     if (this.tagName.toLowerCase() === 'input' && ['radio', 'checkbox'].includes(this.getAttribute('type'))) {
+  //       this.dispatchEvent(new Event('change'))
+  //     } else {
+  //       this.dispatchEvent(new Event('input'))
+  //     }
+  //   }
+  // })
   // }
 }
 
@@ -182,35 +211,37 @@ VPField.prototype.isValid = function () {
     }))
   }
 
-  if (rules.min) {
+  if (isValidRule(rules.min)) {
     errors.push(+value >= +rules.min
-               ? true
-               : `${name} must be more than ${rules.min}.`)
+      ? true
+      : `${name} must be more than ${rules.min}.`)
   }
-  if (rules.max) {
+  if (isValidRule(rules.max)) {
     errors.push(+value <= +rules.max
-               ? true
-               : `${name} must be less than ${rules.max}.`)
+      ? true
+      : `${name} must be less than ${rules.max}.`)
   }
-  if (rules.minLength) {
+  if (isValidRule(rules.minLength)) {
     errors.push(value.length >= +rules.minLength
-               ? true
-               : `${name} must be ${rules.minLength} characters or more.`)
+      ? true
+      : `${name} must be ${rules.minLength} characters or more.`)
   }
-  if (rules.maxLength) {
+  if (isValidRule(rules.maxLength)) {
     errors.push(value.length <= +rules.maxLength
-               ? true
-               : `${name} must be ${rules.maxLength} characters or less.`)
+      ? true
+      : `${name} must be ${rules.maxLength} characters or less.`)
   }
-  if (rules.pattern) {
-    errors.push(new RegExp(rules.pattern).test(value)
-               ? true
-               : `${name} is incorrectly formatted.`)
+  if (isValidRule(rules.pattern)) {
+    errors.push((rules.pattern instanceof RegExp 
+      ? rules.pattern.test(value)
+      : new RegExp(rules.pattern).test(value))
+      ? true
+      : `${name} is incorrectly formatted.`)
   }
 
   switch (type) {
   case 'checkbox':
-    if (rules.required) {
+    if (isValidRule(rules.required) && rules.required) {
       errors.push(checked ? true : `${name} is required.`)
     }
     break
@@ -219,15 +250,16 @@ VPField.prototype.isValid = function () {
     errors.push(checked)
     break
   default:
-    if (rules.required) {
+    if (isValidRule(rules.required) && rules.required) {
       errors.push(value.length > 0 ? true : `${name} is required.`)
     }
   }
 
   this.clearMessages()
   this._isValid = errors.every(err => err === true)
-  if (typeof pre === 'string') {
-    this.addMessage(pre, '-isInfo')
+
+  if (typeof this.options.formatter.pre === 'string') {
+    this.addMessage(this.options.formatter.pre, '-isInfo')
   }
 
   if (this._isValid) {

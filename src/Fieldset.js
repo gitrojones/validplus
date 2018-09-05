@@ -15,7 +15,7 @@ import messaging from './lib/messaging'
 
 const VPFieldset = function (element, strategy, options, onValidate = {}) {
   if (!(element instanceof Element)) {
-    throw new Error(`[VPFieldset] Valid Element is required.`)
+    throw new Error('[VPFieldset] Valid Element is required.')
   }
   if (typeof strategy !== 'function') {
     throw new Error('[VPFieldset] Validation strategy passed is invalid.')
@@ -77,7 +77,10 @@ VPFieldset.prototype.isValid = function () {
       } else {
         // Scroll to the first error
         const firstElement = this._fields.filter(f => f._isValid === false)[0]
-        firstElement.element.scrollIntoView()
+        if (firstElement.element instanceof Element && 
+          typeof firstElement.element.scrollIntoView === 'function') {
+          firstElement.element.scrollIntoView()
+        }
       }
     }
 
