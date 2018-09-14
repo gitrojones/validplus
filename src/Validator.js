@@ -98,11 +98,18 @@ Validator.prototype.isValid = function () {
       this.element.classList.add(this.options.errorClass)
     }
     if (this.options.scrollTo === true) {
+      let scrollElement
       if (this.options.scrollAnchor instanceof Element) {
-        this.options.scrollAnchor.scrollIntoView()
+        scrollElement = this.options.scrollAnchor
       } else {
         const firstElement = this._fieldsets.filter(f => f._isValid === false)[0]
-        firstElement.element.scrollIntoView()
+        scrollElement = firstElement.element
+      }
+
+      if (typeof scrollElement.scrollIntoView === 'function') {
+        scrollElement.scrollIntoView()
+      } else {
+        debug('[VP] Element Scrolling failed.')
       }
     }
 

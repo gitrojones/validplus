@@ -93,6 +93,79 @@ describe('ValidPlus', function () {
 
       expect(fieldset._fields.length).to.equal(1)
     })
+
+
+    it('Validator should lazy evaluate fieldset validness byDefault', function () {
+      let validator = new ValidPlus.Validator({}, testForm)
+      let testFieldset = DOM.window.document.createElement('div')
+      let testFieldsetTwo = DOM.window.document.createElement('div')
+      testFieldset.className = 'fieldset'
+      testFieldsetTwo.className = 'fieldsetTwo'
+
+      let testField = DOM.window.document.createElement('div')
+      let testFieldTwo = DOM.window.document.createElement('div')
+      testField.className = 'VPField'
+      testFieldTwo.className = 'VPField'
+
+      let testInput = DOM.window.document.createElement('input')
+      let testInputTwo = DOM.window.document.createElement('input')
+      testInput.setAttribute('required', true)
+      testInputTwo.setAttribute('required', true)
+
+      testField.append(testInput)
+      testFieldTwo.append(testInputTwo)
+
+      testFieldset.append(testField)
+      testFieldsetTwo.append(testFieldTwo)
+
+      const fieldset = validator.createFieldset(testFieldset, 'all', { }, [
+        new ValidPlus.Field(testField, { }, [], {}),
+      ])
+      const fieldsetTwo = validator.createFieldset(testFieldsetTwo, 'all', { }, [
+        new ValidPlus.Field(testFieldTwo, { }, [], {}),
+      ])
+
+      expect(validator.isValid()).to.be.false
+      expect(fieldset._isValid).to.be.false
+      expect(fieldsetTwo._isValid).to.equal(null)
+    })
+
+    it('Validator should evaluate all fieldsets with lazy off', function () {
+      let validator = new ValidPlus.Validator({
+        lazy: false
+      }, testForm)
+      let testFieldset = DOM.window.document.createElement('div')
+      let testFieldsetTwo = DOM.window.document.createElement('div')
+      testFieldset.className = 'fieldset'
+      testFieldsetTwo.className = 'fieldsetTwo'
+
+      let testField = DOM.window.document.createElement('div')
+      let testFieldTwo = DOM.window.document.createElement('div')
+      testField.className = 'VPField'
+      testFieldTwo.className = 'VPField'
+
+      let testInput = DOM.window.document.createElement('input')
+      let testInputTwo = DOM.window.document.createElement('input')
+      testInput.setAttribute('required', true)
+      testInputTwo.setAttribute('required', true)
+
+      testField.append(testInput)
+      testFieldTwo.append(testInputTwo)
+
+      testFieldset.append(testField)
+      testFieldsetTwo.append(testFieldTwo)
+
+      const fieldset = validator.createFieldset(testFieldset, 'all', { }, [
+        new ValidPlus.Field(testField, { }, [], {}),
+      ])
+      const fieldsetTwo = validator.createFieldset(testFieldsetTwo, 'all', { }, [
+        new ValidPlus.Field(testFieldTwo, { }, [], {}),
+      ])
+
+      expect(validator.isValid()).to.be.false
+      expect(fieldset._isValid).to.be.false
+      expect(fieldsetTwo._isValid).to.be.false
+    })
   })
 
   describe('ValidPlus.Fieldset', function () {
