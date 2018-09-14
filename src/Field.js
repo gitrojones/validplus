@@ -68,7 +68,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
   this.getInput()
   if (this.options.watch === true && this.input instanceof Element) {
 
-    if (['radio', 'checkbox'].includes(this.input.attributes.getNamedItem('type'))) {
+    if (['radio', 'checkbox'].includes(this.input.getAttribute('type'))) {
       this.input.addEventListener('change', () => {
         if (this.options.dirtyOnBlur === false) {
           this._dirty = true
