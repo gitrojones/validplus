@@ -33,6 +33,7 @@ const Validator = function (options, form = null) {
     errorClass: '-isError',
     messageAnchor: null,
     messagePOS: 'bottom',
+    lazy: true,
     watch: false,
     scrollAnchor: null,
     scrollTo: true
@@ -69,7 +70,17 @@ const Validator = function (options, form = null) {
 }
 
 Validator.prototype.isValid = function () {
-  this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
+  if (this.options.lazy) {
+    this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
+  } else {
+    this._isValid = this._fieldsets.reduce((isValid, fieldset) => {
+      if (!fieldset.isValid()) {
+        isValid = false
+      }
+
+      return isValid
+    }, true)
+  }
 
   if (this._isValid) {
     if (this.element instanceof Element) {
