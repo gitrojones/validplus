@@ -155,8 +155,16 @@ VPFieldset.prototype.createField = function (el, options, customRules, onValidat
 VPFieldset.prototype.findFields = function () {
   const vm = this
   let fields = Array.from(this.element.getElementsByClassName(this.options.fieldClass))
+
   // TODO: Attribute parsing to fill in the gaps
-  this._fields = fields.map(field => new VPField(field, {}))
+  this._fields = fields.map(field => {
+    const _field = new VPField(field, {})
+    if (this.options.watch === true) {
+      this.watchField(_field)
+    }
+
+    return _field
+  })
 }
 
 
