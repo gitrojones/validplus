@@ -2,6 +2,7 @@ import VPField from './Field'
 
 import debug from './util/debug'
 import mergeDeep from './util/mergeDeep'
+import isElemVisible from './util/isElemVisible'
 
 import events from './lib/events'
 import messaging from './lib/messaging'
@@ -17,6 +18,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   if (!(element instanceof Element)) {
     throw new Error('[VPFieldset] Valid Element is required.')
   }
+
   if (typeof strategy !== 'function') {
     throw new Error('[VPFieldset] Validation strategy passed is invalid.')
   }
@@ -25,6 +27,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
   this.element = element
   this.listeners = {}
   this.options = Object.assign({
+    validateVisible: true,
     fieldClass: 'VPField',
     errorClass: '-isError',
     messageAnchor: null,
@@ -54,7 +57,17 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
 VPFieldset.prototype.isValid = function () {
   const fieldSetStatus = this._fields.reduce((status, field, index) => {
     debug('[VPFieldset] Validating field', index)
-    status.push(field.isValid())
+    if (this.options.validateVisible) {
+      if (isElemVisible(field.element)) {
+        debug('[VPFieldset] Field is visible, continuing')
+        status.push(field.isValid())
+      } else {
+        debug('[VPFieldset] Skipping hidden field', field)
+      }
+    } else {
+      status.push(field.isValid())
+    }
+
     return status
   }, [])
 

@@ -2,9 +2,11 @@ import VPFieldset from './Fieldset'
 
 import debug from './util/debug'
 import mergeDeep from './util/mergeDeep'
+import isElemVisible from './util/isElemVisible'
 
 import events from './lib/events'
 import messaging from './lib/messaging'
+
 
 const Validator = function (options, form = null) {
   if (form === null) {
@@ -29,6 +31,7 @@ const Validator = function (options, form = null) {
   // Conform to the child interfaces for messaging
   this.element = this._form
   this.options = mergeDeep({
+    validateVisible: true,
     fieldsetClass: 'VPFieldset',
     errorClass: '-isError',
     messageAnchor: null,
@@ -71,11 +74,32 @@ const Validator = function (options, form = null) {
 
 Validator.prototype.isValid = function () {
   if (this.options.lazy) {
-    this._isValid = this._fieldsets.every(fieldset => fieldset.isValid())
+    this._isValid = this._fieldsets.every(fieldset => {
+      if (this.options.validateVisible) {
+        if(isElemVisible(fieldset.element)) {
+          debug('[VPValidator] Fieldset is visible, continuing')
+          fieldset.isValid()
+        } else {
+          debug('[VPValidator] Skipping hidden fieldset', fieldset)
+        }
+      } else {
+        fieldset.isValid()
+      }
+    })
   } else {
     this._isValid = this._fieldsets.reduce((isValid, fieldset) => {
-      if (!fieldset.isValid()) {
-        isValid = false
+      if (this.options.validateVisible) {
+        if(isElemVisible(fieldset.element)) {
+          if (!fieldset.isValid()) {
+            isValid = false
+          } else {
+            debug('[VPValidator] Skipping hidden fieldset', fieldset)
+          }
+        }
+      } else {
+        if (!fieldset.isValid()) {
+          isValid = false
+        }
       }
 
       return isValid
