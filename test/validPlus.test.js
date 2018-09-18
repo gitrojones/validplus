@@ -299,7 +299,7 @@ describe('ValidPlus', function () {
     })
 
     describe('Fields Default Validation Types', function () {
-      it('Should validate required', function () {
+      it('Should validate required (standard)', function () {
         testInput.setAttribute('required', true)
         testInput.value = null
         let field = new ValidPlus.Field(testField, {}, [], {
@@ -310,6 +310,45 @@ describe('ValidPlus', function () {
 
         expect(field.isValid()).to.be.false
         testInput.value = 'hello'
+        expect(field.isValid()).to.be.true
+      })
+
+      it ('Should validate required (radio)', function () {
+        testFieldsetTwo = DOM.window.document.createElement('div')
+        testFieldTwo = DOM.window.document.createElement('div')
+        testFieldTwo.className = 'field'
+        testFieldsetTwo.append(testField)
+
+        testInputTwo = DOM.window.document.createElement('input')
+        testInputTwo.className = 'input'
+        testInputTwo.value = 'Hello, World'
+        testInputTwo.setAttribute('type', 'radio')
+        testFieldTwo.append(testInputTwo)
+
+        testInput.setAttribute('type', 'radio')
+        testInput.setAttribute('required', true)
+        testInput.checked = false
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Foo'
+          }
+        })
+
+        let fieldTwo = new ValidPlus.Field(testFieldTwo, {}, [], {
+          isInvalid: {
+            message: 'Bar'
+          }
+        })
+
+        expect(fieldTwo.isValid()).to.be.true
+        expect(field.isValid()).to.be.false
+
+        testInputTwo.checked = false
+        testInput.checked = true
+
+        // Radio is always valid if not required
+        // Else it is checked/!checked as usual
+        expect(fieldTwo.isValid()).to.be.true
         expect(field.isValid()).to.be.true
       })
 
@@ -591,13 +630,8 @@ describe('ValidPlus', function () {
         }
       })
 
-      console.log('dirty', field.options.dirtyOnBlur, testField.getAttribute('vp-dirty'))
       expect(field.options.dirtyOnBlur).to.be.true
-
-      console.log('blur', field.options.validateOnBlur, testField.getAttribute('vp-blur'))
       expect(field.options.validateOnBlur).to.be.false
-
-      console.log('watch', field.options.watch, testField.getAttribute('vp-watch'))
       expect(field.options.watch).to.be.false
     })
 

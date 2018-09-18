@@ -251,14 +251,12 @@ VPField.prototype.isValid = function () {
   }
 
   switch (type) {
+  case 'radio':
   case 'checkbox':
+    // One should always be selected if required
     if (isValidRule(rules.required) && rules.required) {
       errors.push(checked ? true : `${name} is required.`)
     }
-    break
-  case 'radio':
-    // One should always be selected
-    errors.push(checked)
     break
   default:
     if (isValidRule(rules.required) && rules.required) {
