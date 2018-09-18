@@ -10,6 +10,7 @@
     "build": "NODE_ENV=development node build.js",
     "build:prod": "NODE_ENV=production node build.js",
     "test": "NODE_ENV=production TEST=true node --inspect build.js",
+    "test:e2e": "NODE_ENV=production E2E=true node --inspect server.js",
     "test:dbg": "NODE_ENV=development TEST=true node --inspect build.js"
   },
   "repository": {
