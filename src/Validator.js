@@ -78,12 +78,12 @@ Validator.prototype.isValid = function () {
       if (this.options.validateVisible) {
         if(isElemVisible(fieldset.element)) {
           debug('[VPValidator] Fieldset is visible, continuing')
-          fieldset.isValid()
+          return fieldset.isValid()
         } else {
           debug('[VPValidator] Skipping hidden fieldset', fieldset)
         }
       } else {
-        fieldset.isValid()
+        return fieldset.isValid()
       }
     })
   } else {
