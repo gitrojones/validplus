@@ -19,8 +19,19 @@ const filterNullObj = (obj) => {
 const isValidRule = (rule) => {
   return typeof rule !== 'undefined' && rule !== null
 }
+const toBoolean = (string, def = null) => {
+  if (typeof string !== 'string' || string.length === 0) return def
+
+  if (string.toLowerCase() === 'true') return true
+  if (string.toLowerCase() === 'false') return false
+  return !!string
+}
 
 const VPField = function (element, options, customRules, onValidate = {}) {
+  if (!(element instanceof Element)) {
+    throw new Error('[VPField] Field Element must be instance of Element.')
+  }
+
   this.input = null
   this.element = element
   this.listeners = {}
@@ -43,9 +54,9 @@ const VPField = function (element, options, customRules, onValidate = {}) {
     messageAnchor: null,
     messagePOS: 'bottom',
     showFieldErrors: false,
-    dirtyOnBlur: false,
-    validateOnBlur: true,
-    watch: true
+    dirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
+    validateOnBlur: toBoolean(element.getAttribute('vp-blur'), true),
+    watch: toBoolean(element.getAttribute('vp-watch'), true)
   }, options)
 
   this._onValidation = mergeDeep({

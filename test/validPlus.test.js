@@ -579,6 +579,28 @@ describe('ValidPlus', function () {
       expect(field._dirty).to.be.true
     })
 
+    it('Should accept vp-params to toggle options', function () {
+      testField.setAttribute('vp-dirty', true)
+      testField.setAttribute('vp-blur', false)
+      testField.setAttribute('vp-watch', false)
+
+      let field = new ValidPlus.Field(testField, {
+      }, [], {
+        isInvalid: {
+          message: 'Foo'
+        }
+      })
+
+      console.log('dirty', field.options.dirtyOnBlur, testField.getAttribute('vp-dirty'))
+      expect(field.options.dirtyOnBlur).to.be.true
+
+      console.log('blur', field.options.validateOnBlur, testField.getAttribute('vp-blur'))
+      expect(field.options.validateOnBlur).to.be.false
+
+      console.log('watch', field.options.watch, testField.getAttribute('vp-watch'))
+      expect(field.options.watch).to.be.false
+    })
+
     it('Should validate input based on pattern attribute', function () {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       testInput.setAttribute('pattern', '[0-9]{5}')
