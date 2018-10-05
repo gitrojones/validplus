@@ -635,6 +635,32 @@ describe('ValidPlus', function () {
       expect(field.options.watch).to.be.false
     })
 
+    it('Should validate on blur if set, regardless of watch', function () {
+      let blurEvent = DOM.window.document.createEvent('Event')
+      blurEvent.initEvent('blur', false, false)
+
+      testField.setAttribute('vp-blur', true)
+      testField.setAttribute('vp-watch', false)
+
+      testInput.setAttribute('required', true)
+
+      let field = new ValidPlus.Field(testField, {
+      }, [], {
+        isInvalid: {
+          message: 'Foo'
+        }
+      })
+
+      testInput.value = 'Bar'
+      expect(field._isValid).to.equal(null)
+      testInput.dispatchEvent(blurEvent)
+      expect(field._isValid).to.equal(true)
+      testInput.value = ''
+      expect(field._isValid).to.equal(true)
+      testInput.dispatchEvent(blurEvent)
+      expect(field._isValid).to.equal(false)
+    })
+
     it('Should validate input based on pattern attribute', function () {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       testInput.setAttribute('pattern', '[0-9]{5}')
