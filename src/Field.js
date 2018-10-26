@@ -1,5 +1,6 @@
 import debug from './util/debug'
 import mergeDeep from './util/mergeDeep'
+import createEvent from './util/createEvent'
 
 import events from './lib/events'
 import messaging from './lib/messaging'
@@ -90,8 +91,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
             let valid = this.isValid()
             if (emit) {
-              this.dispatchEvent(new Event('onValidate', {
-                bubbles: false, cancelable: false }), valid)
+              this.dispatchEvent(createEvent('onValidate'), valid)
             }
           }
         })
@@ -106,8 +106,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
 
             let valid = this.isValid()
             if (emit) {
-              this.dispatchEvent(new Event('onValidate', {
-                bubbles: false, cancelable: false }), valid)
+              this.dispatchEvent(createEvent('onValidate'), valid)
             }
           }
         })
@@ -119,8 +118,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
         this._dirty = true
 
         let valid = this.isValid()
-        this.dispatchEvent(new Event('onValidate', {
-          bubbles: false, cancelable: false }), valid)
+        this.dispatchEvent(createEvent('onValidate'), valid)
       })
     }
   }
@@ -196,7 +194,9 @@ VPField.prototype.getInput = function () {
 VPField.prototype.isValid = function () {
   this.canValidate = false
   if (typeof this.options.formatter.pre === 'function') {
-    this.options.formatter.pre(this.input)
+    this.options.formatter.pre(this.input, (event_name) => {
+      this.input.dispatchEvent(createEvent(event_name));
+    })
   }
 
   let attributes = this.parseInput()

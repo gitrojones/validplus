@@ -3,6 +3,7 @@ import VPField from './Field'
 import debug from './util/debug'
 import mergeDeep from './util/mergeDeep'
 import isElemVisible from './util/isElemVisible'
+import createEvent from './util/createEvent'
 
 import events from './lib/events'
 import messaging from './lib/messaging'
@@ -131,9 +132,7 @@ VPFieldset.prototype.watchField = function (field) {
     const emit = this._isValid !== null
 
     if (emit) {
-      this.dispatchEvent(new Event('onValidate', {
-        bubbles: false, cancelable: false
-      }), valid)
+      this.dispatchEvent(createEvent('onValidate'), valid)
     }
   })
 }

@@ -226,7 +226,7 @@ const ElementOrID = function (ElorID, form = null) {
   if (typeof ElorID === 'string') {
     let f = (form !== null && form instanceof Element)
       ? form.getElemenyById(ElorID)
-      : document.getElementById(ElorID)
+      : window.document.getElementById(ElorID)
 
     if (f instanceof Element) return f
   }
