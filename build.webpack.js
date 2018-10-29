@@ -1,7 +1,10 @@
 const path = require('path')
 
 module.exports = {
-  entry: path.resolve(__dirname, './validplus.js'),
+  entry: [
+    '@babel/polyfill',
+    path.resolve(__dirname, './validplus.js'),
+  ],
 
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -27,7 +30,12 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['babel-preset-env']
+              presets: [
+                ['@babel/preset-env', {
+                  targets: '>0.25%, not dead',
+                  useBuiltIns: 'usage'
+                }]
+              ]
             }
           }
         ]

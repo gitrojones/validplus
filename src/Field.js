@@ -28,6 +28,10 @@ const toBoolean = (string, def = null) => {
   return !!string
 }
 
+const dispatchEvent = (input) => (event_name) => {
+  input.dispatchEvent(createEvent(event_name));
+}
+
 const VPField = function (element, options, customRules, onValidate = {}) {
   if (!(element instanceof Element)) {
     throw new Error('[VPField] Field Element must be instance of Element.')
@@ -194,9 +198,7 @@ VPField.prototype.getInput = function () {
 VPField.prototype.isValid = function () {
   this.canValidate = false
   if (typeof this.options.formatter.pre === 'function') {
-    this.options.formatter.pre(this.input, (event_name) => {
-      this.input.dispatchEvent(createEvent(event_name));
-    })
+    this.options.formatter.pre(this.input, dispatchEvent(this.input))
   }
 
   let attributes = this.parseInput()
@@ -300,7 +302,7 @@ VPField.prototype.isValid = function () {
   }
 
   if (typeof this.options.formatter.post === 'function') {
-    this.options.formatter.post(this.input, value)
+    this.options.formatter.post(this.input, dispatchEvent(this.input))
   }
 
   this.canValidate = true

@@ -550,6 +550,40 @@ describe('ValidPlus', function () {
       expect(field.isValid()).to.be.true
     })
 
+    it('Should format pre/post and include an eventDispatch method', function () {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
+
+      let uppercasePre = (input, dispatchEvent) => {
+        input.value = input.value.toUpperCase()
+        input.value = input.value += '-world'
+        dispatchEvent('input')
+      }
+      let lowercasePost = (input, dispatchEvent) => {
+        input.value = input.value.toLowerCase()
+        dispatchEvent('input')
+      }
+      testInput.value = 'hello'
+
+      const spyPreFired = sinon.spy(uppercasePre)
+      const spyPostFired = sinon.spy(lowercasePost)
+
+      let field = new ValidPlus.Field(testField, {
+        formatter: {
+          pre: spyPreFired,
+          post: spyPostFired,
+        }
+      }, [ ], { })
+
+      expect(field.isValid()).to.be.true
+
+      expect(spyPreFired.args[0][0]).to.be.an.instanceof(DOM.window.HTMLElement)
+      expect(typeof spyPreFired.args[0][1]).to.equal('function')
+      expect(spyPostFired.args[0][0]).to.be.an.instanceof(DOM.window.HTMLElement)
+      expect(typeof spyPostFired.args[0][1]).to.equal('function')
+
+      expect(testInput.value).to.equal('hello-world')
+    })
+
     it('Should listen for changes on input/change by default', function () {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
       let field = new ValidPlus.Field(testField, {}, [], {
