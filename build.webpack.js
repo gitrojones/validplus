@@ -1,15 +1,20 @@
 const path = require('path')
 
 module.exports = {
-  entry: [
-    path.resolve(__dirname, './validplus.js'),
-  ],
+  entry: {
+    ValidPlus: path.resolve(__dirname, './validplus'),
+    VPVue: path.resolve(__dirname, './src/vue')
+  },
 
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'ValidPlus.js',
-    library: 'ValidPlus',
+    filename: '[name].js',
+    library: '[name]',
     libraryTarget: 'umd'
+  },
+
+  externals: {
+    validplus: 'ValidPlus'
   },
 
   resolve: {
@@ -24,7 +29,10 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: (file) => (
+          /node_modules/.test(file) &&
+          !/\.vue\.js/.test(file)
+        ),
         use: [
           {
             loader: 'babel-loader',

@@ -1,21 +1,31 @@
 const path = require('path')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('vue-html-webpack-plugin')
 
-module.exports = {
-  entry: [
-    './src/example/entry.js',
-    './validplus.js'
-  ],
+module.exports = merge(require('./build.webpack.js'), {
+  entry: {
+    testapp: './dev/entry.js'
+  },
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js'
+    path: path.resolve(__dirname, 'dev/dist'),
+    filename: '[name].js',
+    libraryTarget: 'var'
   },
   resolve: {
+    extensions: [
+      '.js',
+      '.json',
+      '.vue'
+    ],
     alias: {
-      '@': path.resolve(__dirname, 'src')
+      '#': path.resolve(__dirname, 'dev/src'),
+      'VPVue': path.resolve(__dirname, 'src/vue/index'),
+      'ValidPlus': path.resolve(__dirname, './validplus')
     }
   },
+  devtool: 'eval-source-map',
   mode: process.env.NODE_ENV || 'production',
   module: {
     rules: [
@@ -23,58 +33,48 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
-    ...(process.env.TEST === true ? [
-      {
-        test: /\.test\.js$/,
-        exclude: /node_modules/,
-        use: [
-          'mocha-loader',
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['babel-preset-env']
-            }
-          }
-        ]
-      },
-    ] : [
-    ]),
-      {
-        test: /\.js?$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['babel-preset-env']
-          }
-        },
-        exclude: (file) => (
-            /node_modules/.test(file) &&
-            !/\.vue\.js/.test(file)
-        )
-      },
       {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          'css-loader'
+          'css-loader',
+          'postcss-loader'
         ]
       },
       {
-        test: /\.(ttf|woff|png|jpg|gif|svg)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: '[path][name].[ext]',
-            context: ''
-          }
+        test: /\.less$/,
+        loader: [
+          'vue-style-loader',
+          'css-loader',
+          'postcss-loader',
+          'less-loader'
+        ]
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'img/[name].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)$/,
+        loader: 'file-loader',
+        options: {
+          limit: 10000,
+          name: '[name].[ext]',
+          outputPath: 'fonts/'
         }
       }
     ]
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      vue: true
+      vue: true,
+      chunks: ['testapp']
     })
   ]
-}
+})
