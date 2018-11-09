@@ -1,5 +1,5 @@
 import Validatable from './Validatable'
-import FieldSet from './Fieldset'
+import FieldSet from './FieldSet'
 import Field from './Field'
 
 const VPVue = {

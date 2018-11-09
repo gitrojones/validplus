@@ -4,6 +4,8 @@ const merge = require('webpack-merge')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const HtmlWebpackPlugin = require('vue-html-webpack-plugin')
 
+const isProd = process.env.NODE_ENV === 'production'
+
 const devBundle = merge(require('./build.webpack.js'), {
   entry: {
     testapp: './dev/entry.js'
@@ -26,7 +28,7 @@ const devBundle = merge(require('./build.webpack.js'), {
     }
   },
   devtool: 'eval-source-map',
-  mode: process.env.NODE_ENV || 'production',
+  mode: isProd ? 'production' : 'development',
   module: {
     rules: [
       {

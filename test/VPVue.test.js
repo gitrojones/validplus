@@ -1,6 +1,9 @@
-const { mount } = require('@vue/test-utils')
+const { mount, shallowMount } = require('@vue/test-utils')
 const VPVue = require('VPVue').default
-const TestingGround = mount(require('../dev/src/testing-ground.vue').default)
+
+const TestingGround = require('#/testing-ground').default
+const Fieldset = require('#/components/fieldset').default
+const Field = require('#/components/field').default
 
 describe('VPVue', function () {
   beforeEach(done => {
@@ -17,7 +20,18 @@ describe('VPVue', function () {
     expect(VPVue).to.have.property('Validatable')
   })
 
-  it('Should extend a component', function () {
-    expect(TestingGround.vm.$data.foo).to.equal('bar')
+  describe('Field', function () {
+    it('Should import Validatable', function () {
+      expect(VPVue.Field).to.have.property('mixins')
+      expect(VPVue.Field.mixins[0]).to.equal(VPVue.Validatable)
+    })
+  })
+
+  describe('TestingGround', function () {
+    it('Should import Fieldset', function () {
+      let TG = shallowMount(TestingGround)
+      expect(TG.find(Fieldset).exists()).to.be.true
+      expect(TG.find(Field).exists()).to.be.true
+    })
   })
 })

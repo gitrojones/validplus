@@ -7,7 +7,13 @@ import isElemVisible from './util/isElemVisible'
 import events from './lib/events'
 import messaging from './lib/messaging'
 
-
+/**
+  * ValidPlus Validator instance, the container
+  * responsible for firing off the validation cycle
+  *
+  * @name VPValidator
+  * @param {object} VPValidationOptions - Options for Validation
+  */
 const Validator = function (options, form = null) {
   if (form === null) {
     debug('[Validator] Non-strict fieldset matching.',

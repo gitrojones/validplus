@@ -17,11 +17,12 @@
 import fieldset from '#/components/fieldset'
 import field from '#/components/field'
 
+/**
+ * @vue-prop {Boolean} test - test value
+ */
 export default {
-  data () {
-    return {
-      foo: 'bar'
-    }
+  prop: {
+    test: Boolean
   },
   components: {
     VpFieldset: fieldset,

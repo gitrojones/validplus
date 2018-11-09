@@ -2,6 +2,11 @@ const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
+const isCoverage = process.env.NODE_ENV === 'coverage'
+const isProd = process.env.PROD === 'true'
+  ? true
+  : process.env.NODE_ENV === 'production'
+
 module.exports = {
   entry: {
     testapp: './dev/entry.js'
@@ -9,6 +14,8 @@ module.exports = {
 
   output: {
     path: path.resolve(__dirname, 'dev/dist'),
+    devtoolModuleFilenameTemplate: '[absolute-resource-path]',
+    devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]',
     filename: '[name].js'
   },
 
@@ -32,16 +39,32 @@ module.exports = {
     ],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@lib': path.resolve(__dirname, './lib'),
       '#': path.resolve(__dirname, 'dev/src'),
       'VPVue': path.resolve(__dirname, 'src/vue/index'),
       'ValidPlus': path.resolve(__dirname, './validplus')
     }
   },
 
-  mode: process.env.NODE_ENV || 'production',
+  mode: isProd ? 'production' : 'development',
 
   module: {
     rules: [
+      ...(isCoverage ? [{
+        test: /\.js/,
+        resourceQuery: /blockType=test/,
+        include: (file) => (
+          /src/.test(file) ||
+          /dev\/src/.test(file)
+        ),
+        exclude: (file) => (
+          /src\/vue\//.test(file)
+        ),
+        loader: 'istanbul-instrumenter-loader',
+        query: {
+          esModules: true
+        }
+      }]: []),
       {
         test: /\.js$/,
         exclude: (file) => (
