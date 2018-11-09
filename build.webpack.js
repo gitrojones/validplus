@@ -1,4 +1,5 @@
 const path = require('path')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   entry: {
@@ -14,13 +15,18 @@ module.exports = {
   },
 
   externals: {
-    ValidPlus: 'ValidPlus'
+    ValidPlus: 'ValidPlus',
   },
 
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
     }
+  },
+
+  optimization: {
+    minimizer: [new UglifyJSPlugin({
+    })]
   },
 
   mode: process.env.NODE_ENV || 'production',

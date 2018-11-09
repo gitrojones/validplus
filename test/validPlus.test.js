@@ -1,30 +1,12 @@
-const fs = require('fs')
-const path = require('path')
-
-const _ = require('lodash')
-const expect = require('chai').expect
-const sinon = require('sinon')
-const { JSDOM, VirtualConsole } = require('jsdom')
-const jsdom = new JSDOM('', {
-  includeNodeLocations: true,
-  runScripts: 'dangerously'
-})
-
-const _ValidPlus = fs.readFileSync(path.resolve(__dirname, '../dist/ValidPlus.js'), 'utf-8')
-
 describe('ValidPlus', function () {
-  let DOM
-  let virtualConsole
   let ValidPlus
 
   beforeEach(done => {
-    virtualConsole = new VirtualConsole()
-    virtualConsole.sendTo(console)
-
-    DOM = new JSDOM('', { runScripts: 'outside-only', virtualConsole })
-    DOM.window.eval(_ValidPlus)
-    ValidPlus = DOM.window.ValidPlus.default
-
+    ValidPlus = require('ValidPlus').default
+    done()
+  })
+  afterEach(done => {
+    delete require.cache[require.resolve('ValidPlus')]
     done()
   })
 
@@ -36,7 +18,7 @@ describe('ValidPlus', function () {
     let testForm
 
     beforeEach(done => {
-      testForm = DOM.window.document.createElement('form')
+      testForm = window.document.createElement('form')
       testForm.className = 'form'
 
       done()
@@ -67,7 +49,7 @@ describe('ValidPlus', function () {
 
     it('Validator should track new fieldsets', function () {
       let validator = new ValidPlus.Validator({}, testForm)
-      let testFieldset = DOM.window.document.createElement('div')
+      let testFieldset = window.document.createElement('div')
       testFieldset.className = 'fieldset'
 
       let success = validator.createFieldset(testFieldset, 'one', {}, [])
@@ -79,10 +61,10 @@ describe('ValidPlus', function () {
 
     it('Validator should allowing adding fieldsets and their fields', function () {
       let validator = new ValidPlus.Validator({}, testForm)
-      let testFieldset = DOM.window.document.createElement('div')
+      let testFieldset = window.document.createElement('div')
       testFieldset.className = 'fieldset'
 
-      let testField = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
       testField.className = 'VPField'
 
       testFieldset.append(testField)
@@ -99,18 +81,18 @@ describe('ValidPlus', function () {
       let validator = new ValidPlus.Validator({
         validateVisible: false
       }, testForm)
-      let testFieldset = DOM.window.document.createElement('div')
-      let testFieldsetTwo = DOM.window.document.createElement('div')
+      let testFieldset = window.document.createElement('div')
+      let testFieldsetTwo = window.document.createElement('div')
       testFieldset.className = 'fieldset'
       testFieldsetTwo.className = 'fieldsetTwo'
 
-      let testField = DOM.window.document.createElement('div')
-      let testFieldTwo = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
+      let testFieldTwo = window.document.createElement('div')
       testField.className = 'VPField'
       testFieldTwo.className = 'VPField'
 
-      let testInput = DOM.window.document.createElement('input')
-      let testInputTwo = DOM.window.document.createElement('input')
+      let testInput = window.document.createElement('input')
+      let testInputTwo = window.document.createElement('input')
       testInput.setAttribute('required', true)
       testInputTwo.setAttribute('required', true)
 
@@ -141,18 +123,18 @@ describe('ValidPlus', function () {
         lazy: false,
         validateVisible: false
       }, testForm)
-      let testFieldset = DOM.window.document.createElement('div')
-      let testFieldsetTwo = DOM.window.document.createElement('div')
+      let testFieldset = window.document.createElement('div')
+      let testFieldsetTwo = window.document.createElement('div')
       testFieldset.className = 'fieldset'
       testFieldsetTwo.className = 'fieldsetTwo'
 
-      let testField = DOM.window.document.createElement('div')
-      let testFieldTwo = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
+      let testFieldTwo = window.document.createElement('div')
       testField.className = 'VPField'
       testFieldTwo.className = 'VPField'
 
-      let testInput = DOM.window.document.createElement('input')
-      let testInputTwo = DOM.window.document.createElement('input')
+      let testInput = window.document.createElement('input')
+      let testInputTwo = window.document.createElement('input')
       testInput.setAttribute('required', true)
       testInputTwo.setAttribute('required', true)
 
@@ -186,7 +168,7 @@ describe('ValidPlus', function () {
     let testFieldset
 
     beforeEach(done => {
-      testFieldset = DOM.window.document.createElement('div')
+      testFieldset = window.document.createElement('div')
       testFieldset.className = 'fieldset'
 
       done()
@@ -199,7 +181,7 @@ describe('ValidPlus', function () {
       expect(() => new ValidPlus.Fieldset(testFieldset, null, {})).to.throw()
     })
     it('Fieldset should add children fields', function () {
-      let testField = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
       testField.className = 'field'
       testFieldset.append(testField)
 
@@ -211,9 +193,9 @@ describe('ValidPlus', function () {
     })
 
     it('Fieldset should validate', function () {
-      let testInput = DOM.window.document.createElement('input')
+      let testInput = window.document.createElement('input')
       testInput.className = 'input'
-      let testField = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
       testField.className = 'VPField'
 
       testField.append(testInput)
@@ -227,10 +209,10 @@ describe('ValidPlus', function () {
     })
 
     it('Fieldset should validate fields', function () {
-      let testField = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
       testField.className = 'VPField'
 
-      let testInput = DOM.window.document.createElement('input')
+      let testInput = window.document.createElement('input')
       testInput.value = 10
       testInput.setAttribute('type', 'number')
       testInput.setAttribute('min', 1)
@@ -247,10 +229,10 @@ describe('ValidPlus', function () {
     })
 
     it('Fieldset should append onValid Message and message should be correct', function () {
-      let testField = DOM.window.document.createElement('div')
+      let testField = window.document.createElement('div')
       testField.className = 'VPField'
 
-      let testInput = DOM.window.document.createElement('input')
+      let testInput = window.document.createElement('input')
       testInput.value = 10
       testInput.setAttribute('type', 'number')
       testInput.setAttribute('min', 1)
@@ -282,12 +264,12 @@ describe('ValidPlus', function () {
     let testInput
 
     beforeEach(done => {
-      testFieldset = DOM.window.document.createElement('div')
-      testField = DOM.window.document.createElement('div')
+      testFieldset = window.document.createElement('div')
+      testField = window.document.createElement('div')
       testField.className = 'field'
       testFieldset.append(testField)
 
-      testInput = DOM.window.document.createElement('input')
+      testInput = window.document.createElement('input')
       testInput.className = 'input'
       testInput.value = 'Hello, World'
       testField.append(testInput)
@@ -314,12 +296,12 @@ describe('ValidPlus', function () {
       })
 
       it ('Should validate required (radio)', function () {
-        testFieldsetTwo = DOM.window.document.createElement('div')
-        testFieldTwo = DOM.window.document.createElement('div')
+        let testFieldsetTwo = window.document.createElement('div')
+        let testFieldTwo = window.document.createElement('div')
         testFieldTwo.className = 'field'
         testFieldsetTwo.append(testField)
 
-        testInputTwo = DOM.window.document.createElement('input')
+        let testInputTwo = window.document.createElement('input')
         testInputTwo.className = 'input'
         testInputTwo.value = 'Hello, World'
         testInputTwo.setAttribute('type', 'radio')
@@ -576,9 +558,9 @@ describe('ValidPlus', function () {
 
       expect(field.isValid()).to.be.true
 
-      expect(spyPreFired.args[0][0]).to.be.an.instanceof(DOM.window.HTMLElement)
+      expect(spyPreFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
       expect(typeof spyPreFired.args[0][1]).to.equal('function')
-      expect(spyPostFired.args[0][0]).to.be.an.instanceof(DOM.window.HTMLElement)
+      expect(spyPostFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
       expect(typeof spyPostFired.args[0][1]).to.equal('function')
 
       expect(testInput.value).to.equal('hello-world')
@@ -591,7 +573,7 @@ describe('ValidPlus', function () {
           message: 'Hello, World'
         }
       })
-      let inputEvent = DOM.window.document.createEvent('Event')
+      let inputEvent = window.document.createEvent('Event')
       inputEvent.initEvent('input', false, false)
 
       testInput.value = 'Foo, Bar'
@@ -601,7 +583,7 @@ describe('ValidPlus', function () {
     })
 
     it('Should fire update events on pre/post formatters', function () {
-      let inputEvent = DOM.window.document.createEvent('Event')
+      let inputEvent = window.document.createEvent('Event')
       inputEvent.initEvent('input', false, false)
 
       let field = new ValidPlus.Field(testField, {
@@ -634,8 +616,8 @@ describe('ValidPlus', function () {
         }
       })
 
-      let inputEvent = DOM.window.document.createEvent('Event')
-      let blurEvent = DOM.window.document.createEvent('Event')
+      let inputEvent = window.document.createEvent('Event')
+      let blurEvent = window.document.createEvent('Event')
       inputEvent.initEvent('input', false, false)
       blurEvent.initEvent('blur', false, false)
 
@@ -670,7 +652,7 @@ describe('ValidPlus', function () {
     })
 
     it('Should validate on blur if set, regardless of watch', function () {
-      let blurEvent = DOM.window.document.createEvent('Event')
+      let blurEvent = window.document.createEvent('Event')
       blurEvent.initEvent('blur', false, false)
 
       testField.setAttribute('vp-blur', true)
@@ -705,7 +687,7 @@ describe('ValidPlus', function () {
         }
       })
 
-      let inputEvent = DOM.window.document.createEvent('Event')
+      let inputEvent = window.document.createEvent('Event')
       inputEvent.initEvent('input', false, false)
 
       testInput.value = 'notanumber'

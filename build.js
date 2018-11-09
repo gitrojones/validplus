@@ -29,27 +29,12 @@ const buildBundle = (bundle) => {
     }
 
     console.log('Output Successful!')
-
-    if (process.env.TEST === 'true') {
-      const tests = path.resolve('./test')
-      let mocha = new Mocha();
-
-      fs.readdirSync(tests).filter(file => {
-        return file.substr(-8) === '.test.js'
-      }).forEach(file => {
-        mocha.addFile(path.join(tests, file))
-      })
-
-      mocha.run(failures => {
-        process.exitCode = failures ? -1 : 0;
-      })
-    }
   })
 }
 
 
 if (process.env.APP === 'true') {
-  const config = require('./testapp.webpack.js')
+  const config = require('./dev.webpack.js')
   const bundle = Webpack(config)
 
   server.use(WebpackDevMiddleware(bundle, {
@@ -60,6 +45,21 @@ if (process.env.APP === 'true') {
   }))
 
   server.listen(12000, () => console.log('Test App listening on port 12000!'))
+}
+
+if (process.env.TEST === 'true') {
+  const tests = path.resolve('./test')
+  let mocha = new Mocha()
+
+  fs.readdirSync(tests).filter(file => {
+    return file.substr(-8) === '.test.js'
+  }).forEach(file => {
+    mocha.addFile(path.join(tests, file))
+  })
+
+  mocha.run(failures => {
+    process.exitCode = failures ? -1 : 0
+  })
 }
 
 buildBundle(require('./build.webpack.js'))

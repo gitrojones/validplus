@@ -18,7 +18,10 @@ import fieldset from '#/components/fieldset'
 import field from '#/components/field'
 
 export default {
-  created () {
+  data () {
+    return {
+      foo: 'bar'
+    }
   },
   components: {
     VpFieldset: fieldset,
