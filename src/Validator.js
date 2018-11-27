@@ -90,7 +90,6 @@ Validator.prototype.isValid = function () {
           debug('[VPValidator] Skipping hidden fieldset', fieldset)
         }
       } else {
-        console.log('here 1')
         return fieldset.isValid()
       }
     })
@@ -127,7 +126,6 @@ Validator.prototype.isValid = function () {
       this.addMessage(this._onValidation.isValid.message, this.options.validClass)
     }
   } else {
-    console.log('here', this.element)
     if (this.element instanceof Element) {
       this.element.classList.remove(this.options.validClass)
       this.element.classList.add(this.options.errorClass)
