@@ -1,3 +1,4 @@
+/* global describe, it, beforeEach, afterEach, expect, sinon */
 describe('ValidPlus', function () {
   let ValidPlus
 
@@ -161,6 +162,46 @@ describe('ValidPlus', function () {
 
     // TODO: Implement Cypress E2E testing for visual
     it('Validator should ignore hidden fieldsets by default')
+
+    describe('Validator Error Handling', function () {
+      it('Should append the errorClass on invalid', function () {
+        const MockFieldset = { isValid: () => false, element: {} }
+        const validator = new ValidPlus.Validator({
+          scrollTo: false,
+          validateVisible: false
+        }, testForm)
+        validator._fieldsets.push(MockFieldset)
+
+        expect(validator.isValid()).to.be.false
+        expect(testForm.classList.contains('-isError')).to.be.true
+      })
+      it('Should append the validClass on valid', function () {
+        const validator = new ValidPlus.Validator({}, testForm)
+        expect(validator.isValid()).to.be.true
+        expect(testForm.classList.contains('-isValid')).to.be.true
+      })
+      it('Should append a custom options.errorClass on invalid', function () {
+        const errorClass = '-helloWorld'
+        const MockFieldset = { isValid: () => false, element: {} }
+        const validator = new ValidPlus.Validator({
+          errorClass,
+          scrollTo: false, // ScrollTo expects a element, which we don't have (mocked)
+          validateVisible: false
+        }, testForm)
+        validator._fieldsets.push(MockFieldset)
+
+        expect(validator.isValid()).to.be.false
+        expect(testForm.classList.contains(errorClass)).to.be.true
+      })
+      it('Should append a custom options.validClass on valid', function () {
+        const validClass = '-fooBar'
+        const validator = new ValidPlus.Validator({
+          validClass
+        }, testForm)
+        expect(validator.isValid()).to.be.true
+        expect(testForm.classList.contains(validClass)).to.be.true
+      })
+    })
   })
 
   describe('ValidPlus.Fieldset', function () {
@@ -171,6 +212,78 @@ describe('ValidPlus', function () {
       testFieldset.className = 'fieldset'
 
       done()
+    })
+
+    describe('Fieldset Error Handling', function () {
+      let testFieldset
+      let testField
+      let testInput
+      let all = fields => fields.every(field => field === true)
+
+      beforeEach(() => {
+        testFieldset = window.document.createElement('div')
+        testField = window.document.createElement('div')
+        testField.className = 'field'
+        testFieldset.append(testField)
+
+        testInput = window.document.createElement('input')
+        testInput.className = 'input'
+        testInput.value = 'Hello, World'
+        testField.append(testInput)
+      })
+
+      it('Should append the errorClass on invalid fieldset', function () {
+        testInput.value = null
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
+          validateVisible: false
+        }, {})
+        fieldset.addField(field)
+
+        expect(fieldset.isValid()).to.be.false
+        expect(testFieldset.classList.contains('-isError')).to.be.true
+      })
+      it('Should append the validClass on valid fields/inputs', function () {
+        testInput.value = 'hello'
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
+          validateVisible: false
+        }, {})
+        fieldset.addField(field)
+
+        expect(fieldset.isValid()).to.be.true
+        expect(testFieldset.classList.contains('-isValid')).to.be.true
+      })
+      it('Should allow for custom errorClass', function () {
+        const errorClass = '-fooBar'
+        testInput.value = null
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
+          errorClass,
+          validateVisible: false
+        }, {})
+        fieldset.addField(field)
+
+        expect(fieldset.isValid()).to.be.false
+        expect(testFieldset.classList.contains(errorClass)).to.be.true
+      })
+      it('Should allow for custom validClass', function () {
+        const validClass = '-helloWorld'
+        testInput.value = 'hello'
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
+          validClass,
+          validateVisible: false
+        }, {})
+        fieldset.addField(field)
+
+        expect(fieldset.isValid()).to.be.true
+        expect(testFieldset.classList.contains(validClass)).to.be.true
+      })
     })
 
     it('Fieldset should throw an error if missing an element', function () {
@@ -277,6 +390,47 @@ describe('ValidPlus', function () {
     })
 
     describe('Fields Properties', function () {
+    })
+
+    describe('Field Error Handling', function () {
+      it('Should append the errorClass on invalid fields/inputs', function () {
+        testInput.value = null
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+
+        expect(field.isValid()).to.be.false
+        expect(testField.classList.contains('-isError')).to.be.true
+      })
+      it('Should append the validClass on valid fields/inputs', function () {
+        testInput.value = 'hello'
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, { }, [], {})
+
+        expect(field.isValid()).to.be.true
+        expect(testField.classList.contains('-isValid')).to.be.true
+      })
+      it('Should allow for custom errorClass', function () {
+        const errorClass = '-fooBar'
+        testInput.value = null
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, {
+          errorClass
+        }, [], {})
+
+        expect(field.isValid()).to.be.false
+        expect(testField.classList.contains(errorClass)).to.be.true
+      })
+      it('Should allow for custom validClass', function () {
+        const validClass = '-helloWorld'
+        testInput.value = 'hello'
+        testInput.setAttribute('required', true)
+        let field = new ValidPlus.Field(testField, {
+          validClass
+        }, [], {})
+
+        expect(field.isValid()).to.be.true
+        expect(testField.classList.contains(validClass)).to.be.true
+      })
     })
 
     describe('Fields Default Validation Types', function () {

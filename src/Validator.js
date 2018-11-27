@@ -40,6 +40,7 @@ const Validator = function (options, form = null) {
     validateVisible: true,
     fieldsetClass: 'VPFieldset',
     errorClass: '-isError',
+    validClass: '-isValid',
     messageAnchor: null,
     messagePOS: 'bottom',
     lazy: true,
@@ -89,6 +90,7 @@ Validator.prototype.isValid = function () {
           debug('[VPValidator] Skipping hidden fieldset', fieldset)
         }
       } else {
+        console.log('here 1')
         return fieldset.isValid()
       }
     })
@@ -115,16 +117,19 @@ Validator.prototype.isValid = function () {
   if (this._isValid) {
     if (this.element instanceof Element) {
       this.element.classList.remove(this.options.errorClass)
+      this.element.classList.add(this.options.validClass)
     }
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.addMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, this.options.validClass)
     }
   } else {
+    console.log('here', this.element)
     if (this.element instanceof Element) {
+      this.element.classList.remove(this.options.validClass)
       this.element.classList.add(this.options.errorClass)
     }
     if (this.options.scrollTo === true) {
@@ -147,7 +152,7 @@ Validator.prototype.isValid = function () {
       this._onValidation.isInvalid.cb()
     }
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.addMessage(this._onValidation.isInvalid.message, '-isValid')
+      this.addMessage(this._onValidation.isInvalid.message, this.options.errorClass)
     }
   }
 

@@ -56,6 +56,7 @@ const VPField = function (element, options, customRules, onValidate = {}) {
       post: null
     },
     errorClass: '-isError',
+    validClass: '-isValid',
     messageAnchor: null,
     messagePOS: 'bottom',
     showFieldErrors: false,
@@ -276,14 +277,16 @@ VPField.prototype.isValid = function () {
 
   if (this._isValid) {
     this.element.classList.remove(this.options.errorClass)
+    this.element.classList.add(this.options.validClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.addMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, this.options.validClass)
     }
   } else {
+    this.element.classList.remove(this.options.validClass)
     this.element.classList.add(this.options.errorClass)
 
     if (typeof this._onValidation.isInvalid.cb === 'function') {
@@ -292,12 +295,12 @@ VPField.prototype.isValid = function () {
 
     if (this.options.showFieldErrors) {
       errors.filter(err => typeof err === 'string').forEach(err => {
-        this.addMessage(err, '-isError')
+        this.addMessage(err, this.options.errorClass)
       })
     }
 
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.addMessage(this._onValidation.isInvalid.message, '-isError')
+      this.addMessage(this._onValidation.isInvalid.message, this.options.errorClass)
     }
   }
 

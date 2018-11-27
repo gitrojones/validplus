@@ -31,6 +31,7 @@ const VPFieldset = function (element, strategy, options, onValidate = {}) {
     validateVisible: true,
     fieldClass: 'VPField',
     errorClass: '-isError',
+    validClass: '-isValid',
     messageAnchor: null,
     messagePOS: 'bottom',
     scrollAnchor: null,
@@ -76,14 +77,16 @@ VPFieldset.prototype.isValid = function () {
   this._isValid = this.strategy(fieldSetStatus)
   if (this._isValid) {
     this.element.classList.remove(this.options.errorClass)
+    this.element.classList.add(this.options.validClass)
 
     if (typeof this._onValidation.isValid.cb === 'function') {
       this._onValidation.isValid.cb()
     }
     if (typeof this._onValidation.isValid.message === 'string') {
-      this.addMessage(this._onValidation.isValid.message, '-isValid')
+      this.addMessage(this._onValidation.isValid.message, this.options.validClass)
     }
   } else {
+    this.element.classList.remove(this.options.validClass)
     this.element.classList.add(this.options.errorClass)
     if (this.options.scrollTo === true) {
       if (this.options.scrollAnchor instanceof Element) {
@@ -102,7 +105,7 @@ VPFieldset.prototype.isValid = function () {
       this._onValidation.isInvalid.cb()
     }
     if (typeof this._onValidation.isInvalid.message === 'string') {
-      this.addMessage(this._onValidation.isInvalid.message, '-isError')
+      this.addMessage(this._onValidation.isInvalid.message, this.options.errorClass)
     }
   }
 
