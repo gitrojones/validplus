@@ -6,7 +6,6 @@ describe('ValidPlus', function () {
     done()
   })
   afterEach(done => {
-    delete require.cache[require.resolve('ValidPlus')]
     done()
   })
 
@@ -564,6 +563,8 @@ describe('ValidPlus', function () {
       expect(typeof spyPostFired.args[0][1]).to.equal('function')
 
       expect(testInput.value).to.equal('hello-world')
+
+      ValidPlus.Field.prototype.isValid.restore()
     })
 
     it('Should listen for changes on input/change by default', function () {
@@ -580,6 +581,8 @@ describe('ValidPlus', function () {
       testInput.dispatchEvent(inputEvent)
 
       expect(spyIsValid.calledOnce).to.be.true
+
+      ValidPlus.Field.prototype.isValid.restore()
     })
 
     it('Should fire update events on pre/post formatters', function () {
@@ -632,6 +635,8 @@ describe('ValidPlus', function () {
       testInput.dispatchEvent(blurEvent)
       expect(spyIsValid.calledOnce).to.be.true
       expect(field._dirty).to.be.true
+
+      ValidPlus.Field.prototype.isValid.restore()
     })
 
     it('Should accept vp-params to toggle options', function () {
