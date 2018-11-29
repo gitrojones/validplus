@@ -1,5 +1,3 @@
-import VP from 'ValidPlus'
-
 export default {
   props: {
     validator: {
@@ -21,14 +19,36 @@ export default {
     }
   },
   inject: {
+    VPField: {
+      default () {
+        // SSR Support
+        if (process.env.VUE_ENV === 'client') {
+          const { Field } = require('validplus').default
+          return Field
+        } else {
+          return null
+        }
+      }
+    },
+    VPFieldset: {
+      default () {
+        // SSR Support
+        if (process.env.VUE_ENV === 'client') {
+          const { Fieldset } = require('validplus').default
+          return Fieldset
+        } else {
+          return null
+        }
+      }
+    },
     VPValidator: {
       default () {
         console.log('[VPVue] Validator not provided, injecting new validator.')
         this.VPNewValidator = true
 
         // SSR Support
-        if (process.env.VUE_ENV !== 'server') {
-          const VP = require('ValidPlus').default
+        if (process.env.VUE_ENV === 'client') {
+          const VP = require('validplus').default
           return new VP.Validator({})
         } else {
           return null
@@ -38,7 +58,7 @@ export default {
   },
   methods: {
     VPCreateField (el, options, rules, onValidation) {
-      return new VP.Field(el, options, rules, onValidation)
+      return new this.VPField(el, options, rules, onValidation)
     },
     VPCreateFieldset (el, strategy, options, fields, onvalidation) {
       const fieldset = this.validator.createFieldset(el, strategy, options, fields, onvalidation)

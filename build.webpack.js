@@ -15,7 +15,7 @@ module.exports = {
   },
 
   externals: {
-    ValidPlus: 'ValidPlus',
+    validplus: 'validplus',
   },
 
   resolve: {
