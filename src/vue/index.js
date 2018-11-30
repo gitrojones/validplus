@@ -1,15 +1,11 @@
-import Validatable from './Validatable'
-import Fieldset from './Fieldset'
-import Field from './Field'
+import Validatable from './Validatable';
+import Fieldset from './Fieldset';
+import Field from './Field';
 
 const VPVue = {
   Validatable,
   Fieldset,
-  Field
-}
+  Field,
+};
 
-export default (env) => {
-  return (env === 'client')
-    ? VPVue
-    : { Validatable: {}, Fieldset: {}, Field: {} }
-}
+export default VPVue;

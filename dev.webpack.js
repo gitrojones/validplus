@@ -1,31 +1,28 @@
-const path = require('path')
-const webpack = require('webpack')
-const merge = require('webpack-merge')
-const VueLoaderPlugin = require('vue-loader/lib/plugin')
-const HtmlWebpackPlugin = require('vue-html-webpack-plugin')
+const path = require('path');
+const webpack = require('webpack');
+const merge = require('webpack-merge');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const HtmlWebpackPlugin = require('vue-html-webpack-plugin');
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production';
 
 const devBundle = merge(require('./build.webpack.js'), {
   entry: {
-    testapp: './dev/entry.js'
+    testapp: './dev/entry.js',
   },
   output: {
     path: path.resolve(__dirname, 'dev/dist'),
     filename: '[name].js',
-    libraryTarget: 'var'
+    libraryTarget: 'var',
   },
   resolve: {
-    extensions: [
-      '.js',
-      '.json',
-      '.vue'
-    ],
+    extensions: ['.js', '.json', '.vue'],
     alias: {
       '#': path.resolve(__dirname, 'dev/src'),
-      'VPVue': path.resolve(__dirname, 'src/vue/index'),
-      'ValidPlus': path.resolve(__dirname, './validplus')
-    }
+      VPVue: path.resolve(__dirname, 'src/vue/index'),
+      'SSR/VPVue': path.resolve(__dirname, 'src/vue/index.ssr'),
+      validplus: path.resolve(__dirname, './validplus'),
+    },
   },
   devtool: 'eval-source-map',
   mode: isProd ? 'production' : 'development',
@@ -33,15 +30,11 @@ const devBundle = merge(require('./build.webpack.js'), {
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader'
+        loader: 'vue-loader',
       },
       {
         test: /\.css$/,
-        use: [
-          'vue-style-loader',
-          'css-loader',
-          'postcss-loader'
-        ]
+        use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
       },
       {
         test: /\.less$/,
@@ -49,16 +42,16 @@ const devBundle = merge(require('./build.webpack.js'), {
           'vue-style-loader',
           'css-loader',
           'postcss-loader',
-          'less-loader'
-        ]
+          'less-loader',
+        ],
       },
       {
         test: /\.(png|jpe?g|gif)$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-          name: 'img/[name].[ext]'
-        }
+          name: 'img/[name].[ext]',
+        },
       },
       {
         test: /\.(woff2?|eot|ttf|otf)$/,
@@ -66,20 +59,20 @@ const devBundle = merge(require('./build.webpack.js'), {
         options: {
           limit: 10000,
           name: '[name].[ext]',
-          outputPath: 'fonts/'
-        }
-      }
-    ]
+          outputPath: 'fonts/',
+        },
+      },
+    ],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       vue: true,
-      chunks: ['testapp']
-    })
-  ]
-})
+      chunks: ['testapp'],
+    }),
+  ],
+});
 
-devBundle.externals = {}
-module.exports = devBundle
+devBundle.externals = {};
+module.exports = devBundle;

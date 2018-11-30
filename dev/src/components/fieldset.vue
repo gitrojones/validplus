@@ -1,31 +1,26 @@
 <template>
-<div class="test-fieldset">
-  <vp-field id="internal">
-    internal
-  </vp-field>
+  <div class="test-fieldset">
+    <VPField id="internal">internal</VPField>
 
-  <!-- External Fields -->
-  <slot>
-  </slot>
-</div>
+    <!-- External Fields -->
+    <slot></slot>
+  </div>
 </template>
 
 <script>
-import VPVue from 'VPVue'
-import VpField from './field'
+import VPVue from "VPVue";
+import VPField from "./field";
 
 export default {
-  props: {
-  },
-  mixins: [ VPVue.FieldSet ],
-  data () {
-    return {
-    }
+  props: {},
+  mixins: [VPVue.Fieldset],
+  data() {
+    return {};
   },
   components: {
-    VpField
+    VPField
   }
-}
+};
 </script>
 
 <style lang="less" scoped>

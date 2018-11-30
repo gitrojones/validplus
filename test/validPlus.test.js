@@ -1,865 +1,986 @@
 /* global describe, it, beforeEach, afterEach, expect, sinon */
-describe('ValidPlus', function () {
-  let ValidPlus
+describe('ValidPlus', function() {
+  let ValidPlus;
 
   beforeEach(done => {
-    ValidPlus = require('ValidPlus').default
-    done()
-  })
+    ValidPlus = require('validplus').default;
+    done();
+  });
   afterEach(done => {
-    done()
-  })
+    done();
+  });
 
-  it('Should export "Validator"', function () {
-    expect(ValidPlus).to.have.property('Validator')
-  })
+  it('Should export "Validator"', function() {
+    expect(ValidPlus).to.have.property('Validator');
+  });
 
-  describe('ValidPlus.Validator', function () {
-    let testForm
+  describe('ValidPlus.Validator', function() {
+    let testForm;
 
     beforeEach(done => {
-      testForm = window.document.createElement('form')
-      testForm.className = 'form'
+      testForm = window.document.createElement('form');
+      testForm.className = 'form';
 
-      done()
-    })
+      done();
+    });
 
-    describe('Validator Properties', function () {
-      it('Validator instance should have properties', function () {
-        let validator = new ValidPlus.Validator({})
-        expect(validator).to.have.property('addFieldset')
-        expect(validator).to.have.property('removeFieldset')
-        expect(validator).to.have.property('createFieldset')
-        expect(validator).to.have.property('clearMessages')
-        expect(validator).to.have.property('removeMessage')
-        expect(validator).to.have.property('addMessage')
-        expect(validator).to.have.property('isValid')
-      })
-    })
+    describe('Validator Properties', function() {
+      it('Validator instance should have properties', function() {
+        let validator = new ValidPlus.Validator({});
+        expect(validator).to.have.property('addFieldset');
+        expect(validator).to.have.property('removeFieldset');
+        expect(validator).to.have.property('createFieldset');
+        expect(validator).to.have.property('clearMessages');
+        expect(validator).to.have.property('removeMessage');
+        expect(validator).to.have.property('addMessage');
+        expect(validator).to.have.property('isValid');
+      });
+    });
 
-    it('Validator should mount in passive mode without form Element supplied', function () {
-      let validator = new ValidPlus.Validator({})
-      expect(validator._strict).to.be.false
-    })
+    it('Validator should mount in passive mode without form Element supplied', function() {
+      let validator = new ValidPlus.Validator({});
+      expect(validator._strict).to.be.false;
+    });
 
-    it('Validator should mount in active mode with a form Element supplied', function () {
-      let validator = new ValidPlus.Validator({}, testForm)
-      expect(validator._strict).to.be.true
-    })
+    it('Validator should mount in active mode with a form Element supplied', function() {
+      let validator = new ValidPlus.Validator({}, testForm);
+      expect(validator._strict).to.be.true;
+    });
 
-    it('Validator should track new fieldsets', function () {
-      let validator = new ValidPlus.Validator({}, testForm)
-      let testFieldset = window.document.createElement('div')
-      testFieldset.className = 'fieldset'
+    it('Validator should track new fieldsets', function() {
+      let validator = new ValidPlus.Validator({}, testForm);
+      let testFieldset = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
 
-      let success = validator.createFieldset(testFieldset, 'one', {}, [])
+      let success = validator.createFieldset(testFieldset, 'one', {}, []);
 
-      expect(success).to.not.be.false
-      expect(validator._fieldsets.length).to.equal(1)
-      expect(validator._fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset)
-    })
+      expect(success).to.not.be.false;
+      expect(validator._fieldsets.length).to.equal(1);
+      expect(validator._fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset);
+    });
 
-    it('Validator should allowing adding fieldsets and their fields', function () {
-      let validator = new ValidPlus.Validator({}, testForm)
-      let testFieldset = window.document.createElement('div')
-      testFieldset.className = 'fieldset'
+    it('Validator should allowing adding fieldsets and their fields', function() {
+      let validator = new ValidPlus.Validator({}, testForm);
+      let testFieldset = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
 
-      let testField = window.document.createElement('div')
-      testField.className = 'VPField'
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
 
-      testFieldset.append(testField)
+      testFieldset.append(testField);
 
       const fieldset = validator.createFieldset(testFieldset, 'all', {}, [
-        new ValidPlus.Field(testField, {}, [], {})
-      ])
+        new ValidPlus.Field(testField, {}, [], {}),
+      ]);
 
-      expect(fieldset._fields.length).to.equal(1)
-    })
+      expect(fieldset._fields.length).to.equal(1);
+    });
 
+    it('Validator should lazy evaluate fieldset validness byDefault', function() {
+      let validator = new ValidPlus.Validator(
+        {
+          validateVisible: false,
+        },
+        testForm
+      );
+      let testFieldset = window.document.createElement('div');
+      let testFieldsetTwo = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
+      testFieldsetTwo.className = 'fieldsetTwo';
 
-    it('Validator should lazy evaluate fieldset validness byDefault', function () {
-      let validator = new ValidPlus.Validator({
-        validateVisible: false
-      }, testForm)
-      let testFieldset = window.document.createElement('div')
-      let testFieldsetTwo = window.document.createElement('div')
-      testFieldset.className = 'fieldset'
-      testFieldsetTwo.className = 'fieldsetTwo'
+      let testField = window.document.createElement('div');
+      let testFieldTwo = window.document.createElement('div');
+      testField.className = 'VPField';
+      testFieldTwo.className = 'VPField';
 
-      let testField = window.document.createElement('div')
-      let testFieldTwo = window.document.createElement('div')
-      testField.className = 'VPField'
-      testFieldTwo.className = 'VPField'
+      let testInput = window.document.createElement('input');
+      let testInputTwo = window.document.createElement('input');
+      testInput.setAttribute('required', true);
+      testInputTwo.setAttribute('required', true);
 
-      let testInput = window.document.createElement('input')
-      let testInputTwo = window.document.createElement('input')
-      testInput.setAttribute('required', true)
-      testInputTwo.setAttribute('required', true)
+      testField.append(testInput);
+      testFieldTwo.append(testInputTwo);
 
-      testField.append(testInput)
-      testFieldTwo.append(testInputTwo)
+      testFieldset.append(testField);
+      testFieldsetTwo.append(testFieldTwo);
 
-      testFieldset.append(testField)
-      testFieldsetTwo.append(testFieldTwo)
+      const fieldset = validator.createFieldset(
+        testFieldset,
+        'all',
+        {
+          validateVisible: false,
+        },
+        [new ValidPlus.Field(testField, {}, [], {})]
+      );
+      const fieldsetTwo = validator.createFieldset(
+        testFieldsetTwo,
+        'all',
+        {
+          validateVisible: false,
+        },
+        [new ValidPlus.Field(testFieldTwo, {}, [], {})]
+      );
 
-      const fieldset = validator.createFieldset(testFieldset, 'all', {
-        validateVisible: false
-      }, [
-        new ValidPlus.Field(testField, { }, [], {}),
-      ])
-      const fieldsetTwo = validator.createFieldset(testFieldsetTwo, 'all', {
-        validateVisible: false
-      }, [
-        new ValidPlus.Field(testFieldTwo, { }, [], {}),
-      ])
+      expect(validator.isValid()).to.be.false;
+      expect(fieldset._isValid).to.be.false;
+      expect(fieldsetTwo._isValid).to.equal(null);
+    });
 
-      expect(validator.isValid()).to.be.false
-      expect(fieldset._isValid).to.be.false
-      expect(fieldsetTwo._isValid).to.equal(null)
-    })
+    it('Validator should evaluate all fieldsets with lazy off', function() {
+      let validator = new ValidPlus.Validator(
+        {
+          lazy: false,
+          validateVisible: false,
+        },
+        testForm
+      );
+      let testFieldset = window.document.createElement('div');
+      let testFieldsetTwo = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
+      testFieldsetTwo.className = 'fieldsetTwo';
 
-    it('Validator should evaluate all fieldsets with lazy off', function () {
-      let validator = new ValidPlus.Validator({
-        lazy: false,
-        validateVisible: false
-      }, testForm)
-      let testFieldset = window.document.createElement('div')
-      let testFieldsetTwo = window.document.createElement('div')
-      testFieldset.className = 'fieldset'
-      testFieldsetTwo.className = 'fieldsetTwo'
+      let testField = window.document.createElement('div');
+      let testFieldTwo = window.document.createElement('div');
+      testField.className = 'VPField';
+      testFieldTwo.className = 'VPField';
 
-      let testField = window.document.createElement('div')
-      let testFieldTwo = window.document.createElement('div')
-      testField.className = 'VPField'
-      testFieldTwo.className = 'VPField'
+      let testInput = window.document.createElement('input');
+      let testInputTwo = window.document.createElement('input');
+      testInput.setAttribute('required', true);
+      testInputTwo.setAttribute('required', true);
 
-      let testInput = window.document.createElement('input')
-      let testInputTwo = window.document.createElement('input')
-      testInput.setAttribute('required', true)
-      testInputTwo.setAttribute('required', true)
+      testField.append(testInput);
+      testFieldTwo.append(testInputTwo);
 
-      testField.append(testInput)
-      testFieldTwo.append(testInputTwo)
+      testFieldset.append(testField);
+      testFieldsetTwo.append(testFieldTwo);
 
-      testFieldset.append(testField)
-      testFieldsetTwo.append(testFieldTwo)
+      const fieldset = validator.createFieldset(
+        testFieldset,
+        'all',
+        {
+          validateVisible: false,
+        },
+        [new ValidPlus.Field(testField, {}, [], {})]
+      );
+      const fieldsetTwo = validator.createFieldset(
+        testFieldsetTwo,
+        'all',
+        {
+          validateVisible: false,
+        },
+        [new ValidPlus.Field(testFieldTwo, {}, [], {})]
+      );
 
-      const fieldset = validator.createFieldset(testFieldset, 'all', {
-        validateVisible: false
-      }, [
-        new ValidPlus.Field(testField, { }, [], {}),
-      ])
-      const fieldsetTwo = validator.createFieldset(testFieldsetTwo, 'all', {
-        validateVisible: false
-      }, [
-        new ValidPlus.Field(testFieldTwo, { }, [], {}),
-      ])
-
-      expect(validator.isValid()).to.be.false
-      expect(fieldset._isValid).to.be.false
-      expect(fieldsetTwo._isValid).to.be.false
-    })
+      expect(validator.isValid()).to.be.false;
+      expect(fieldset._isValid).to.be.false;
+      expect(fieldsetTwo._isValid).to.be.false;
+    });
 
     // TODO: Implement Cypress E2E testing for visual
-    it('Validator should ignore hidden fieldsets by default')
+    it('Validator should ignore hidden fieldsets by default');
 
-    describe('Validator Error Handling', function () {
-      it('Should append the errorClass on invalid', function () {
-        const MockFieldset = { isValid: () => false, element: {} }
-        const validator = new ValidPlus.Validator({
-          scrollTo: false,
-          validateVisible: false
-        }, testForm)
-        validator._fieldsets.push(MockFieldset)
+    describe('Validator Error Handling', function() {
+      it('Should append the errorClass on invalid', function() {
+        const MockFieldset = { isValid: () => false, element: {} };
+        const validator = new ValidPlus.Validator(
+          {
+            scrollTo: false,
+            validateVisible: false,
+          },
+          testForm
+        );
+        validator._fieldsets.push(MockFieldset);
 
-        expect(validator.isValid()).to.be.false
-        expect(testForm.classList.contains('-isError')).to.be.true
-      })
-      it('Should append the validClass on valid', function () {
-        const validator = new ValidPlus.Validator({}, testForm)
-        expect(validator.isValid()).to.be.true
-        expect(testForm.classList.contains('-isValid')).to.be.true
-      })
-      it('Should append a custom options.errorClass on invalid', function () {
-        const errorClass = '-helloWorld'
-        const MockFieldset = { isValid: () => false, element: {} }
-        const validator = new ValidPlus.Validator({
-          errorClass,
-          scrollTo: false, // ScrollTo expects a element, which we don't have (mocked)
-          validateVisible: false
-        }, testForm)
-        validator._fieldsets.push(MockFieldset)
+        expect(validator.isValid()).to.be.false;
+        expect(testForm.classList.contains('-isError')).to.be.true;
+      });
+      it('Should append the validClass on valid', function() {
+        const validator = new ValidPlus.Validator({}, testForm);
+        expect(validator.isValid()).to.be.true;
+        expect(testForm.classList.contains('-isValid')).to.be.true;
+      });
+      it('Should append a custom options.errorClass on invalid', function() {
+        const errorClass = '-helloWorld';
+        const MockFieldset = { isValid: () => false, element: {} };
+        const validator = new ValidPlus.Validator(
+          {
+            errorClass,
+            scrollTo: false, // ScrollTo expects a element, which we don't have (mocked)
+            validateVisible: false,
+          },
+          testForm
+        );
+        validator._fieldsets.push(MockFieldset);
 
-        expect(validator.isValid()).to.be.false
-        expect(testForm.classList.contains(errorClass)).to.be.true
-      })
-      it('Should append a custom options.validClass on valid', function () {
-        const validClass = '-fooBar'
-        const validator = new ValidPlus.Validator({
-          validClass
-        }, testForm)
-        expect(validator.isValid()).to.be.true
-        expect(testForm.classList.contains(validClass)).to.be.true
-      })
-    })
-  })
+        expect(validator.isValid()).to.be.false;
+        expect(testForm.classList.contains(errorClass)).to.be.true;
+      });
+      it('Should append a custom options.validClass on valid', function() {
+        const validClass = '-fooBar';
+        const validator = new ValidPlus.Validator(
+          {
+            validClass,
+          },
+          testForm
+        );
+        expect(validator.isValid()).to.be.true;
+        expect(testForm.classList.contains(validClass)).to.be.true;
+      });
+    });
+  });
 
-  describe('ValidPlus.Fieldset', function () {
-    let testFieldset
+  describe('ValidPlus.Fieldset', function() {
+    let testFieldset;
 
     beforeEach(done => {
-      testFieldset = window.document.createElement('div')
-      testFieldset.className = 'fieldset'
+      testFieldset = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
 
-      done()
-    })
+      done();
+    });
 
-    describe('Fieldset Error Handling', function () {
-      let testFieldset
-      let testField
-      let testInput
-      let all = fields => fields.every(field => field === true)
+    describe('Fieldset Error Handling', function() {
+      let testFieldset;
+      let testField;
+      let testInput;
+      let all = fields => fields.every(field => field === true);
 
       beforeEach(() => {
-        testFieldset = window.document.createElement('div')
-        testField = window.document.createElement('div')
-        testField.className = 'field'
-        testFieldset.append(testField)
+        testFieldset = window.document.createElement('div');
+        testField = window.document.createElement('div');
+        testField.className = 'field';
+        testFieldset.append(testField);
 
-        testInput = window.document.createElement('input')
-        testInput.className = 'input'
-        testInput.value = 'Hello, World'
-        testField.append(testInput)
-      })
+        testInput = window.document.createElement('input');
+        testInput.className = 'input';
+        testInput.value = 'Hello, World';
+        testField.append(testInput);
+      });
 
-      it('Should append the errorClass on invalid fieldset', function () {
-        testInput.value = null
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
-        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
-          validateVisible: false
-        }, {})
-        fieldset.addField(field)
+      it('Should append the errorClass on invalid fieldset', function() {
+        testInput.value = null;
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
+        let fieldset = new ValidPlus.Fieldset(
+          testFieldset,
+          all,
+          {
+            validateVisible: false,
+          },
+          {}
+        );
+        fieldset.addField(field);
 
-        expect(fieldset.isValid()).to.be.false
-        expect(testFieldset.classList.contains('-isError')).to.be.true
-      })
-      it('Should append the validClass on valid fields/inputs', function () {
-        testInput.value = 'hello'
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
-        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
-          validateVisible: false
-        }, {})
-        fieldset.addField(field)
+        expect(fieldset.isValid()).to.be.false;
+        expect(testFieldset.classList.contains('-isError')).to.be.true;
+      });
+      it('Should append the validClass on valid fields/inputs', function() {
+        testInput.value = 'hello';
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
+        let fieldset = new ValidPlus.Fieldset(
+          testFieldset,
+          all,
+          {
+            validateVisible: false,
+          },
+          {}
+        );
+        fieldset.addField(field);
 
-        expect(fieldset.isValid()).to.be.true
-        expect(testFieldset.classList.contains('-isValid')).to.be.true
-      })
-      it('Should allow for custom errorClass', function () {
-        const errorClass = '-fooBar'
-        testInput.value = null
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
-        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
-          errorClass,
-          validateVisible: false
-        }, {})
-        fieldset.addField(field)
+        expect(fieldset.isValid()).to.be.true;
+        expect(testFieldset.classList.contains('-isValid')).to.be.true;
+      });
+      it('Should allow for custom errorClass', function() {
+        const errorClass = '-fooBar';
+        testInput.value = null;
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
+        let fieldset = new ValidPlus.Fieldset(
+          testFieldset,
+          all,
+          {
+            errorClass,
+            validateVisible: false,
+          },
+          {}
+        );
+        fieldset.addField(field);
 
-        expect(fieldset.isValid()).to.be.false
-        expect(testFieldset.classList.contains(errorClass)).to.be.true
-      })
-      it('Should allow for custom validClass', function () {
-        const validClass = '-helloWorld'
-        testInput.value = 'hello'
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
-        let fieldset = new ValidPlus.Fieldset(testFieldset, all, {
-          validClass,
-          validateVisible: false
-        }, {})
-        fieldset.addField(field)
+        expect(fieldset.isValid()).to.be.false;
+        expect(testFieldset.classList.contains(errorClass)).to.be.true;
+      });
+      it('Should allow for custom validClass', function() {
+        const validClass = '-helloWorld';
+        testInput.value = 'hello';
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
+        let fieldset = new ValidPlus.Fieldset(
+          testFieldset,
+          all,
+          {
+            validClass,
+            validateVisible: false,
+          },
+          {}
+        );
+        fieldset.addField(field);
 
-        expect(fieldset.isValid()).to.be.true
-        expect(testFieldset.classList.contains(validClass)).to.be.true
-      })
-    })
+        expect(fieldset.isValid()).to.be.true;
+        expect(testFieldset.classList.contains(validClass)).to.be.true;
+      });
+    });
 
-    it('Fieldset should throw an error if missing an element', function () {
-      expect(() => new ValidPlus.Fieldset(null, () => null, {})).to.throw()
-    })
-    it('Fieldset should throw an error if missing a strategy', function () {
-      expect(() => new ValidPlus.Fieldset(testFieldset, null, {})).to.throw()
-    })
-    it('Fieldset should add children fields', function () {
-      let testField = window.document.createElement('div')
-      testField.className = 'field'
-      testFieldset.append(testField)
+    it('Fieldset should throw an error if missing an element', function() {
+      expect(() => new ValidPlus.Fieldset(null, () => null, {})).to.throw();
+    });
+    it('Fieldset should throw an error if missing a strategy', function() {
+      expect(() => new ValidPlus.Fieldset(testFieldset, null, {})).to.throw();
+    });
+    it('Fieldset should add children fields', function() {
+      let testField = window.document.createElement('div');
+      testField.className = 'field';
+      testFieldset.append(testField);
 
-      let fieldset = new ValidPlus.Fieldset(testFieldset, () => null, { fieldClass: 'field' })
-      fieldset.createField(testField, [], {})
+      let fieldset = new ValidPlus.Fieldset(testFieldset, () => null, {
+        fieldClass: 'field',
+      });
+      fieldset.createField(testField, [], {});
 
-      expect(fieldset._fields.length).to.equal(1)
-      expect(fieldset._fields[0]).to.be.instanceof(ValidPlus.Field)
-    })
+      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset._fields[0]).to.be.instanceof(ValidPlus.Field);
+    });
 
-    it('Fieldset should validate', function () {
-      let testInput = window.document.createElement('input')
-      testInput.className = 'input'
-      let testField = window.document.createElement('div')
-      testField.className = 'VPField'
+    it('Fieldset should validate', function() {
+      let testInput = window.document.createElement('input');
+      testInput.className = 'input';
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
 
-      testField.append(testInput)
-      testFieldset.append(testField)
+      testField.append(testInput);
+      testFieldset.append(testField);
 
-      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
-      fieldset.createField(testField, [], {})
+      let fieldset = new ValidPlus.Fieldset(
+        testFieldset,
+        a => a.every(v => v === true),
+        {}
+      );
+      fieldset.createField(testField, [], {});
 
-      expect(fieldset._fields.length).to.equal(1)
-      expect(fieldset.isValid()).to.be.true
-    })
+      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset.isValid()).to.be.true;
+    });
 
-    it('Fieldset should validate fields', function () {
-      let testField = window.document.createElement('div')
-      testField.className = 'VPField'
+    it('Fieldset should validate fields', function() {
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
 
-      let testInput = window.document.createElement('input')
-      testInput.value = 10
-      testInput.setAttribute('type', 'number')
-      testInput.setAttribute('min', 1)
-      testInput.setAttribute('max', 15)
+      let testInput = window.document.createElement('input');
+      testInput.value = 10;
+      testInput.setAttribute('type', 'number');
+      testInput.setAttribute('min', 1);
+      testInput.setAttribute('max', 15);
 
-      testField.append(testInput)
-      testFieldset.append(testField)
+      testField.append(testInput);
+      testFieldset.append(testField);
 
-      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {})
-      fieldset.addField(new ValidPlus.Field(testField, {}))
+      let fieldset = new ValidPlus.Fieldset(
+        testFieldset,
+        a => a.every(v => v === true),
+        {}
+      );
+      fieldset.addField(new ValidPlus.Field(testField, {}));
 
-      expect(fieldset._fields.length).to.equal(1)
-      expect(fieldset.isValid()).to.be.true
-    })
+      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset.isValid()).to.be.true;
+    });
 
-    it('Fieldset should append onValid Message and message should be correct', function () {
-      let testField = window.document.createElement('div')
-      testField.className = 'VPField'
+    it('Fieldset should append onValid Message and message should be correct', function() {
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
 
-      let testInput = window.document.createElement('input')
-      testInput.value = 10
-      testInput.setAttribute('type', 'number')
-      testInput.setAttribute('min', 1)
-      testInput.setAttribute('max', 15)
+      let testInput = window.document.createElement('input');
+      testInput.value = 10;
+      testInput.setAttribute('type', 'number');
+      testInput.setAttribute('min', 1);
+      testInput.setAttribute('max', 15);
 
-      testField.append(testInput)
-      testFieldset.append(testField)
+      testField.append(testInput);
+      testFieldset.append(testField);
 
-      let fieldset = new ValidPlus.Fieldset(testFieldset, (a) => a.every(v => v === true), {}, {
-        isValid: {
-          message: 'Hello, World'
+      let fieldset = new ValidPlus.Fieldset(
+        testFieldset,
+        a => a.every(v => v === true),
+        {},
+        {
+          isValid: {
+            message: 'Hello, World',
+          },
         }
-      })
-      fieldset.addField(new ValidPlus.Field(testField, {}))
+      );
+      fieldset.addField(new ValidPlus.Field(testField, {}));
 
-      expect(fieldset.isValid()).to.be.true
-      expect(testFieldset.children.length).to.equal(2)
-      expect((testFieldset.children)[1].className).to.equal('VPMessages')
-      expect((testFieldset.children)[1].children.length).to.equal(1)
-      expect(((testFieldset.children)[1].children)[0].className).to.equal('VPMessage -isValid')
-      expect(((testFieldset.children)[1].children)[0].innerHTML).to.equal('Hello, World')
-    })
-  })
+      expect(fieldset.isValid()).to.be.true;
+      expect(testFieldset.children.length).to.equal(2);
+      expect(testFieldset.children[1].className).to.equal('VPMessages');
+      expect(testFieldset.children[1].children.length).to.equal(1);
+      expect(testFieldset.children[1].children[0].className).to.equal(
+        'VPMessage -isValid'
+      );
+      expect(testFieldset.children[1].children[0].innerHTML).to.equal(
+        'Hello, World'
+      );
+    });
+  });
 
-  describe('ValidPlus.Field', function () {
-    let validator
-    let testFieldset
-    let testField
-    let testInput
+  describe('ValidPlus.Field', function() {
+    let validator;
+    let testFieldset;
+    let testField;
+    let testInput;
 
     beforeEach(done => {
-      testFieldset = window.document.createElement('div')
-      testField = window.document.createElement('div')
-      testField.className = 'field'
-      testFieldset.append(testField)
+      testFieldset = window.document.createElement('div');
+      testField = window.document.createElement('div');
+      testField.className = 'field';
+      testFieldset.append(testField);
 
-      testInput = window.document.createElement('input')
-      testInput.className = 'input'
-      testInput.value = 'Hello, World'
-      testField.append(testInput)
+      testInput = window.document.createElement('input');
+      testInput.className = 'input';
+      testInput.value = 'Hello, World';
+      testField.append(testInput);
 
-      done()
-    })
+      done();
+    });
 
-    describe('Fields Properties', function () {
-    })
+    describe('Fields Properties', function() {});
 
-    describe('Field Error Handling', function () {
-      it('Should append the errorClass on invalid fields/inputs', function () {
-        testInput.value = null
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
+    describe('Field Error Handling', function() {
+      it('Should append the errorClass on invalid fields/inputs', function() {
+        testInput.value = null;
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
 
-        expect(field.isValid()).to.be.false
-        expect(testField.classList.contains('-isError')).to.be.true
-      })
-      it('Should append the validClass on valid fields/inputs', function () {
-        testInput.value = 'hello'
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, { }, [], {})
+        expect(field.isValid()).to.be.false;
+        expect(testField.classList.contains('-isError')).to.be.true;
+      });
+      it('Should append the validClass on valid fields/inputs', function() {
+        testInput.value = 'hello';
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(testField, {}, [], {});
 
-        expect(field.isValid()).to.be.true
-        expect(testField.classList.contains('-isValid')).to.be.true
-      })
-      it('Should allow for custom errorClass', function () {
-        const errorClass = '-fooBar'
-        testInput.value = null
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, {
-          errorClass
-        }, [], {})
+        expect(field.isValid()).to.be.true;
+        expect(testField.classList.contains('-isValid')).to.be.true;
+      });
+      it('Should allow for custom errorClass', function() {
+        const errorClass = '-fooBar';
+        testInput.value = null;
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            errorClass,
+          },
+          [],
+          {}
+        );
 
-        expect(field.isValid()).to.be.false
-        expect(testField.classList.contains(errorClass)).to.be.true
-      })
-      it('Should allow for custom validClass', function () {
-        const validClass = '-helloWorld'
-        testInput.value = 'hello'
-        testInput.setAttribute('required', true)
-        let field = new ValidPlus.Field(testField, {
-          validClass
-        }, [], {})
+        expect(field.isValid()).to.be.false;
+        expect(testField.classList.contains(errorClass)).to.be.true;
+      });
+      it('Should allow for custom validClass', function() {
+        const validClass = '-helloWorld';
+        testInput.value = 'hello';
+        testInput.setAttribute('required', true);
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            validClass,
+          },
+          [],
+          {}
+        );
 
-        expect(field.isValid()).to.be.true
-        expect(testField.classList.contains(validClass)).to.be.true
-      })
-    })
+        expect(field.isValid()).to.be.true;
+        expect(testField.classList.contains(validClass)).to.be.true;
+      });
+    });
 
-    describe('Fields Default Validation Types', function () {
-      it('Should validate required (standard)', function () {
-        testInput.setAttribute('required', true)
-        testInput.value = null
+    describe('Fields Default Validation Types', function() {
+      it('Should validate required (standard)', function() {
+        testInput.setAttribute('required', true);
+        testInput.value = null;
         let field = new ValidPlus.Field(testField, {}, [], {
           isInvalid: {
-            message: 'Hello, World'
-          }
-        })
+            message: 'Hello, World',
+          },
+        });
 
-        expect(field.isValid()).to.be.false
-        testInput.value = 'hello'
-        expect(field.isValid()).to.be.true
-      })
+        expect(field.isValid()).to.be.false;
+        testInput.value = 'hello';
+        expect(field.isValid()).to.be.true;
+      });
 
-      it ('Should validate required (radio)', function () {
-        let testFieldsetTwo = window.document.createElement('div')
-        let testFieldTwo = window.document.createElement('div')
-        testFieldTwo.className = 'field'
-        testFieldsetTwo.append(testField)
+      it('Should validate required (radio)', function() {
+        let testFieldsetTwo = window.document.createElement('div');
+        let testFieldTwo = window.document.createElement('div');
+        testFieldTwo.className = 'field';
+        testFieldsetTwo.append(testField);
 
-        let testInputTwo = window.document.createElement('input')
-        testInputTwo.className = 'input'
-        testInputTwo.value = 'Hello, World'
-        testInputTwo.setAttribute('type', 'radio')
-        testFieldTwo.append(testInputTwo)
+        let testInputTwo = window.document.createElement('input');
+        testInputTwo.className = 'input';
+        testInputTwo.value = 'Hello, World';
+        testInputTwo.setAttribute('type', 'radio');
+        testFieldTwo.append(testInputTwo);
 
-        testInput.setAttribute('type', 'radio')
-        testInput.setAttribute('required', true)
-        testInput.checked = false
+        testInput.setAttribute('type', 'radio');
+        testInput.setAttribute('required', true);
+        testInput.checked = false;
         let field = new ValidPlus.Field(testField, {}, [], {
           isInvalid: {
-            message: 'Foo'
-          }
-        })
+            message: 'Foo',
+          },
+        });
 
         let fieldTwo = new ValidPlus.Field(testFieldTwo, {}, [], {
           isInvalid: {
-            message: 'Bar'
-          }
-        })
+            message: 'Bar',
+          },
+        });
 
-        expect(fieldTwo.isValid()).to.be.true
-        expect(field.isValid()).to.be.false
+        expect(fieldTwo.isValid()).to.be.true;
+        expect(field.isValid()).to.be.false;
 
-        testInputTwo.checked = false
-        testInput.checked = true
+        testInputTwo.checked = false;
+        testInput.checked = true;
 
         // Radio is always valid if not required
         // Else it is checked/!checked as usual
-        expect(fieldTwo.isValid()).to.be.true
-        expect(field.isValid()).to.be.true
-      })
+        expect(fieldTwo.isValid()).to.be.true;
+        expect(field.isValid()).to.be.true;
+      });
 
-      it('Should validate min', function () {
-        testInput.setAttribute('min', 5)
-        testInput.value = 3
+      it('Should validate min', function() {
+        testInput.setAttribute('min', 5);
+        testInput.value = 3;
         let field = new ValidPlus.Field(testField, {}, [], {
           isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.false
-        testInput.value = 6
-        expect(field.isValid()).to.be.true
-      })
-      it('Should validate max', function () {
-        testInput.setAttribute('max', 5)
-        testInput.value = 3
-        let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = 6
-        expect(field.isValid()).to.be.false
-      })
-      it('Should validate maxLength', function () {
-        testInput.setAttribute('maxlength', 5)
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = ''
-        expect(field.isValid()).to.be.true
-        testInput.value = 'hello world'
-        expect(field.isValid()).to.be.false
-      })
-      it('Should validate minLength', function () {
-        testInput.setAttribute('minlength', 5)
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = ''
-        expect(field.isValid()).to.be.false
-        testInput.value = 'hello world'
-        expect(field.isValid()).to.be.true
-      })
-      it('Should validate pattern', function () {
-        testInput.setAttribute('pattern', '[0-9]{5}')
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.false
-        testInput.value = 1245
-        expect(field.isValid()).to.be.false
-        testInput.value = '12345'
-        expect(field.isValid()).to.be.true
-      })
-    })
-
-    describe('Validate programmically', function () {
-      it('Should validate required', function () {
-        testInput.value = null
-        let field = new ValidPlus.Field(testField, {
-          rules: {
-            required: true
+            message: 'Hello, World',
           },
-        }, [], {
+        });
+
+        expect(field.isValid()).to.be.false;
+        testInput.value = 6;
+        expect(field.isValid()).to.be.true;
+      });
+      it('Should validate max', function() {
+        testInput.setAttribute('max', 5);
+        testInput.value = 3;
+        let field = new ValidPlus.Field(testField, {}, [], {
           isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.false
-        testInput.value = 'hello'
-        expect(field.isValid()).to.be.true
-      })
-
-      it('Should validate min', function () {
-        testInput.value = 3
-        let field = new ValidPlus.Field(testField, {
-          rules: {
-            min: 5
+            message: 'Hello, World',
           },
-        }, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
+        });
 
-        expect(field.isValid()).to.be.false
-        testInput.value = 6
-        expect(field.isValid()).to.be.true
-      })
-      it('Should validate max', function () {
-        testInput.value = 3
-        let field = new ValidPlus.Field(testField, {
+        expect(field.isValid()).to.be.true;
+        testInput.value = 6;
+        expect(field.isValid()).to.be.false;
+      });
+      it('Should validate maxLength', function() {
+        testInput.setAttribute('maxlength', 5);
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World',
+          },
+        });
+
+        expect(field.isValid()).to.be.true;
+        testInput.value = '';
+        expect(field.isValid()).to.be.true;
+        testInput.value = 'hello world';
+        expect(field.isValid()).to.be.false;
+      });
+      it('Should validate minLength', function() {
+        testInput.setAttribute('minlength', 5);
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World',
+          },
+        });
+
+        expect(field.isValid()).to.be.true;
+        testInput.value = '';
+        expect(field.isValid()).to.be.false;
+        testInput.value = 'hello world';
+        expect(field.isValid()).to.be.true;
+      });
+      it('Should validate pattern', function() {
+        testInput.setAttribute('pattern', '[0-9]{5}');
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(testField, {}, [], {
+          isInvalid: {
+            message: 'Hello, World',
+          },
+        });
+
+        expect(field.isValid()).to.be.false;
+        testInput.value = 1245;
+        expect(field.isValid()).to.be.false;
+        testInput.value = '12345';
+        expect(field.isValid()).to.be.true;
+      });
+    });
+
+    describe('Validate programmically', function() {
+      it('Should validate required', function() {
+        testInput.value = null;
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              required: true,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.false;
+        testInput.value = 'hello';
+        expect(field.isValid()).to.be.true;
+      });
+
+      it('Should validate min', function() {
+        testInput.value = 3;
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              min: 5,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.false;
+        testInput.value = 6;
+        expect(field.isValid()).to.be.true;
+      });
+      it('Should validate max', function() {
+        testInput.value = 3;
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              max: 5,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.true;
+        testInput.value = 6;
+        expect(field.isValid()).to.be.false;
+      });
+      it('Should validate maxLength', function() {
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              maxLength: 5,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.true;
+        testInput.value = '';
+        expect(field.isValid()).to.be.true;
+        testInput.value = 'hello world';
+        expect(field.isValid()).to.be.false;
+      });
+      it('Should validate minLength', function() {
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              minLength: 5,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.true;
+        testInput.value = '';
+        expect(field.isValid()).to.be.false;
+        testInput.value = 'hello world';
+        expect(field.isValid()).to.be.true;
+      });
+      it('Should validate pattern', function() {
+        testInput.value = 'hello';
+        let field = new ValidPlus.Field(
+          testField,
+          {
+            rules: {
+              pattern: /[0-9]{5}/,
+            },
+          },
+          [],
+          {
+            isInvalid: {
+              message: 'Hello, World',
+            },
+          }
+        );
+
+        expect(field.isValid()).to.be.false;
+        testInput.value = 1245;
+        expect(field.isValid()).to.be.false;
+        testInput.value = '12345';
+        expect(field.isValid()).to.be.true;
+      });
+    });
+
+    it('Should validate rules over attribute if force is set', function() {
+      testInput.setAttribute('maxlength', 3);
+      testInput.value = 'hello';
+      let field = new ValidPlus.Field(
+        testField,
+        {
           rules: {
-            max: 5
-          }
-        }, [], {
+            maxLength: 5,
+          },
+        },
+        [],
+        {
           isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = 6
-        expect(field.isValid()).to.be.false
-      })
-      it('Should validate maxLength', function () {
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {
-          rules: {
-            maxLength: 5
-          }
-        }, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = ''
-        expect(field.isValid()).to.be.true
-        testInput.value = 'hello world'
-        expect(field.isValid()).to.be.false
-      })
-      it('Should validate minLength', function () {
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {
-          rules: {
-            minLength: 5
-          }
-        }, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.true
-        testInput.value = ''
-        expect(field.isValid()).to.be.false
-        testInput.value = 'hello world'
-        expect(field.isValid()).to.be.true
-      })
-      it('Should validate pattern', function () {
-        testInput.value = 'hello'
-        let field = new ValidPlus.Field(testField, {
-          rules: {
-            pattern: /[0-9]{5}/
-          }
-        }, [], {
-          isInvalid: {
-            message: 'Hello, World'
-          }
-        })
-
-        expect(field.isValid()).to.be.false
-        testInput.value = 1245
-        expect(field.isValid()).to.be.false
-        testInput.value = '12345'
-        expect(field.isValid()).to.be.true
-      })
-    })
-
-
-    it('Should validate rules over attribute if force is set', function () {
-      testInput.setAttribute('maxlength', 3)
-      testInput.value = 'hello'
-      let field = new ValidPlus.Field(testField, {
-        rules: {
-          maxLength: 5
+            message: 'Hello, World',
+          },
         }
-      }, [], {
-        isInvalid: {
-          message: 'Hello, World'
-        }
-      })
+      );
 
-      expect(field.isValid()).to.be.false
-      field.options.forceRules = true
-      expect(field.isValid()).to.be.true
-    })
+      expect(field.isValid()).to.be.false;
+      field.options.forceRules = true;
+      expect(field.isValid()).to.be.true;
+    });
 
-    it('Should format pre/post and include an eventDispatch method', function () {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
+    it('Should format pre/post and include an eventDispatch method', function() {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
 
       let uppercasePre = (input, dispatchEvent) => {
-        input.value = input.value.toUpperCase()
-        input.value = input.value += '-world'
-        dispatchEvent('input')
-      }
+        input.value = input.value.toUpperCase();
+        input.value = input.value += '-world';
+        dispatchEvent('input');
+      };
       let lowercasePost = (input, dispatchEvent) => {
-        input.value = input.value.toLowerCase()
-        dispatchEvent('input')
-      }
-      testInput.value = 'hello'
+        input.value = input.value.toLowerCase();
+        dispatchEvent('input');
+      };
+      testInput.value = 'hello';
 
-      const spyPreFired = sinon.spy(uppercasePre)
-      const spyPostFired = sinon.spy(lowercasePost)
+      const spyPreFired = sinon.spy(uppercasePre);
+      const spyPostFired = sinon.spy(lowercasePost);
 
-      let field = new ValidPlus.Field(testField, {
-        formatter: {
-          pre: spyPreFired,
-          post: spyPostFired,
-        }
-      }, [ ], { })
+      let field = new ValidPlus.Field(
+        testField,
+        {
+          formatter: {
+            pre: spyPreFired,
+            post: spyPostFired,
+          },
+        },
+        [],
+        {}
+      );
 
-      expect(field.isValid()).to.be.true
+      expect(field.isValid()).to.be.true;
 
-      expect(spyPreFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
-      expect(typeof spyPreFired.args[0][1]).to.equal('function')
-      expect(spyPostFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
-      expect(typeof spyPostFired.args[0][1]).to.equal('function')
+      expect(spyPreFired.args[0][0]).to.be.an.instanceof(window.HTMLElement);
+      expect(typeof spyPreFired.args[0][1]).to.equal('function');
+      expect(spyPostFired.args[0][0]).to.be.an.instanceof(window.HTMLElement);
+      expect(typeof spyPostFired.args[0][1]).to.equal('function');
 
-      expect(testInput.value).to.equal('hello-world')
+      expect(testInput.value).to.equal('hello-world');
 
-      ValidPlus.Field.prototype.isValid.restore()
-    })
+      ValidPlus.Field.prototype.isValid.restore();
+    });
 
-    it('Should listen for changes on input/change by default', function () {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
+    it('Should listen for changes on input/change by default', function() {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
       let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
-          message: 'Hello, World'
+          message: 'Hello, World',
+        },
+      });
+      let inputEvent = window.document.createEvent('Event');
+      inputEvent.initEvent('input', false, false);
+
+      testInput.value = 'Foo, Bar';
+      testInput.dispatchEvent(inputEvent);
+
+      expect(spyIsValid.calledOnce).to.be.true;
+
+      ValidPlus.Field.prototype.isValid.restore();
+    });
+
+    it('Should fire update events on pre/post formatters', function() {
+      let inputEvent = window.document.createEvent('Event');
+      inputEvent.initEvent('input', false, false);
+
+      let field = new ValidPlus.Field(
+        testField,
+        {
+          formatter: {
+            pre: input => {
+              input.value = 'Foo Bar';
+              input.dispatchEvent(inputEvent);
+            },
+          },
+        },
+        [],
+        {
+          isInvalid: {
+            message: 'Hello, World',
+          },
         }
-      })
-      let inputEvent = window.document.createEvent('Event')
-      inputEvent.initEvent('input', false, false)
+      );
 
-      testInput.value = 'Foo, Bar'
-      testInput.dispatchEvent(inputEvent)
+      let inputSpy = sinon.spy(field.input, 'dispatchEvent');
 
-      expect(spyIsValid.calledOnce).to.be.true
+      field.isValid();
+      expect(testInput.value).to.equal('Foo Bar');
+      expect(inputSpy.called).to.be.true;
+    });
 
-      ValidPlus.Field.prototype.isValid.restore()
-    })
-
-    it('Should fire update events on pre/post formatters', function () {
-      let inputEvent = window.document.createEvent('Event')
-      inputEvent.initEvent('input', false, false)
-
-      let field = new ValidPlus.Field(testField, {
-        formatter: {
-          pre: (input) => {
-            input.value = 'Foo Bar'
-            input.dispatchEvent(inputEvent)
-          }
+    it('Should only validate onBlur w/ dirtyOnBlur', function() {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
+      let field = new ValidPlus.Field(
+        testField,
+        {
+          dirtyOnBlur: true,
+        },
+        [],
+        {
+          isInvalid: {
+            message: 'Hello, World',
+          },
         }
-      }, [], {
-        isInvalid: {
-          message: 'Hello, World'
-        }
-      })
+      );
 
-      let inputSpy = sinon.spy(field.input, 'dispatchEvent')
+      let inputEvent = window.document.createEvent('Event');
+      let blurEvent = window.document.createEvent('Event');
+      inputEvent.initEvent('input', false, false);
+      blurEvent.initEvent('blur', false, false);
 
-      field.isValid()
-      expect(testInput.value).to.equal('Foo Bar')
-      expect(inputSpy.called).to.be.true
-    })
-
-    it('Should only validate onBlur w/ dirtyOnBlur', function () {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
-      let field = new ValidPlus.Field(testField, {
-        dirtyOnBlur: true
-      }, [], {
-        isInvalid: {
-          message: 'Hello, World'
-        }
-      })
-
-      let inputEvent = window.document.createEvent('Event')
-      let blurEvent = window.document.createEvent('Event')
-      inputEvent.initEvent('input', false, false)
-      blurEvent.initEvent('blur', false, false)
-
-      const string = 'FooBar'
-      for(let i = 0, l = string.length; i < l; i++) {
-        testInput.value = testInput.value + string[i]
-        testInput.dispatchEvent(inputEvent)
+      const string = 'FooBar';
+      for (let i = 0, l = string.length; i < l; i++) {
+        testInput.value = testInput.value + string[i];
+        testInput.dispatchEvent(inputEvent);
       }
-      expect(field._dirty).to.be.false
-      expect(spyIsValid.calledOnce).to.be.false
+      expect(field._dirty).to.be.false;
+      expect(spyIsValid.calledOnce).to.be.false;
 
-      testInput.dispatchEvent(blurEvent)
-      expect(spyIsValid.calledOnce).to.be.true
-      expect(field._dirty).to.be.true
+      testInput.dispatchEvent(blurEvent);
+      expect(spyIsValid.calledOnce).to.be.true;
+      expect(field._dirty).to.be.true;
 
-      ValidPlus.Field.prototype.isValid.restore()
-    })
+      ValidPlus.Field.prototype.isValid.restore();
+    });
 
-    it('Should accept vp-params to toggle options', function () {
-      testField.setAttribute('vp-dirty', true)
-      testField.setAttribute('vp-blur', false)
-      testField.setAttribute('vp-watch', false)
+    it('Should accept vp-params to toggle options', function() {
+      testField.setAttribute('vp-dirty', true);
+      testField.setAttribute('vp-blur', false);
+      testField.setAttribute('vp-watch', false);
 
-      let field = new ValidPlus.Field(testField, {
-      }, [], {
+      let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
-          message: 'Foo'
-        }
-      })
+          message: 'Foo',
+        },
+      });
 
-      expect(field.options.dirtyOnBlur).to.be.true
-      expect(field.options.validateOnBlur).to.be.false
-      expect(field.options.watch).to.be.false
-    })
+      expect(field.options.dirtyOnBlur).to.be.true;
+      expect(field.options.validateOnBlur).to.be.false;
+      expect(field.options.watch).to.be.false;
+    });
 
-    it('Should validate on blur if set, regardless of watch', function () {
-      let blurEvent = window.document.createEvent('Event')
-      blurEvent.initEvent('blur', false, false)
+    it('Should validate on blur if set, regardless of watch', function() {
+      let blurEvent = window.document.createEvent('Event');
+      blurEvent.initEvent('blur', false, false);
 
-      testField.setAttribute('vp-blur', true)
-      testField.setAttribute('vp-watch', false)
+      testField.setAttribute('vp-blur', true);
+      testField.setAttribute('vp-watch', false);
 
-      testInput.setAttribute('required', true)
+      testInput.setAttribute('required', true);
 
-      let field = new ValidPlus.Field(testField, {
-      }, [], {
+      let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
-          message: 'Foo'
-        }
-      })
+          message: 'Foo',
+        },
+      });
 
-      testInput.value = 'Bar'
-      expect(field._isValid).to.equal(null)
-      testInput.dispatchEvent(blurEvent)
-      expect(field._isValid).to.equal(true)
-      testInput.value = ''
-      expect(field._isValid).to.equal(true)
-      testInput.dispatchEvent(blurEvent)
-      expect(field._isValid).to.equal(false)
-    })
+      testInput.value = 'Bar';
+      expect(field._isValid).to.equal(null);
+      testInput.dispatchEvent(blurEvent);
+      expect(field._isValid).to.equal(true);
+      testInput.value = '';
+      expect(field._isValid).to.equal(true);
+      testInput.dispatchEvent(blurEvent);
+      expect(field._isValid).to.equal(false);
+    });
 
-    it('Should validate input based on pattern attribute', function () {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
-      testInput.setAttribute('pattern', '[0-9]{5}')
+    it('Should validate input based on pattern attribute', function() {
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
+      testInput.setAttribute('pattern', '[0-9]{5}');
 
-      let field = new ValidPlus.Field(testField, { }, [], {
+      let field = new ValidPlus.Field(testField, {}, [], {
         isInvalid: {
-          message: 'Hello, World'
-        }
-      })
+          message: 'Hello, World',
+        },
+      });
 
-      let inputEvent = window.document.createEvent('Event')
-      inputEvent.initEvent('input', false, false)
+      let inputEvent = window.document.createEvent('Event');
+      inputEvent.initEvent('input', false, false);
 
-      testInput.value = 'notanumber'
-      testInput.dispatchEvent(inputEvent)
-      expect(field._isValid).to.be.false
+      testInput.value = 'notanumber';
+      testInput.dispatchEvent(inputEvent);
+      expect(field._isValid).to.be.false;
 
-      testInput.value = '09101'
-      testInput.dispatchEvent(inputEvent)
-      expect(field._isValid).to.be.true
+      testInput.value = '09101';
+      testInput.dispatchEvent(inputEvent);
+      expect(field._isValid).to.be.true;
 
-      testInput.value = '00'
-      testInput.dispatchEvent(inputEvent)
-      expect(field._isValid).to.be.false
-    })
-  })
-})
+      testInput.value = '00';
+      testInput.dispatchEvent(inputEvent);
+      expect(field._isValid).to.be.false;
+    });
+  });
+});

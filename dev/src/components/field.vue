@@ -1,25 +1,21 @@
 <template>
-<div class="test-field">
-  <slot></slot>
-  <input id="testField" name="test" type="text" :value="true" />
-</div>
+  <div class="test-field">
+    <slot></slot>
+    <input id="testField" name="test" type="text" :value="true">
+  </div>
 </template>
 
 <script>
-import VPVue from 'VPVue'
+import VPVue from "VPVue";
 
 export default {
-  props: {
+  props: {},
+  mixins: [VPVue.Field],
+  data() {
+    return {};
   },
-  mixins: [ VPVue.Field ],
-  data () {
-    return {
-    }
-  },
-  computed: {
-  }
-}
+  computed: {}
+};
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
