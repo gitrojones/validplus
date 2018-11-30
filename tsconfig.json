@@ -1,0 +1,71 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": false,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "declarationDir": "dist/types",
+    "declaration": true,
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "./dist/",
+    "lib": ["es2015", "es2017", "dom"],
+    "jsx": "react",
+    "allowJs": true,
+    "noEmit": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src": ["/src"],
+      "@lib": ["/lib"]
+    }
+  },
+  "include": ["validplus.ts, src/**/*", "lib/**/*"],
+  "exclude": ["node_modules", "dist", "coverage", "dev"],
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build",
+      "problemMatcher": ["$ts-webpack", "$tslint-webpack"]
+    },
+    {
+      "type": "npm",
+      "script": "build:watch",
+      "group": "build",
+      "isBackground": true,
+      "problemMatcher": [
+        {
+          "base": "$ts-webpack",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "Compilation starting…"
+            },
+            "endsPattern": {
+              "regexp": "Compilation finished"
+            }
+          }
+        },
+        {
+          "base": "$tslint-webpack",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "Compilation starting…"
+            },
+            "endsPattern": {
+              "regexp": "Compilation finished"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

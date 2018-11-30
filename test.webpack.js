@@ -29,7 +29,7 @@ module.exports = {
   externals: [nodeExternals()],
 
   resolve: {
-    extensions: ['.js', '.json', '.vue'],
+    extensions: ['.js', '.ts', '.json', '.vue'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@lib': path.resolve(__dirname, './lib'),
@@ -59,7 +59,7 @@ module.exports = {
           ]
         : []),
       {
-        test: /\.js$/,
+        test: /\.(js|ts)x$/,
         exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
         use: [
           {
@@ -72,7 +72,13 @@ module.exports = {
                     targets: '>0.25%, not dead',
                     useBuiltIns: 'usage',
                   },
+                  '@babel/preset-typescript',
                 ],
+              ],
+              plugins: [
+                require('@babel/plugin-transform-typescript').default,
+                require('@babel/plugin-proposal-class-properties').default,
+                require('@babel/plugin-proposal-object-rest-spread').default,
               ],
             },
           },

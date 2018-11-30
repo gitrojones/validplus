@@ -16,7 +16,7 @@ const devBundle = merge(require('./build.webpack.js'), {
     libraryTarget: 'var',
   },
   resolve: {
-    extensions: ['.js', '.json', '.vue'],
+    extensions: ['.js', '.ts', '.json', '.vue'],
     alias: {
       '#': path.resolve(__dirname, 'dev/src'),
       VPVue: path.resolve(__dirname, 'src/vue/index'),
