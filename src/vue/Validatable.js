@@ -11,57 +11,30 @@ export default {
       }
     }
   },
+  beforeMount () {
+    this.VP = require('validplus').default
+  },
   provide () {
-    if (this.VPProvideValidator) {
-      return {
-        VPValidator: this.validator
-      }
-    }
+    let providing = {}
+    if (this.VPProvideValidator) providing.VPValidator = this.validator
+    return providing
   },
   inject: {
-    VPField: {
-      default () {
-        // SSR Support
-        if (process.env.VUE_ENV === 'client') {
-          const { Field } = require('validplus').default
-          return Field
-        } else {
-          return null
-        }
-      }
-    },
-    VPFieldset: {
-      default () {
-        // SSR Support
-        if (process.env.VUE_ENV === 'client') {
-          const { Fieldset } = require('validplus').default
-          return Fieldset
-        } else {
-          return null
-        }
-      }
-    },
     VPValidator: {
       default () {
-        console.log('[VPVue] Validator not provided, injecting new validator.')
         this.VPNewValidator = true
-
-        // SSR Support
-        if (process.env.VUE_ENV === 'client') {
-          const VP = require('validplus').default
-          return new VP.Validator({})
-        } else {
-          return null
-        }
+        console.log('[VPVue] Validator not provided, injecting new validator.')
+        const VP = require('validplus').default
+        return new VP.Validator({})
       }
     }
   },
   methods: {
     VPCreateField (el, options, rules, onValidation) {
-      return new this.VPField(el, options, rules, onValidation)
+      return new this.VP.Field(el, options, rules, onValidation)
     },
-    VPCreateFieldset (el, strategy, options, fields, onvalidation) {
-      const fieldset = this.validator.createFieldset(el, strategy, options, fields, onvalidation)
+    VPCreateFieldset (el, strategy, options, fields, onValidation) {
+      const fieldset = this.validator.createFieldset(el, strategy, options, fields, onValidation)
       this.VPFieldSets.push(fieldset)
 
       return fieldset

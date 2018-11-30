@@ -2,12 +2,33 @@ import Validatable from './Validatable'
 
 export default {
   props: {
-    VPOptions: Object,
-    VPValid: Object
+    VPOptions: {
+      type: Object
+    },
+    VPRules: {
+      type: Object
+    },
+    VPValid: {
+      type: Object
+    }
   },
   mixins: [ Validatable ],
+  watch: {
+    'VPField._isValid': function (isValid) {
+      if (isValid) {
+        this.$emit('isValid', this)
+      } else {
+        this.$emit('isInvalid', this)
+      }
+    }
+  },
   mounted () {
-    this.VPField = this.VPCreateField(this.$el, this.VPOptions, this.VPRules, this.VPValid)
+    this.VPField = this.VPCreateField(
+      this.$el,
+      this.VPOptions$,
+      this.VPRules$,
+      this.VPValid$
+    )
 
     this.$nextTick(() => {
       this.$emit('VPAddField', this.VPField)
@@ -15,7 +36,10 @@ export default {
   },
   data () {
     return {
-      VPField: null
+      VPField: null,
+      VPOptions$: this.VPOptions || {},
+      VPRules$: this.VPRules || {},
+      VPValid$: this.VPValid || {}
     }
   },
   methods: {
