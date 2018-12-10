@@ -26,7 +26,7 @@ describe('ValidPlus', function() {
 
     describe('Validator Properties', function() {
       it('Validator instance should have properties', function() {
-        let validator = new ValidPlus.Validator({});
+        let validator = new ValidPlus.Validator({}, testForm);
         expect(validator).to.have.property('addFieldset');
         expect(validator).to.have.property('removeFieldset');
         expect(validator).to.have.property('createFieldset');
@@ -37,16 +37,6 @@ describe('ValidPlus', function() {
       });
     });
 
-    it('Validator should mount in passive mode without form Element supplied', function() {
-      let validator = new ValidPlus.Validator({});
-      expect(validator._strict).to.be.false;
-    });
-
-    it('Validator should mount in active mode with a form Element supplied', function() {
-      let validator = new ValidPlus.Validator({}, testForm);
-      expect(validator._strict).to.be.true;
-    });
-
     it('Validator should track new fieldsets', function() {
       let validator = new ValidPlus.Validator({}, testForm);
       let testFieldset = window.document.createElement('div');
@@ -55,8 +45,8 @@ describe('ValidPlus', function() {
       let success = validator.createFieldset(testFieldset, 'one', {}, []);
 
       expect(success).to.not.be.false;
-      expect(validator._fieldsets.length).to.equal(1);
-      expect(validator._fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset);
+      expect(validator.$fieldsets.length).to.equal(1);
+      expect(validator.$fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset);
     });
 
     it('Validator should allowing adding fieldsets and their fields', function() {
@@ -73,13 +63,14 @@ describe('ValidPlus', function() {
         new ValidPlus.Field(testField, {}, [], {}),
       ]);
 
-      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset.$fields.length).to.equal(1);
     });
 
     it('Validator should lazy evaluate fieldset validness byDefault', function() {
       let validator = new ValidPlus.Validator(
         {
-          validateVisible: false,
+          ValidateVisible: false,
+          ScrollTo: false,
         },
         testForm
       );
@@ -108,7 +99,8 @@ describe('ValidPlus', function() {
         testFieldset,
         'all',
         {
-          validateVisible: false,
+          ValidateVisible: false,
+          ScrollTo: false,
         },
         [new ValidPlus.Field(testField, {}, [], {})]
       );
@@ -116,21 +108,22 @@ describe('ValidPlus', function() {
         testFieldsetTwo,
         'all',
         {
-          validateVisible: false,
+          ValidateVisible: false,
+          ScrollTo: false,
         },
         [new ValidPlus.Field(testFieldTwo, {}, [], {})]
       );
 
       expect(validator.isValid()).to.be.false;
-      expect(fieldset._isValid).to.be.false;
-      expect(fieldsetTwo._isValid).to.equal(null);
+      expect(fieldset.$isValid).to.be.false;
+      expect(fieldsetTwo.$isValid).to.equal(null);
     });
 
     it('Validator should evaluate all fieldsets with lazy off', function() {
       let validator = new ValidPlus.Validator(
         {
-          lazy: false,
-          validateVisible: false,
+          ValidateLazy: false,
+          ValidateVisible: false,
         },
         testForm
       );
@@ -159,7 +152,7 @@ describe('ValidPlus', function() {
         testFieldset,
         'all',
         {
-          validateVisible: false,
+          ValidateVisible: false,
         },
         [new ValidPlus.Field(testField, {}, [], {})]
       );
@@ -167,14 +160,14 @@ describe('ValidPlus', function() {
         testFieldsetTwo,
         'all',
         {
-          validateVisible: false,
+          ValidateVisible: false,
         },
         [new ValidPlus.Field(testFieldTwo, {}, [], {})]
       );
 
       expect(validator.isValid()).to.be.false;
-      expect(fieldset._isValid).to.be.false;
-      expect(fieldsetTwo._isValid).to.be.false;
+      expect(fieldset.$isValid).to.be.false;
+      expect(fieldsetTwo.$isValid).to.be.false;
     });
 
     // TODO: Implement Cypress E2E testing for visual
@@ -185,12 +178,12 @@ describe('ValidPlus', function() {
         const MockFieldset = { isValid: () => false, element: {} };
         const validator = new ValidPlus.Validator(
           {
-            scrollTo: false,
-            validateVisible: false,
+            ScrollTo: false,
+            ValidateVisible: false,
           },
           testForm
         );
-        validator._fieldsets.push(MockFieldset);
+        validator.$fieldsets.push(MockFieldset);
 
         expect(validator.isValid()).to.be.false;
         expect(testForm.classList.contains('-isError')).to.be.true;
@@ -205,13 +198,13 @@ describe('ValidPlus', function() {
         const MockFieldset = { isValid: () => false, element: {} };
         const validator = new ValidPlus.Validator(
           {
-            errorClass,
-            scrollTo: false, // ScrollTo expects a element, which we don't have (mocked)
-            validateVisible: false,
+            ErrorClassName: errorClass,
+            ScrollTo: false, // ScrollTo expects a element, which we don't have (mocked)
+            ValidateVisible: false,
           },
           testForm
         );
-        validator._fieldsets.push(MockFieldset);
+        validator.$fieldsets.push(MockFieldset);
 
         expect(validator.isValid()).to.be.false;
         expect(testForm.classList.contains(errorClass)).to.be.true;
@@ -220,7 +213,7 @@ describe('ValidPlus', function() {
         const validClass = '-fooBar';
         const validator = new ValidPlus.Validator(
           {
-            validClass,
+            ValidClassName: validClass,
           },
           testForm
         );
@@ -244,7 +237,6 @@ describe('ValidPlus', function() {
       let testFieldset;
       let testField;
       let testInput;
-      let all = fields => fields.every(field => field === true);
 
       beforeEach(() => {
         testFieldset = window.document.createElement('div');
@@ -264,9 +256,9 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(testField, {}, [], {});
         let fieldset = new ValidPlus.Fieldset(
           testFieldset,
-          all,
+          'all',
           {
-            validateVisible: false,
+            ValidateVisible: false,
           },
           {}
         );
@@ -281,9 +273,9 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(testField, {}, [], {});
         let fieldset = new ValidPlus.Fieldset(
           testFieldset,
-          all,
+          'all',
           {
-            validateVisible: false,
+            ValidateVisible: false,
           },
           {}
         );
@@ -299,10 +291,10 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(testField, {}, [], {});
         let fieldset = new ValidPlus.Fieldset(
           testFieldset,
-          all,
+          'all',
           {
-            errorClass,
-            validateVisible: false,
+            ErrorClassName: errorClass,
+            ValidateVisible: false,
           },
           {}
         );
@@ -318,10 +310,10 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(testField, {}, [], {});
         let fieldset = new ValidPlus.Fieldset(
           testFieldset,
-          all,
+          'all',
           {
-            validClass,
-            validateVisible: false,
+            ValidClassName: validClass,
+            ValidateVisible: false,
           },
           {}
         );
@@ -348,8 +340,8 @@ describe('ValidPlus', function() {
       });
       fieldset.createField(testField, [], {});
 
-      expect(fieldset._fields.length).to.equal(1);
-      expect(fieldset._fields[0]).to.be.instanceof(ValidPlus.Field);
+      expect(fieldset.$fields.length).to.equal(1);
+      expect(fieldset.$fields[0]).to.be.instanceof(ValidPlus.Field);
     });
 
     it('Fieldset should validate', function() {
@@ -368,7 +360,7 @@ describe('ValidPlus', function() {
       );
       fieldset.createField(testField, [], {});
 
-      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset.$fields.length).to.equal(1);
       expect(fieldset.isValid()).to.be.true;
     });
 
@@ -392,7 +384,7 @@ describe('ValidPlus', function() {
       );
       fieldset.addField(new ValidPlus.Field(testField, {}));
 
-      expect(fieldset._fields.length).to.equal(1);
+      expect(fieldset.$fields.length).to.equal(1);
       expect(fieldset.isValid()).to.be.true;
     });
 
@@ -411,11 +403,11 @@ describe('ValidPlus', function() {
 
       let fieldset = new ValidPlus.Fieldset(
         testFieldset,
-        a => a.every(v => v === true),
+        'all',
         {},
         {
-          isValid: {
-            message: 'Hello, World',
+          Valid: {
+            Message: 'Hello, World',
           },
         }
       );

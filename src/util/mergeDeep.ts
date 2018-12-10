@@ -1,19 +1,18 @@
 /**
  * Simple object check.
- * @param item
- * @returns {boolean}
  */
-const isObject = function(item) {
+const isObject = function (item: any): boolean {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
 /**
- * Deep merge two objects.
- * @param target
- * @param ...sources
+ * Deep merge two objects, left most takes priority
+ *
+ * @param target - The object to merge onto
+ * @param sources - The object(s) to merge into the target
  */
-const mergeDeep = function (target, ...sources) {
-  if (!sources.length) return target;
+const mergeDeep = function (target: object, ...sources: object[]): object {
+  if (!Array.isArray(sources) || sources.length < 1) return target;
   const source = sources.shift();
 
   if (isObject(target) && isObject(source)) {

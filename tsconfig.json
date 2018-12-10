@@ -22,7 +22,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@src": ["/src"],
+      "@": ["/src"],
       "@lib": ["/lib"]
     }
   },

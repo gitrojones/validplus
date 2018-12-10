@@ -36,7 +36,12 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(js|ts)x$/,
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
+      },
+      {
+        test: /\.(js|ts)x?$/,
         exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
         use: [
           {
