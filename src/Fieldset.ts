@@ -7,7 +7,7 @@ import { VPFieldsetOptions } from './interfaces/VPOptions'
 import ValidationStrategy from './interfaces/ValidationStrategy'
 import Validatable from './Validatable'
 
-const VPFieldset = class VPFieldset extends Validatable {
+class VPFieldset extends Validatable {
   $strategy: ValidationStrategy
   $fields: VPField[]
   get $visibleFields(): VPField[] {
