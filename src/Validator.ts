@@ -60,7 +60,7 @@ const VPValidator = class VPValidator extends Validatable {
 
   // TODO: Child state checks
   // TODO: Add MutationObserver on children
-  addFieldset(fieldset) {
+  addFieldset(fieldset: VPFieldset) {
     if (!(fieldset instanceof VPFieldset)) {
       throw new Error('[Validator] Fieldset must be an instanceof VPFieldset');
     }
@@ -82,18 +82,21 @@ const VPValidator = class VPValidator extends Validatable {
     });
   }
 
-  // TODO: Remove MutationObserver on children
   removeFieldset(fieldset) {
     const index = this.$fieldsets.indexOf(fieldset);
     if (index !== -1) {
-      this.$fieldsets = this.$fieldsets.splice(index, 1);
+      const removedField = this.$fieldsets.splice(index, 1);
+      // TODO: Remove MutationObserver
     }
   }
 
   // TODO: Append Predefined Fields w/ CB logic
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
-  createFieldset(fs, strategy, options, fields, onValidate = null) {
+  createFieldset(fs: HTMLElement,
+    strategy: VPValidatorStrategy,
+    options: VPFieldsetOptions,
+    fields: VPField[], onValidate = null) {
     const fieldset = new VPFieldset(fs, strategy, options, onValidate);
     fields.forEach(field => {
       fieldset.addField(field);

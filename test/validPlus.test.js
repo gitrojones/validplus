@@ -29,7 +29,6 @@ describe('ValidPlus', function() {
         let validator = new ValidPlus.Validator({}, testForm);
         expect(validator).to.have.property('addFieldset');
         expect(validator).to.have.property('removeFieldset');
-        expect(validator).to.have.property('createFieldset');
         expect(validator).to.have.property('clearMessages');
         expect(validator).to.have.property('removeMessage');
         expect(validator).to.have.property('addMessage');
@@ -42,14 +41,15 @@ describe('ValidPlus', function() {
       let testFieldset = window.document.createElement('div');
       testFieldset.className = 'fieldset';
 
-      let success = validator.createFieldset(testFieldset, 'one', {}, []);
+      let success = new ValidPlus.Fieldset(testFieldset, 'one', {}, []);
+      validator.addFieldset(success)
 
       expect(success).to.not.be.false;
       expect(validator.$fieldsets.length).to.equal(1);
       expect(validator.$fieldsets[0]).to.be.instanceof(ValidPlus.Fieldset);
     });
 
-    it('Validator should allowing adding fieldsets and their fields', function() {
+    it('Validator should allow adding fieldsets and their fields', function() {
       let validator = new ValidPlus.Validator({}, testForm);
       let testFieldset = window.document.createElement('div');
       testFieldset.className = 'fieldset';
@@ -59,10 +59,10 @@ describe('ValidPlus', function() {
 
       testFieldset.append(testField);
 
-      const fieldset = validator.createFieldset(testFieldset, 'all', {}, [
-        new ValidPlus.Field(testField, {}, [], {}),
-      ]);
+      const fieldset = new ValidPlus.Fieldset(testFieldset, 'all', {}, {})
+      fieldset.addField(new ValidPlus.Field(testField, {}))
 
+      validator.addFieldset(fieldset)
       expect(fieldset.$fields.length).to.equal(1);
     });
 
