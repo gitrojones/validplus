@@ -19,56 +19,60 @@ const isValidRule = rule => {
   return typeof rule !== 'undefined' && rule !== null;
 };
 
-const VPField = class VPField extends Validatable {
+class VPField extends Validatable {
   $dirty: boolean
-  $inputs: boolean
+  $input: HTMLInputElement
+  $canValidate: boolean
 
-  constructor(element, options) {
-    super(element, options)
+  constructor(element, options, customRules, onValidate) {
+    super(options, element)
 
-    this.$inputs = null;
+    this.$input = null;
     this.$dirty = false;
+    this.$canValidate = true;
 
     mergeDeep(this.$options, {
       ForceRules: false,
       InputRules: {},
-      CustomRules: [],
+      CustomRules: customRules,
       InputFormatter: {},
       ShowFieldErrors: false,
       DirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
       ValidateOnBlur: toBoolean(element.getAttribute('vp-blur'), false)
     }, options)
-    this.setLifecycle(this.$options.Lifecycle)
+    this.setLifecycle(onValidate)
 
     this.getInput();
-    if (this.input instanceof Element) {
-      if (this.options.watch === true) {
-        if (['radio', 'checkbox'].includes(this.input.getAttribute('type'))) {
-          this.input.addEventListener('change', () => {
-            if (this.options.dirtyOnBlur === false) {
-              this._dirty = true;
+    if (this.$input instanceof Element) {
+      if (this.$options.Watch === true) {
+        if (['radio', 'checkbox'].includes(this.$input.getAttribute('type'))) {
+          this.$input.addEventListener('change', () => {
+            if (this.$options.DirtyOnBlur === false) {
+              this.$dirty = true;
             }
 
-            if (this.canValidate === true && this._dirty === true) {
-              const emit = this._isValid !== null;
+            if (this.$canValidate === true && this.$dirty === true) {
+              const emit = this.$isValid !== null;
 
               let valid = this.isValid();
               if (emit) {
+                console.log('here 1', this.dispatchEvent)
                 this.dispatchEvent(this.createEvent('onValidate'), valid);
               }
             }
           });
         } else {
-          this.input.addEventListener('input', () => {
-            if (this.options.dirtyOnBlur === false) {
-              this._dirty = true;
+          this.$input.addEventListener('input', () => {
+            if (this.$options.DirtyOnBlur === false) {
+              this.$dirty = true;
             }
 
-            if (this.canValidate === true && this._dirty === true) {
-              const emit = this._isValid !== null;
+            if (this.$canValidate === true && this.$dirty === true) {
+              const emit = this.$isValid !== null;
 
               let valid = this.isValid();
               if (emit) {
+                console.log('here 2', this.dispatchEvent)
                 this.dispatchEvent(this.createEvent('onValidate'), valid);
               }
             }
@@ -76,11 +80,12 @@ const VPField = class VPField extends Validatable {
         }
       }
 
-      if (this.options.validateOnBlur) {
-        this.input.addEventListener('blur', () => {
-          this._dirty = true;
+      if (this.$options.ValidateOnBlur) {
+        this.$input.addEventListener('blur', () => {
+          this.$dirty = true;
 
           let valid = this.isValid();
+          console.log('here 3', this.dispatchEvent)
           this.dispatchEvent(this.createEvent('onValidate'), valid);
         });
       }
@@ -88,31 +93,31 @@ const VPField = class VPField extends Validatable {
   }
 
   parseInput() {
-    if (!(this.input instanceof Element)) {
+    if (!(this.$input instanceof Element)) {
       throw new Error('[VPField] Input must be an instance of Element');
     }
 
     const inputRules = filterNullObj({
-      min: this.input.getAttribute('min'),
-      minLength: this.input.getAttribute('minlength'),
-      max: this.input.getAttribute('max'),
-      maxLength: this.input.getAttribute('maxlength'),
-      pattern: this.input.getAttribute('pattern'),
-      required: this.input.getAttribute('required'),
+      min: this.$input.getAttribute('min'),
+      minLength: this.$input.getAttribute('minlength'),
+      max: this.$input.getAttribute('max'),
+      maxLength: this.$input.getAttribute('maxlength'),
+      pattern: this.$input.getAttribute('pattern'),
+      required: this.$input.getAttribute('required'),
     });
 
-    const rules = this.options.forceRules
-      ? Object.assign({}, inputRules, this.options.rules)
-      : Object.assign({}, this.options.rules, inputRules);
+    const rules = this.$options.ForceRules
+      ? Object.assign({}, inputRules, this.$options.InputRules)
+      : Object.assign({}, this.$options.InputRules, inputRules);
 
     return {
-      value: this.input.value,
-      checked: this.input.checked,
-      type: this.input.getAttribute('type'),
+      value: this.$input.value,
+      checked: this.$input.checked,
+      type: this.$input.getAttribute('type'),
       name:
-        this.input.getAttribute('data-name') ||
-        this.input.getAttribute('name') ||
-        this.input.tagName,
+        this.$input.getAttribute('data-name') ||
+        this.$input.getAttribute('name') ||
+        this.$input.tagName,
       rules,
     };
   }
@@ -120,15 +125,15 @@ const VPField = class VPField extends Validatable {
   getInput() {
     debug('[VPField] Querying inputs');
 
-    let input = this.element.getElementsByTagName('input');
-    let select = this.element.getElementsByTagName('select');
-    let textarea = this.element.getElementsByTagName('textarea');
+    let input = this.$element.getElementsByTagName('input');
+    let select = this.$element.getElementsByTagName('select');
+    let textarea = this.$element.getElementsByTagName('textarea');
 
     if (input.length > 0) debug('[VPField] Found input', input);
     if (select.length > 0) debug('[VPField] Found select', select);
     if (textarea.length > 0) debug('[VPField] Found textarea', textarea);
 
-    this.input = [].concat(
+    this.$input = [].concat(
       Array.from(input),
       Array.from(select),
       Array.from(textarea)
@@ -136,30 +141,24 @@ const VPField = class VPField extends Validatable {
   }
 
   isValid() {
-    this.canValidate = false;
-    if (typeof this.options.formatter.pre === 'function') {
-      this.options.formatter.pre(this.input, eventName =>
-        this.input.dispatchEvent(this.createEvent(eventName))
-      );
+    this.$canValidate = false;
+    if (typeof this.$options.InputFormatter.pre === 'function') {
+      this.$options.InputFormatter.pre(this.$input, (eventName) => {
+        this.$input.dispatchEvent(this.createEvent(eventName))
+      });
     }
 
     let attributes = this.parseInput();
     let { value, checked, message, action, type, name, rules } = attributes;
 
     let errors = [];
-    if (typeof this._customRules === 'function') {
-      errors.push(this._customRules(attributes, this.element, this.input));
-    } else if (Array.isArray(this._customRules)) {
-      errors = errors.concat(
-        this._customRules.map(rule => {
-          if (typeof rule === 'function') {
-            return rule(attributes, this.element, this.input);
-          }
+    errors.concat(this.$options.CustomRules.map((func) => {
+      if (typeof func === 'function') {
+        return func(attributes, this.$element, this.$input)
+      }
 
-          return true;
-        })
-      );
-    }
+      return true
+    }))
 
     if (isValidRule(rules.min)) {
       errors.push(
@@ -214,55 +213,19 @@ const VPField = class VPField extends Validatable {
     }
 
     this.clearMessages();
-    this._isValid = errors.every(err => err === true);
+    this.$isValid = errors.every(err => err === true);
 
-    if (typeof this.options.formatter.pre === 'string') {
-      this.addMessage(this.options.formatter.pre, '-isInfo');
+    if (typeof this.$options.InputFormatter.pre === 'string') {
+      this.addMessage(this.$options.InputFormatter.pre, '-isInfo');
     }
-
-    if (this._isValid) {
-      this.element.classList.remove(this.options.errorClass);
-      this.element.classList.add(this.options.validClass);
-
-      if (typeof this._onValidation.isValid.cb === 'function') {
-        this._onValidation.isValid.cb();
-      }
-      if (typeof this._onValidation.isValid.message === 'string') {
-        this.addMessage(
-          this._onValidation.isValid.message,
-          this.options.validClass
-        );
-      }
-    } else {
-      this.element.classList.remove(this.options.validClass);
-      this.element.classList.add(this.options.errorClass);
-
-      if (typeof this._onValidation.isInvalid.cb === 'function') {
-        this._onValidation.isInvalid.cb();
-      }
-
-      if (this.options.showFieldErrors) {
-        errors.filter(err => typeof err === 'string').forEach(err => {
-          this.addMessage(err, this.options.errorClass);
-        });
-      }
-
-      if (typeof this._onValidation.isInvalid.message === 'string') {
-        this.addMessage(
-          this._onValidation.isInvalid.message,
-          this.options.errorClass
-        );
-      }
-    }
-
-    if (typeof this.options.formatter.post === 'function') {
-      this.options.formatter.post(this.input, eventName =>
-        this.input.dispatchEvent(this.createEvent(eventName))
+    if (typeof this.$options.InputFormatter.post === 'function') {
+      this.$options.InputFormatter.post(this.$input, eventName =>
+        this.$input.dispatchEvent(this.createEvent(eventName))
       );
     }
 
-    this.canValidate = true;
-    return this._isValid;
+    this.$canValidate = true;
+    return this.$isValid;
   }
 }
 

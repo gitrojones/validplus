@@ -13,7 +13,7 @@ import { VPValidatorOptions } from './interfaces/VPOptions'
  *
  * @name VPValidator
  */
-const VPValidator = class VPValidator extends Validatable {
+class VPValidator extends Validatable {
   private $fieldsets: VPFieldset[];
   private get $visibleFieldsets(): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {

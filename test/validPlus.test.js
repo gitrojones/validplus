@@ -59,8 +59,9 @@ describe('ValidPlus', function() {
 
       testFieldset.append(testField);
 
-      const fieldset = new ValidPlus.Fieldset(testFieldset, 'all', {}, {})
-      fieldset.addField(new ValidPlus.Field(testField, {}))
+      const fieldset = new ValidPlus.Fieldset(testFieldset, 'all', {})
+      const field = new ValidPlus.Field(testField, {}, [], {})
+      fieldset.addField(field)
 
       validator.addFieldset(fieldset)
       expect(fieldset.$fields.length).to.equal(1);
@@ -768,7 +769,7 @@ describe('ValidPlus', function() {
       let field = new ValidPlus.Field(
         testField,
         {
-          rules: {
+          InputRules: {
             maxLength: 5,
           },
         },
@@ -781,7 +782,7 @@ describe('ValidPlus', function() {
       );
 
       expect(field.isValid()).to.be.false;
-      field.options.forceRules = true;
+      field.$options.ForceRules = true;
       expect(field.isValid()).to.be.true;
     });
 
@@ -805,7 +806,7 @@ describe('ValidPlus', function() {
       let field = new ValidPlus.Field(
         testField,
         {
-          formatter: {
+          InputFormatter: {
             pre: spyPreFired,
             post: spyPostFired,
           },
@@ -828,7 +829,9 @@ describe('ValidPlus', function() {
 
     it('Should listen for changes on input/change by default', function() {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
-      let field = new ValidPlus.Field(testField, {}, [], {
+      let field = new ValidPlus.Field(testField, {
+        Watch: true
+      }, [], {
         isInvalid: {
           message: 'Hello, World',
         },
@@ -851,10 +854,12 @@ describe('ValidPlus', function() {
       let field = new ValidPlus.Field(
         testField,
         {
-          formatter: {
-            pre: input => {
+          Watch: true,
+          InputFormatter: {
+            pre: (input, dispatchEvent) => {
+              console.log('here')
               input.value = 'Foo Bar';
-              input.dispatchEvent(inputEvent);
+              dispatchEvent('input');
             },
           },
         },
