@@ -93,8 +93,8 @@ VPFieldset.prototype.isValid = function () {
         this.options.scrollAnchor.scrollIntoView()
       } else {
         // Scroll to the first error
-        const firstElement = this._fields.filter(f => f._isValid === false)[0]
-        if (firstElement.element instanceof Element && 
+        const firstElement = this._fields.filter(f => f._isValid === false).shift() || {}
+        if (firstElement.element instanceof Element &&
           typeof firstElement.element.scrollIntoView === 'function') {
           firstElement.element.scrollIntoView()
         }

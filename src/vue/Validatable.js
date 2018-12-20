@@ -14,6 +14,11 @@ export default {
   beforeMount () {
     this.VP = require('validplus').default
   },
+  mounted () {
+    if (this.VPNewValidator) {
+      this.validator.element = this.$el
+    }
+  },
   provide () {
     let providing = {}
     if (this.VPProvideValidator) providing.VPValidator = this.validator
@@ -40,8 +45,13 @@ export default {
       return fieldset
     },
     VPisValid () {
-      if (this.validator.isValid()) {
-        this.$emit('isValid')
+      if ((this.VPField && this.VPField.isValid()) ||
+          (this.VPFieldset && this.VPFieldset.isValid()) ||
+          this.validator.isValid()) {
+        this.$nextTick(() => {
+          this.$emit('isValid')
+        })
+
         return true
       }
 

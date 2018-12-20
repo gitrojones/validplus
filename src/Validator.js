@@ -17,7 +17,7 @@ import messaging from './lib/messaging'
 const Validator = function (options, form = null) {
   if (form === null) {
     debug('[Validator] Non-strict fieldset matching.',
-          'Provide a form Element or ID to enable strict matching.')
+      'Provide a form Element or ID to enable strict matching.')
     this._form = null
     this._strict = false
 
@@ -135,8 +135,10 @@ Validator.prototype.isValid = function () {
       if (this.options.scrollAnchor instanceof Element) {
         scrollElement = this.options.scrollAnchor
       } else {
-        const firstElement = this._fieldsets.filter(f => f._isValid === false)[0]
-        scrollElement = firstElement.element
+        const firstElement = this._fieldsets.filter(f => f._isValid === false).shift() || {}
+        if (firstElement.element) {
+          scrollElement = firstElement.element
+        }
       }
 
       if (typeof scrollElement.scrollIntoView === 'function') {
