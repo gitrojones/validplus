@@ -473,7 +473,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            errorClass,
+            ErrorClassName: errorClass,
           },
           [],
           {}
@@ -489,7 +489,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            validClass,
+            ValidClassName: validClass,
           },
           [],
           {}
@@ -633,7 +633,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               required: true,
             },
           },
@@ -655,7 +655,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               min: 5,
             },
           },
@@ -676,7 +676,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               max: 5,
             },
           },
@@ -697,7 +697,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               maxLength: 5,
             },
           },
@@ -720,7 +720,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               minLength: 5,
             },
           },
@@ -743,7 +743,7 @@ describe('ValidPlus', function() {
         let field = new ValidPlus.Field(
           testField,
           {
-            rules: {
+            InputRules: {
               pattern: /[0-9]{5}/,
             },
           },
@@ -787,8 +787,6 @@ describe('ValidPlus', function() {
     });
 
     it('Should format pre/post and include an eventDispatch method', function() {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
-
       let uppercasePre = (input, dispatchEvent) => {
         input.value = input.value.toUpperCase();
         input.value = input.value += '-world';
@@ -823,8 +821,6 @@ describe('ValidPlus', function() {
       expect(typeof spyPostFired.args[0][1]).to.equal('function');
 
       expect(testInput.value).to.equal('hello-world');
-
-      ValidPlus.Field.prototype.isValid.restore();
     });
 
     it('Should listen for changes on input/change by default', function() {
@@ -857,7 +853,6 @@ describe('ValidPlus', function() {
           Watch: true,
           InputFormatter: {
             pre: (input, dispatchEvent) => {
-              console.log('here')
               input.value = 'Foo Bar';
               dispatchEvent('input');
             },
@@ -871,7 +866,7 @@ describe('ValidPlus', function() {
         }
       );
 
-      let inputSpy = sinon.spy(field.input, 'dispatchEvent');
+      let inputSpy = sinon.spy(field.$input, 'dispatchEvent');
 
       field.isValid();
       expect(testInput.value).to.equal('Foo Bar');
@@ -879,11 +874,12 @@ describe('ValidPlus', function() {
     });
 
     it('Should only validate onBlur w/ dirtyOnBlur', function() {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
       let field = new ValidPlus.Field(
         testField,
         {
-          dirtyOnBlur: true,
+          ValidateOnBlur: true,
+          DirtyOnBlur: true,
+          Watch: true
         },
         [],
         {
@@ -892,6 +888,7 @@ describe('ValidPlus', function() {
           },
         }
       );
+      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
 
       let inputEvent = window.document.createEvent('Event');
       let blurEvent = window.document.createEvent('Event');
@@ -903,12 +900,13 @@ describe('ValidPlus', function() {
         testInput.value = testInput.value + string[i];
         testInput.dispatchEvent(inputEvent);
       }
-      expect(field._dirty).to.be.false;
+
+      expect(field.$dirty).to.be.false;
       expect(spyIsValid.calledOnce).to.be.false;
 
       testInput.dispatchEvent(blurEvent);
       expect(spyIsValid.calledOnce).to.be.true;
-      expect(field._dirty).to.be.true;
+      expect(field.$dirty).to.be.true;
 
       ValidPlus.Field.prototype.isValid.restore();
     });
@@ -924,9 +922,9 @@ describe('ValidPlus', function() {
         },
       });
 
-      expect(field.options.dirtyOnBlur).to.be.true;
-      expect(field.options.validateOnBlur).to.be.false;
-      expect(field.options.watch).to.be.false;
+      expect(field.$options.DirtyOnBlur).to.be.true;
+      expect(field.$options.ValidateOnBlur).to.be.false;
+      expect(field.$options.Watch).to.be.false;
     });
 
     it('Should validate on blur if set, regardless of watch', function() {
@@ -945,20 +943,21 @@ describe('ValidPlus', function() {
       });
 
       testInput.value = 'Bar';
-      expect(field._isValid).to.equal(null);
+      expect(field.$isValid).to.equal(null);
       testInput.dispatchEvent(blurEvent);
-      expect(field._isValid).to.equal(true);
+      expect(field.$isValid).to.equal(true);
       testInput.value = '';
-      expect(field._isValid).to.equal(true);
+      expect(field.$isValid).to.equal(true);
       testInput.dispatchEvent(blurEvent);
-      expect(field._isValid).to.equal(false);
+      expect(field.$isValid).to.equal(false);
     });
 
     it('Should validate input based on pattern attribute', function() {
-      const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
       testInput.setAttribute('pattern', '[0-9]{5}');
 
-      let field = new ValidPlus.Field(testField, {}, [], {
+      let field = new ValidPlus.Field(testField, {
+        Watch: true
+      }, [], {
         isInvalid: {
           message: 'Hello, World',
         },
@@ -969,15 +968,15 @@ describe('ValidPlus', function() {
 
       testInput.value = 'notanumber';
       testInput.dispatchEvent(inputEvent);
-      expect(field._isValid).to.be.false;
+      expect(field.$isValid).to.be.false;
 
       testInput.value = '09101';
       testInput.dispatchEvent(inputEvent);
-      expect(field._isValid).to.be.true;
+      expect(field.$isValid).to.be.true;
 
       testInput.value = '00';
       testInput.dispatchEvent(inputEvent);
-      expect(field._isValid).to.be.false;
+      expect(field.$isValid).to.be.false;
     });
   });
 });

@@ -43,7 +43,7 @@ class VPField extends Validatable {
     this.setLifecycle(onValidate)
 
     this.getInput();
-    if (this.$input instanceof Element) {
+    if (this.$input instanceof HTMLElement) {
       if (this.$options.Watch === true) {
         if (['radio', 'checkbox'].includes(this.$input.getAttribute('type'))) {
           this.$input.addEventListener('change', () => {
@@ -56,7 +56,6 @@ class VPField extends Validatable {
 
               let valid = this.isValid();
               if (emit) {
-                console.log('here 1', this.dispatchEvent)
                 this.dispatchEvent(this.createEvent('onValidate'), valid);
               }
             }
@@ -72,7 +71,6 @@ class VPField extends Validatable {
 
               let valid = this.isValid();
               if (emit) {
-                console.log('here 2', this.dispatchEvent)
                 this.dispatchEvent(this.createEvent('onValidate'), valid);
               }
             }
@@ -85,7 +83,6 @@ class VPField extends Validatable {
           this.$dirty = true;
 
           let valid = this.isValid();
-          console.log('here 3', this.dispatchEvent)
           this.dispatchEvent(this.createEvent('onValidate'), valid);
         });
       }
@@ -144,7 +141,9 @@ class VPField extends Validatable {
     this.$canValidate = false;
     if (typeof this.$options.InputFormatter.pre === 'function') {
       this.$options.InputFormatter.pre(this.$input, (eventName) => {
-        this.$input.dispatchEvent(this.createEvent(eventName))
+        if (this.$input instanceof HTMLElement) {
+          this.$input.dispatchEvent(this.createEvent(eventName))
+        }
       });
     }
 
@@ -219,9 +218,11 @@ class VPField extends Validatable {
       this.addMessage(this.$options.InputFormatter.pre, '-isInfo');
     }
     if (typeof this.$options.InputFormatter.post === 'function') {
-      this.$options.InputFormatter.post(this.$input, eventName =>
-        this.$input.dispatchEvent(this.createEvent(eventName))
-      );
+      this.$options.InputFormatter.post(this.$input, eventName => {
+        if (this.$input instanceof HTMLElement) {
+          this.$input.dispatchEvent(this.createEvent(eventName))
+        }
+      });
     }
 
     this.$canValidate = true;

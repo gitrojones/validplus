@@ -2,7 +2,10 @@
  * Simple object check.
  */
 const isObject = function (item: any): boolean {
-  return (item && typeof item === 'object' && !Array.isArray(item));
+  const exception = Array.isArray(item)
+    || item instanceof RegExp
+
+  return (item && typeof item === 'object' && !exception)
 }
 
 /**
@@ -19,7 +22,7 @@ const mergeDeep = function (target: object, ...sources: object[]): object {
     for (const key in source) {
       if (isObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} });
-        return mergeDeep(target[key], source[key]);
+        mergeDeep(target[key], source[key]);
       } else {
         Object.assign(target, { [key]: source[key] });
       }
