@@ -3,17 +3,17 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>validplus</title>
+	<title>&quot;mixins/DOMMessaging&quot; | validplus</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
 <header>
 	<div class="tsd-page-toolbar">
 		<div class="container">
 			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.js" data-base="..">
 					<div class="field">
 						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
 						<input id="tsd-search-field" type="text" />
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">validplus</a>
+					<a href="../index.html" class="title">validplus</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -53,120 +53,136 @@
 		<div class="container">
 			<ul class="tsd-breadcrumb">
 				<li>
-					<a href="globals.html">Globals</a>
+					<a href="../globals.html">Globals</a>
+				</li>
+				<li>
+					<a href="_mixins_dommessaging_.html">&quot;mixins/DOMMessaging&quot;</a>
 				</li>
 			</ul>
-			<h1> validplus</h1>
+			<h1>External module &quot;mixins/DOMMessaging&quot;</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<h1 id="validplus">ValidPlus</h1>
-				<p>Simple validation library designed to be platform agnostic. Features three levels of granularity allowing for Form-wide validation, Fieldset-wide validation and Field validation. Each level allows for onValid/onInvalid lifecycle hooks. Fields include basic support for DOM properties allowing you to couple validation as it makes sense.</p>
-				<p>Fields are designed to validate on the same HTML validation properties which allows for fallback support in the case that javascript isn&#39;t available or is blocked.</p>
-				<h2 id="prs-and-support">PRs and Support</h2>
-				<p>Pull requests are welcome. New functionality should be covered by tests if possible. Bug fixes are welcome but it is recommended you include a reproducible example test for the bug to speed up PRs. IE, if validation fails in a specific case, include an example test which is expected to fail on the current master and pass with the PR.</p>
-				<h2 id="test-coverage">Test Coverage</h2>
-				<p>Test coverage is focused on STRICT mode. LAX coverage is inferred from STRICT but not complete. Feel free to add new tests with your pull requests. <strong>All tests must pass in order for a PR to be merged</strong></p>
-				<h2 id="usage">Usage</h2>
-				<p>This library functions in STRICT and LAX mode. Each section outlines the differences you can expect. For the most part, you can drop this library in and starting using it right away.</p>
-				<p><code>import ValidPlus from &#39;validplus&#39;</code></p>
-				<h3 id="validator">Validator</h3>
-				<p>The main validation object. Marshals validation to descendants</p>
-				<h4 id="strict">STRICT</h4>
-				<ul>
-					<li>Children are automatically detected based on the options passed to the constructor. The preferred way to interface with STRICT mode is through the custom DOM attributes for each ValidPlus element.</li>
-					<li>Only Decendants of the provided form can be validated against. Default behavior is to ignore non-descendants and spit out an error.<h4 id="lax">LAX</h4>
-					</li>
-					<li>It is your responsibility to add each fieldset to the validator. This allows for greater flexibility at the cost of boilerplate.</li>
-					<li>Any added fieldset is considered in the validation loop. It is your responsibility to ensure the correct state of the fieldset collection when you validate.<h5 id="api">API</h5>
-						<h6 id="constructor">Constructor</h6>
-						<ul>
-							<li>Params:
-								1) Options :: Object
-								Allows for customization of validation logic
-								DEFAULT: {
-								onValidation: {
-								isValid: null,
-								isInvalid: null
-								},
-								fieldsetClass: &#39;VPfieldset&#39;,
-								fieldClass: &#39;VPfield&#39;,
-								validInputs: [
-								&#39;input&#39;,
-								&#39;messagebox&#39;,
-								&#39;select&#39;
-								]
-								}
-								2) Form(?) :: HTMLFormElement || String (DOM ID)
-								Instantiates the Validator, placing the validator into STRICT or LAX mode based on the presence of a Form reference<h6 id="methods">Methods</h6>
-								####### isValid()
-								Runs validation on decendants, with results bubbling upwards. If a valdiation message or cb is provided, they are called in tandem.
-							####### addFieldset()</li>
-						</ul>
-					</li>
-				</ul>
-				<p>Validator can be instantiated with and without a root form element. If a Form element is provided the validator is considered to be in &#39;strict&#39; mode, limiting validation to direct decendants of the Validator form element. It is recommended you utilize strict mode when it makes sense to do so, as the amount of boilerplate is reduced (By default, ValidPlus will attempt to populate your field structure).</p>
-				<p>The main validator depends on being passed a form to track on instantiation. This is the root of the validation strategy where all validation flows through. Strict matching ensures fields are only considered if they&#39;re decendants of the root form. This is the recommonded way to consume the validator. Non-strict mode allows for global validation ()</p>
-				<p>Fieldsets are defined as groups of fields. Typically following a structure like</p>
-				<pre><code><span class="hljs-selector-class">.fieldset</span> &gt; <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> &lt;...&gt;</code></pre><p>where field is the logical container for your input/select field.</p>
-			</div>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter"><a href="_mixins_dommessaging_.html#dommessaging" class="tsd-kind-icon">DOMMessaging</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+					<a name="dommessaging" class="tsd-anchor"></a>
+					<h3>DOMMessaging</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+						<li class="tsd-signature tsd-kind-icon">DOMMessaging&lt;TBase&gt;<span class="tsd-signature-symbol">(</span>Base<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">TBase</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">(Anonymous class)</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L9">mixins/DOMMessaging.ts:9</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>requires</dt>
+									<dd><p>MessageNodePOS - The position (top, bottom) where messages append to the node</p>
+									</dd>
+									<dt>requires</dt>
+									<dd><p>MessageAnchor - The node where messages are to be appended to</p>
+									</dd>
+									<dt>requires</dt>
+									<dd><p>ClassName - The name to use as the base class name</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-type-parameters-title">Type parameters</h4>
+							<ul class="tsd-type-parameters">
+								<li>
+									<h4>TBase<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Constructor</span></h4>
+								</li>
+							</ul>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>Base: <span class="tsd-signature-type">TBase</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">(Anonymous class)</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
 					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_field_.html">"<wbr>Field"</a>
+						<a href="_field_.html">"<wbr>Field"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_fieldset_.html">"<wbr>Fieldset"</a>
+						<a href="_fieldset_.html">"<wbr>Fieldset"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_validatable_.html">"<wbr>Validatable"</a>
+						<a href="_validatable_.html">"<wbr>Validatable"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_validator_.html">"<wbr>Validator"</a>
+						<a href="_validator_.html">"<wbr>Validator"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_enums_positions_.html">"enums/<wbr>Positions"</a>
+						<a href="_enums_positions_.html">"enums/<wbr>Positions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_interfaces_vpoptions_.html">"interfaces/VPOptions"</a>
+						<a href="_interfaces_vpoptions_.html">"interfaces/VPOptions"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_interfaces_validationlifecycle_.html">"interfaces/<wbr>Validation<wbr>Lifecycle"</a>
+						<a href="_interfaces_validationlifecycle_.html">"interfaces/<wbr>Validation<wbr>Lifecycle"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_interfaces_validationrules_.html">"interfaces/<wbr>Validation<wbr>Rules"</a>
+						<a href="_interfaces_validationrules_.html">"interfaces/<wbr>Validation<wbr>Rules"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_interfaces_validationstrategy_.html">"interfaces/<wbr>Validation<wbr>Strategy"</a>
+						<a href="_interfaces_validationstrategy_.html">"interfaces/<wbr>Validation<wbr>Strategy"</a>
+					</li>
+					<li class="current tsd-kind-external-module">
+						<a href="_mixins_dommessaging_.html">"mixins/DOMMessaging"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_mixins_dommessaging_.html">"mixins/DOMMessaging"</a>
+						<a href="_mixins_eventemitter_.html">"mixins/<wbr>Event<wbr>Emitter"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_mixins_eventemitter_.html">"mixins/<wbr>Event<wbr>Emitter"</a>
+						<a href="_util_debug_.html">"util/debug"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_util_debug_.html">"util/debug"</a>
+						<a href="_util_mergedeep_.html">"util/merge<wbr>Deep"</a>
 					</li>
 					<li class=" tsd-kind-external-module">
-						<a href="modules/_util_mergedeep_.html">"util/merge<wbr>Deep"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="modules/_util_toboolean_.html">"util/to<wbr>Boolean"</a>
+						<a href="_util_toboolean_.html">"util/to<wbr>Boolean"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
+					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-has-type-parameter">
+						<a href="_mixins_dommessaging_.html#dommessaging" class="tsd-kind-icon">DOMMessaging</a>
+					</li>
 				</ul>
 			</nav>
 		</div>
@@ -235,7 +251,7 @@
 	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+<script src="../assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="../assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>
