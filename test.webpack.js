@@ -47,11 +47,11 @@ module.exports = {
       ...(isCoverage
         ? [
             {
-              test: /\.js/,
-              resourceQuery: /blockType=test/,
-              include: file => /src/.test(file) || /dev\/src/.test(file),
-              exclude: file => /src\/vue\//.test(file),
+              test: /\.(js|ts)x?$/,
+              include: file => /src/.test(file),
+              exclude: file => /src\/vue/.test(file) || /dev/.test(file),
               loader: 'istanbul-instrumenter-loader',
+              enforce: 'post',
               query: {
                 esModules: true,
               },

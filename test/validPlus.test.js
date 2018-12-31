@@ -14,6 +14,72 @@ describe('ValidPlus', function() {
     expect(ValidPlus).to.have.property('Validator');
   });
 
+  describe('ValidPlus.Validatable', function () {
+    describe('DOMMessaging', function () {
+      let validatable
+      let testValidator
+      let testFieldset
+      let testField
+
+      beforeEach(done => {
+        testValidator = window.document.createElement('form');
+        testFieldset = window.document.createElement('div');
+        testField = window.document.createElement('div');
+
+        validatable = [
+          new ValidPlus.Validator({}, testValidator),
+          new ValidPlus.Fieldset(testFieldset, 'all', {}),
+          new ValidPlus.Field(testField, {}, [], {})
+        ]
+
+        done()
+      })
+
+      it('Implements AddEventListener', function () {
+        expect(validatable.every(v => typeof v.addEventListener === 'function')).to.be.true
+      })
+      it('AddEventListener adds a listener to the listener property', function () {
+        const func = () => null
+
+        validatable.forEach(v => {
+          v.addEventListener('click', func)
+        })
+        expect(validatable.every(v => v.$listeners.click[0] === func)).to.be.true
+      })
+      it('Implements RemoveEventListener', function () {
+        expect(validatable.every(v => typeof v.removeEventListener === 'function')).to.be.true
+      })
+      it('RemoveEventListener removes a listener on the listener property', function () {
+        const func = () => null
+
+        validatable.forEach(v => {
+          v.addEventListener('click', func)
+          v.removeEventListener('click', func)
+        })
+        expect(validatable.every(v => v.$listeners.click.length === 0)).to.be.true
+      })
+      it('Implements DispatchEvent', function () {
+        expect(validatable.every(v => typeof v.dispatchEvent === 'function')).to.be.true
+      })
+      it('DispatchEvent fires an event upwards', function (done) {
+        let count = 0
+        validatable.forEach(v => {
+          v.addEventListener('click', function () {
+            expect(true).to.be.true
+            count++
+
+            if (count === 3) done()
+          })
+        })
+
+        validatable.every(v => v.dispatchEvent(v.createEvent('click')))
+      })
+      it('Implements CreateEvent Helper', function () {
+        expect(validatable.every(v => typeof v.createEvent === 'function')).to.be.true
+      })
+    })
+  })
+
   describe('ValidPlus.Validator', function() {
     let testForm;
 
@@ -842,6 +908,29 @@ describe('ValidPlus', function() {
 
       ValidPlus.Field.prototype.isValid.restore();
     });
+
+    it ('Should append message for pre/post formatters', function () {
+      const Message = 'Hello, World'
+
+      let field = new ValidPlus.Field(
+        testField,
+        {
+          Watch: true,
+          InputFormatter: {
+            pre: 'Hello World'
+          },
+        },
+        [],
+        {
+          isInvalid: {
+            message: Message
+          },
+        }
+      );
+
+      field.isValid();
+      expect(field.$MessageNode.children[1].innerHTML === Message)
+    })
 
     it('Should fire update events on pre/post formatters', function() {
       let inputEvent = window.document.createEvent('Event');

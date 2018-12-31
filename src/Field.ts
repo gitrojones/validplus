@@ -4,6 +4,8 @@ import toBoolean from './util/toBoolean';
 
 import Validatable from './Validatable'
 
+import { VPFieldsetOptions } from './interfaces/VPOptions'
+
 const filterNullObj = obj => {
   return Object.keys(obj).reduce((newObj, key) => {
     const value = obj[key];
@@ -24,7 +26,7 @@ class VPField extends Validatable {
   $input: HTMLInputElement
   $canValidate: boolean
 
-  constructor(element, options, customRules, onValidate) {
+  constructor(element: HTMLElement, options: VPFieldsetOptions, customRules, onValidate) {
     super(options, element)
 
     this.$input = null;
