@@ -1,7 +1,9 @@
-import { VerticalPosition } from '@/enums/Position'
-import ValidationRules from '@/interfaces/ValidationRules'
+import { VerticalPosition } from '@/enums/Positions'
+import ValidationRules from '@/interfaces/HTMLValidationRules'
+import CustomValidationRule from '@/interfaces/CustomValidationRule'
+import AsyncCustomValidationRule from '@/interfaces/AsyncCustomValidationRule'
 import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
-import ValidationStrategy from './ValidationStrategy';
+import ValidationStrategy from './ValidationStrategy'
 
 export interface VPOptions {
   // ControlFlow
@@ -14,6 +16,7 @@ export interface VPOptions {
   ValidClassName: string
 
   // Messaging
+  MessageClassName: string,
   MessageAnchor: HTMLElement,
   MessagePOS: VerticalPosition,
   ScrollTo: boolean,
@@ -45,8 +48,8 @@ export interface VPFieldOptions extends VPOptions {
   // ValidationOptions
   ForceRules: boolean,
   InputFormatter: { pre: (innerHTML: string) => string, post: (innerHTML: string) => string },
-  InputRules: ValidationRules.Input,
-  CustomRules: ValidationRules.Custom[],
+  InputRules: ValidationRules,
+  CustomRules: (CustomValidationRule | AsyncCustomValidationRule)[],
 
   // Messaging
   ShowFieldErrors: boolean

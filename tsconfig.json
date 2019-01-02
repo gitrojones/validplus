@@ -22,10 +22,10 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@": ["src"]
+      "@/*": ["src/*"]
     }
   },
-  "include": ["validplus.ts, src/**/*", "lib/**/*"],
+  "include": ["validplus.ts"],
   "exclude": ["node_modules", "dist", "coverage", "dev"],
   "tasks": [
     {

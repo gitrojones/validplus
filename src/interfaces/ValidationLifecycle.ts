@@ -1,4 +1,4 @@
-export interface ValidationLifecycle {
+export default interface ValidationLifecycle {
   Valid: {
     Message: string,
     CB: Array<() => null>

@@ -1,6 +1,6 @@
-import Validator from './src/Validator'
-import Fieldset from './src/Fieldset'
-import Field from './src/Field'
+import Validator from '@/Validator'
+import Fieldset from '@/Fieldset'
+import Field from '@/Field'
 
 import '@lib/polyfills'
 

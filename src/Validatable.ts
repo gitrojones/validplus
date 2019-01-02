@@ -6,15 +6,15 @@ import EventEmitter from './mixins/EventEmitter'
 import { VPOptions } from './interfaces/VPOptions'
 import { ValidationStrategies } from './interfaces/ValidationStrategy'
 
-const Validatable = DOMMessaging(EventEmitter(class Validatable {
+export default DOMMessaging(EventEmitter(class Validatable {
   $options: VPOptions
   $element: HTMLElement
   $strategies: ValidationStrategies
-  private $_isValid: boolean | null
+  private $ISVALID: boolean | null
 
-  constructor(options: VPOptions, element: HTMLElement) {
+  constructor (options: VPOptions, element: HTMLElement) {
     this.$element = element
-    this.$_isValid = null;
+    this.$ISVALID = null
 
     // Set some logical defaults
     this.$options = mergeDeep({
@@ -37,18 +37,18 @@ const Validatable = DOMMessaging(EventEmitter(class Validatable {
     }
 
     // DOMMessaging
-    this.$MessageClassName = this.$options.MessageClassName;
-    this.$MessageAnchor = this.$options.MessageAnchor;
-    this.$MessageNodePOS = this.$options.MessagePOS;
+    this.$MessageClassName = this.$options.MessageClassName
+    this.$MessageAnchor = this.$options.MessageAnchor
+    this.$MessageNodePOS = this.$options.MessagePOS
     // END DOMMessaging
   }
 
-  get $isValid(): boolean {
-    return this.$_isValid
+  get $isValid (): boolean | null {
+    return this.$ISVALID
   }
 
-  set $isValid(isValid: boolean) {
-    this.$_isValid = isValid
+  set $isValid (isValid: boolean | null) {
+    this.$ISVALID = isValid
     this.clearMessages()
 
     if (isValid) {
@@ -122,5 +122,3 @@ const Validatable = DOMMessaging(EventEmitter(class Validatable {
     }
   }
 }));
-
-export default Validatable

@@ -1,37 +1,38 @@
-import debug from './util/debug';
-import mergeDeep from './util/mergeDeep';
-import toBoolean from './util/toBoolean';
+import debug from './util/debug'
+import mergeDeep from './util/mergeDeep'
+import toBoolean from './util/toBoolean'
 
 import Validatable from './Validatable'
 
 import { VPFieldsetOptions } from './interfaces/VPOptions'
 
-const filterNullObj = obj => {
-  return Object.keys(obj).reduce((newObj, key) => {
-    const value = obj[key];
+const filterNullObj = (obj: any): any => {
+  return Object.keys(obj).reduce((newObj: any, key: string) => {
+    const value = obj[key]
 
     if (value !== null && typeof value !== 'undefined') {
-      newObj[key] = value;
+      newObj[key] = value
     }
 
-    return newObj;
-  }, {});
-};
-const isValidRule = rule => {
-  return typeof rule !== 'undefined' && rule !== null;
-};
+    return newObj
+  }, {})
+}
+
+const isValidRule = (rule: (string | number)): boolean => {
+  return typeof rule !== 'undefined' && rule !== null
+}
 
 class VPField extends Validatable {
   $dirty: boolean
-  $input: HTMLInputElement
+  $input: (HTMLInputElement | null)
   $canValidate: boolean
 
-  constructor(element: HTMLElement, options: VPFieldsetOptions, customRules, onValidate) {
+  constructor (element: HTMLElement, options: VPFieldsetOptions, customRules, onValidate) {
     super(options, element)
 
-    this.$input = null;
-    this.$dirty = false;
-    this.$canValidate = true;
+    this.$input = null
+    this.$dirty = false
+    this.$canValidate = true
 
     mergeDeep(this.$options, {
       ForceRules: false,
