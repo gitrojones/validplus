@@ -1,38 +1,30 @@
-import debug from './util/debug'
-import mergeDeep from './util/mergeDeep'
-import toBoolean from './util/toBoolean'
+import debug from '@/util/debug'
+import mergeDeep from '@/util/mergeDeep'
+import toBoolean from '@/util/toBoolean'
+import filterNullObj from '@/util/filterNullObject'
+import isSet from '@/util/isSet'
 
-import Validatable from './Validatable'
+import { VPFieldOptions } from '@/interfaces/VPOptions'
+import CustomValidationRule from '@/interfaces/validation/CustomValidationRule'
+import ValidationLifecycle from '@/interfaces/validation/ValidationLifecycle'
+import ValidationAttributes from '@/interfaces/validation/ValidationAttributes'
+import HTMLValidationRules from '@/interfaces/validation/HTMLValidationRules'
 
-import { VPFieldsetOptions } from './interfaces/VPOptions'
-
-const filterNullObj = (obj: any): any => {
-  return Object.keys(obj).reduce((newObj: any, key: string) => {
-    const value = obj[key]
-
-    if (value !== null && typeof value !== 'undefined') {
-      newObj[key] = value
-    }
-
-    return newObj
-  }, {})
-}
-
-const isValidRule = (rule: (string | number)): boolean => {
-  return typeof rule !== 'undefined' && rule !== null
-}
+import Validatable from '@/Validatable'
 
 class VPField extends Validatable {
-  $dirty: boolean
-  $input: (HTMLInputElement | null)
-  $canValidate: boolean
+  $options: VPFieldOptions = this.$options
+  $dirty: boolean = false
+  $input: (HTMLInputElement | null) = null
+  $canValidate: boolean = true
 
-  constructor (element: HTMLElement, options: VPFieldsetOptions, customRules, onValidate) {
+  constructor (
+    element: HTMLElement,
+    options: VPFieldOptions,
+    customRules: CustomValidationRule[],
+    onValidate: ValidationLifecycle
+  ) {
     super(options, element)
-
-    this.$input = null
-    this.$dirty = false
-    this.$canValidate = true
 
     mergeDeep(this.$options, {
       ForceRules: false,
@@ -41,74 +33,96 @@ class VPField extends Validatable {
       InputFormatter: {},
       ShowFieldErrors: false,
       DirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
-      ValidateOnBlur: toBoolean(element.getAttribute('vp-blur'), false)
+      ValidateOn: {
+        blur: toBoolean(element.getAttribute('vp-blur'), false),
+        change: toBoolean(element.getAttribute('vp-change'), false),
+        mouseLeave: toBoolean(element.getAttribute('vp-mouseleave'), false)
+      }
     }, options)
     this.setLifecycle(onValidate)
+    this.setInput()
 
-    this.getInput();
-    if (this.$input instanceof HTMLElement) {
+    if (this.$input instanceof HTMLInputElement) {
       if (this.$options.Watch === true) {
-        if (['radio', 'checkbox'].includes(this.$input.getAttribute('type'))) {
+        if (['radio', 'checkbox'].includes(this.$input.getAttribute('type') || '')) {
           this.$input.addEventListener('change', () => {
             if (this.$options.DirtyOnBlur === false) {
-              this.$dirty = true;
+              this.$dirty = true
             }
 
             if (this.$canValidate === true && this.$dirty === true) {
-              const emit = this.$isValid !== null;
+              const emit = this.$isValid !== null
 
-              let valid = this.isValid();
+              let valid = this.isValid()
               if (emit) {
-                this.dispatchEvent(this.createEvent('onValidate'), valid);
+                this.dispatchEvent(this.createEvent('onValidate'), valid)
               }
             }
-          });
+          })
         } else {
           this.$input.addEventListener('input', () => {
             if (this.$options.DirtyOnBlur === false) {
-              this.$dirty = true;
+              this.$dirty = true
             }
 
             if (this.$canValidate === true && this.$dirty === true) {
-              const emit = this.$isValid !== null;
+              const emit = this.$isValid !== null
 
-              let valid = this.isValid();
+              let valid = this.isValid()
               if (emit) {
-                this.dispatchEvent(this.createEvent('onValidate'), valid);
+                this.dispatchEvent(this.createEvent('onValidate'), valid)
               }
             }
-          });
+          })
         }
       }
 
-      if (this.$options.ValidateOnBlur) {
+      if (this.$options.ValidateOn.blur) {
         this.$input.addEventListener('blur', () => {
-          this.$dirty = true;
+          this.$dirty = true
 
-          let valid = this.isValid();
-          this.dispatchEvent(this.createEvent('onValidate'), valid);
-        });
+          let valid = this.isValid()
+          this.dispatchEvent(this.createEvent('onValidate'), valid)
+        })
+      }
+
+      if (this.$options.ValidateOn.change) {
+        this.$input.addEventListener('change', () => {
+          this.$dirty = true
+
+          let valid = this.isValid()
+          this.dispatchEvent(this.createEvent('onValidate'), valid)
+        })
+      }
+
+      if (this.$options.ValidateOn.mouseleave) {
+        this.$input.addEventListener('mouseleave', () => {
+          this.$dirty = true
+
+          let valid = this.isValid()
+          this.dispatchEvent(this.createEvent('onValidate'), valid)
+        })
       }
     }
   }
 
-  parseInput() {
-    if (!(this.$input instanceof Element)) {
-      throw new Error('[VPField] Input must be an instance of Element');
+  parseInput (): ValidationAttributes {
+    if (!(this.$input instanceof HTMLInputElement)) {
+      throw new Error('[VPField] Input must be an instance of Element')
     }
 
-    const inputRules = filterNullObj({
+    const inputRules: HTMLValidationRules = filterNullObj({
       min: this.$input.getAttribute('min'),
       minLength: this.$input.getAttribute('minlength'),
       max: this.$input.getAttribute('max'),
       maxLength: this.$input.getAttribute('maxlength'),
       pattern: this.$input.getAttribute('pattern'),
-      required: this.$input.getAttribute('required'),
-    });
+      required: this.$input.getAttribute('required')
+    })
 
     const rules = this.$options.ForceRules
       ? Object.assign({}, inputRules, this.$options.InputRules)
-      : Object.assign({}, this.$options.InputRules, inputRules);
+      : Object.assign({}, this.$options.InputRules, inputRules)
 
     return {
       value: this.$input.value,
@@ -118,42 +132,43 @@ class VPField extends Validatable {
         this.$input.getAttribute('data-name') ||
         this.$input.getAttribute('name') ||
         this.$input.tagName,
-      rules,
-    };
+      rules
+    }
   }
 
-  getInput() {
-    debug('[VPField] Querying inputs');
+  setInput () {
+    debug('[VPField] Querying inputs')
 
-    let input = this.$element.getElementsByTagName('input');
-    let select = this.$element.getElementsByTagName('select');
-    let textarea = this.$element.getElementsByTagName('textarea');
+    let input = this.$element.getElementsByTagName('input')
+    let select = this.$element.getElementsByTagName('select')
+    let textarea = this.$element.getElementsByTagName('textarea')
 
-    if (input.length > 0) debug('[VPField] Found input', input);
-    if (select.length > 0) debug('[VPField] Found select', select);
-    if (textarea.length > 0) debug('[VPField] Found textarea', textarea);
+    if (input.length > 0) debug('[VPField] Found input', input)
+    if (select.length > 0) debug('[VPField] Found select', select)
+    if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
 
-    this.$input = [].concat(
-      Array.from(input),
-      Array.from(select),
-      Array.from(textarea)
-    )[0];
+    // TODO: Add logic for specifying prefered input type
+    this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as HTMLInputElement
   }
 
-  isValid() {
-    this.$canValidate = false;
+  isValid () {
+    this.$canValidate = false
     if (typeof this.$options.InputFormatter.pre === 'function') {
-      this.$options.InputFormatter.pre(this.$input, (eventName) => {
+      if (this.$input === null) {
+        throw new Error('[VPField] Cannot format Input as it is unset.')
+      }
+
+      this.$options.InputFormatter.pre(this.$input.innerHTML, (eventName: string) => {
         if (this.$input instanceof HTMLElement) {
           this.$input.dispatchEvent(this.createEvent(eventName))
         }
-      });
+      })
     }
 
-    let attributes = this.parseInput();
-    let { value, checked, message, action, type, name, rules } = attributes;
+    let attributes = this.parseInput()
+    let { value, checked, type, name, rules } = attributes
 
-    let errors = [];
+    let errors: boolean[] = []
     errors.concat(this.$options.CustomRules.map((func) => {
       if (typeof func === 'function') {
         return func(attributes, this.$element, this.$input)
@@ -162,35 +177,35 @@ class VPField extends Validatable {
       return true
     }))
 
-    if (isValidRule(rules.min)) {
+    if (isSet(rules.min)) {
       errors.push(
         +value >= +rules.min
           ? true
           : `${name} must be more than ${rules.min}.`
       );
     }
-    if (isValidRule(rules.max)) {
+    if (isSet(rules.max)) {
       errors.push(
         +value <= +rules.max
           ? true
           : `${name} must be less than ${rules.max}.`
       );
     }
-    if (isValidRule(rules.minLength)) {
+    if (isSet(rules.minLength)) {
       errors.push(
         value.length >= +rules.minLength
           ? true
           : `${name} must be ${rules.minLength} characters or more.`
       );
     }
-    if (isValidRule(rules.maxLength)) {
+    if (isSet(rules.maxLength)) {
       errors.push(
         value.length <= +rules.maxLength
           ? true
           : `${name} must be ${rules.maxLength} characters or less.`
       );
     }
-    if (isValidRule(rules.pattern)) {
+    if (isSet(rules.pattern)) {
       errors.push(
         (rules.pattern instanceof RegExp
         ? rules.pattern.test(value)
@@ -204,12 +219,12 @@ class VPField extends Validatable {
       case 'radio':
       case 'checkbox':
         // One should always be selected if required
-        if (isValidRule(rules.required) && rules.required) {
+        if (isSet(rules.required) && rules.required) {
           errors.push(checked ? true : `${name} is required.`);
         }
         break;
       default:
-        if (isValidRule(rules.required) && rules.required) {
+        if (isSet(rules.required) && rules.required) {
           errors.push(value.length > 0 ? true : `${name} is required.`);
         }
     }

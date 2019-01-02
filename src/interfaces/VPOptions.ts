@@ -1,7 +1,6 @@
 import { VerticalPosition } from '@/enums/Positions'
 import ValidationRules from '@/interfaces/HTMLValidationRules'
 import CustomValidationRule from '@/interfaces/CustomValidationRule'
-import AsyncCustomValidationRule from '@/interfaces/AsyncCustomValidationRule'
 import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
 import ValidationStrategy from './ValidationStrategy'
 
@@ -44,12 +43,16 @@ export interface VPFieldOptions extends VPOptions {
     change: boolean, // When the element is updated
     mouseleave: boolean // When the element loses the mouse (For visual controls)
   },
+  DirtyOnBlur: boolean,
 
   // ValidationOptions
   ForceRules: boolean,
-  InputFormatter: { pre: (innerHTML: string) => string, post: (innerHTML: string) => string },
+  InputFormatter: {
+    pre: (innerHTML: string, dispatchEvent: ((eventName: string) => void)) => string,
+    post: (innerHTML: string, dispatchEvent: ((eventName: string) => void)) => string
+  },
   InputRules: ValidationRules,
-  CustomRules: (CustomValidationRule | AsyncCustomValidationRule)[],
+  CustomRules: CustomValidationRule[],
 
   // Messaging
   ShowFieldErrors: boolean

@@ -1,7 +1,13 @@
-export default (str: string, _default: (boolean | null) = null): boolean => {
-  if (typeof str !== 'string' || str.length === 0) return _default;
+export default (param: string | number | null, _default: boolean): boolean => {
+  if (param === null) return _default
 
-  if (str.toLowerCase() === 'true') return true;
-  if (str.toLowerCase() === 'false') return false;
-  return !!str;
-};
+  switch (typeof param) {
+  case 'string':
+    if (param.length === 0) return _default
+    if (param.toLowerCase() === 'true') return true
+    if (param.toLowerCase() === 'false') return false
+    break
+  }
+
+  return !!param
+}

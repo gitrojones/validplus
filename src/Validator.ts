@@ -1,11 +1,11 @@
-import Validatable from '@/Validatable'
-import VPFieldset from '@/Fieldset'
-
 import debug from '@/util/debug'
 import mergeDeep from '@/util/mergeDeep'
 
-import DOMMessaging from '@/mixins/DOMMessaging'
 import { VPValidatorOptions } from '@/interfaces/VPOptions'
+import EventCallback from '@/interfaces/events/EventCallback'
+
+import Validatable from '@/Validatable'
+import VPFieldset from '@/Fieldset'
 
 /**
  * ValidPlus Validator instance, the container
@@ -14,10 +14,12 @@ import { VPValidatorOptions } from '@/interfaces/VPOptions'
  * @name VPValidator
  */
 class VPValidator extends Validatable {
+  $options: VPValidatorOptions = this.$options
+
   private $fieldsets: VPFieldset[]
-  private get $visibleFieldsets(): VPFieldset[] {
+  private get $visibleFieldsets (): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {
-      return this.isElementVisible(fieldset.element)
+      return this.isElementVisible(fieldset.$element)
     })
   }
 
@@ -32,7 +34,7 @@ class VPValidator extends Validatable {
     mergeDeep(this.$options, {
       ValidateLazy: true,
       ValidateVisible: true,
-      ValidationInputs: ['input', 'select', 'textarea'],
+      ValidationInputs: ['input', 'select', 'textarea']
     }, options)
     this.setLifecycle(this.$options.Lifecycle)
   }
@@ -72,14 +74,16 @@ class VPValidator extends Validatable {
   }
 
   // TODO: method to remove watchers
-  watchFieldset(fieldset) {
+  watchFieldset (fieldset: VPFieldset) {
     if (!(fieldset instanceof VPFieldset)) return
+
+    const CB: EventCallback = () => {
+      this.isValid()
+    }
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    fieldset.addEventListener('onValidate', (e, isValid) => {
-      this.isValid()
-    })
+    fieldset.addEventListener('onValidate', CB)
   }
 
   removeFieldset(fieldset) {

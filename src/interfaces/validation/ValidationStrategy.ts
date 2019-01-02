@@ -7,6 +7,6 @@ export interface ValidationStrategies {
 
   all: ValidationStrategy,
   some: ValidationStrategy,
-  one: ValidationStrategy
-  none: ValidationStrategy,
+  one: ValidationStrategy,
+  none: ValidationStrategy
 }

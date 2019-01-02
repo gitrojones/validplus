@@ -1,100 +1,110 @@
-import VPField from './Field';
+import debug from '@/util/debug'
+import mergeDeep from '@/util/mergeDeep'
 
-import debug from './util/debug';
-import mergeDeep from './util/mergeDeep';
+import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
+import ValidationStrategy from '@/interfaces/ValidationStrategy'
+import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
+import CustomValidationRule from '@/interfaces/CustomValidationRule'
 
-import { VPFieldsetOptions } from './interfaces/VPOptions'
-import ValidationStrategy from './interfaces/ValidationStrategy'
-import Validatable from './Validatable'
+import VPField from '@/Field'
+import Validatable from '@/Validatable'
 
 class VPFieldset extends Validatable {
+  $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
-  get $visibleFields(): VPField[] {
+  get $visibleFields (): VPField[] {
     return this.$fields.filter((field: VPField) => {
-      return this.isElementVisible(field.element)
+      return this.isElementVisible(field.$element)
     })
   }
 
-  constructor(element: HTMLElement, strategy, options: VPFieldsetOptions, onValidate = {}) {
+  constructor (
+    element: HTMLElement,
+    strategy: string | ValidationStrategy,
+    options: VPFieldsetOptions,
+    onValidate: ValidationLifecycle
+  ) {
     super(options, element)
 
-    let validationStrategy = strategy;
+    let validationStrategy = strategy
     if (typeof strategy === 'string') {
-      validationStrategy = this.$strategies[strategy];
+      validationStrategy = this.$strategies[strategy]
     }
     if (typeof validationStrategy !== 'function') {
-      throw new Error(
-        '[VPFieldset] Expected ValidationStrategy to be a function.'
-      );
+      throw new Error('[VPFieldset] Expected ValidationStrategy to be a function.')
     }
 
-    // TODO: Legacy support for onValidate
     mergeDeep(this.$options, {
       ValidationStrategy: validationStrategy,
       ValidateVisible: true,
       FieldClass: 'VPField'
     }, options)
+
     this.setLifecycle(onValidate)
     this.$strategy = this.$options.ValidationStrategy
     this.$fields = []
   }
 
-  isValid() {
+  isValid () {
     const fields = this.$options.ValidateVisible ? this.$visibleFields : this.$fields
-    const fieldSetStatus = fields.reduce((status, field, index) => {
-      debug('[VPFieldset] Validating field', index);
-      status.push(field.isValid());
+    const fieldSetStatus = fields.reduce((status: boolean[], field, index) => {
+      debug('[VPFieldset] Validating field', index)
+      status.push(field.isValid())
 
-      return status;
-    }, []);
+      return status
+    }, [])
 
-    this.$isValid = this.$strategy(fieldSetStatus);
-    return this.$isValid;
+    this.$isValid = this.$strategy(fieldSetStatus)
+    return this.$isValid
   }
 
-  removeField(field) {
+  removeField (field: VPField) {
     if (!(field instanceof VPField)) {
-      throw new Error('[VPFieldset] Field must be an instanceof VPField');
+      throw new Error('[VPFieldset] Field must be an instanceof VPField')
     }
 
-    const index = this.$fields.indexOf(field);
+    const index = this.$fields.indexOf(field)
     if (index !== -1) {
-      this.$fields = this.$fields.splice(index, 1);
+      this.$fields = this.$fields.splice(index, 1)
     }
   }
 
-  watchField(field) {
+  watchField (field: VPField) {
     if (!(field instanceof VPField)) {
-      throw new Error('Field must be an instance of VPField');
+      throw new Error('Field must be an instance of VPField')
     }
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    field.addEventListener('onValidate', (e, isValid) => {
-      const valid = this.isValid();
-      const emit = this.$isValid !== null;
+    field.addEventListener('onValidate', (e: Event, isValid: boolean) => {
+      const valid = this.isValid()
+      const emit = this.$isValid !== null
 
       if (emit) {
-        this.dispatchEvent(this.createEvent('onValidate'), valid);
+        this.dispatchEvent(this.createEvent('onValidate'), valid)
       }
-    });
+    })
   }
 
-  addField(field) {
+  addField (field: VPField) {
     if (!(field instanceof VPField)) {
       throw new Error('[VPFieldset] Field must be an instanceof VPField');
     }
-    debug('[VPFieldset] Adding field');
+    debug('[VPFieldset] Adding field')
 
-    this.$fields.push(field);
+    this.$fields.push(field)
     if (this.$options.Watch === true) {
-      this.watchField(field);
+      this.watchField(field)
     }
   }
 
-  // TODO: Enforce onValidate structure
-  createField(el, options, customRules, onValidate) {
+  createField (
+    el: HTMLElement,
+    options: VPFieldOptions,
+    customRules: CustomValidationRule,
+    onValidate: ValidationLifecycle
+  ) {
     if (!(el instanceof Element)) {
       throw new Error(
         '[VPFieldset] Field Element must be a valid DOMElement.'

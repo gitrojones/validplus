@@ -81,9 +81,9 @@ module.exports = {
                 ],
               ],
               plugins: [
-                require('@babel/plugin-transform-typescript').default,
-                require('@babel/plugin-proposal-class-properties').default,
-                require('@babel/plugin-proposal-object-rest-spread').default,
+                '@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-object-rest-spread'
               ],
             },
           },

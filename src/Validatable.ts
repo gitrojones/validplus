@@ -1,18 +1,24 @@
-import mergeDeep from './util/mergeDeep'
-import debug from './util/debug'
+import mergeDeep from '@/util/mergeDeep'
+import debug from '@/util/debug'
+import isSet from '@/util/isSet'
 
-import DOMMessaging from './mixins/DOMMessaging'
-import EventEmitter from './mixins/EventEmitter'
-import { VPOptions } from './interfaces/VPOptions'
-import { ValidationStrategies } from './interfaces/ValidationStrategy'
+import { VPOptions } from '@/interfaces/VPOptions'
+import { ValidationStrategies } from '@/interfaces/ValidationStrategy'
+import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
 
-export default DOMMessaging(EventEmitter(class Validatable {
+import DOMMessaging from '@/lib/DOMMessaging'
+
+import EventEmitter from '@/mixins/EventEmitter'
+
+class Validatable extends DOMMessaging {
   $options: VPOptions
   $element: HTMLElement
   $strategies: ValidationStrategies
-  private $ISVALID: boolean | null
+  $ISVALID: boolean | null
 
   constructor (options: VPOptions, element: HTMLElement) {
+    super()
+
     this.$element = element
     this.$ISVALID = null
 
@@ -40,6 +46,8 @@ export default DOMMessaging(EventEmitter(class Validatable {
     this.$MessageClassName = this.$options.MessageClassName
     this.$MessageAnchor = this.$options.MessageAnchor
     this.$MessageNodePOS = this.$options.MessagePOS
+
+    this.generateMessageNode()
     // END DOMMessaging
   }
 
@@ -52,59 +60,63 @@ export default DOMMessaging(EventEmitter(class Validatable {
     this.clearMessages()
 
     if (isValid) {
-      this.$element.classList.remove(this.$options.ErrorClassName);
-      this.$element.classList.add(this.$options.ValidClassName);
+      this.$element.classList.remove(this.$options.ErrorClassName)
+      this.$element.classList.add(this.$options.ValidClassName)
 
-      this.$options.Lifecycle.Valid.CB.forEach(CB => CB.call(this))
-      this.addMessage(
-        this.$options.Lifecycle.Valid.Message,
-        this.$options.ValidClassName
-      )
+      if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
+        this.$options.Lifecycle.Valid.CB.forEach(CB => CB.call(this))
+      }
+
+      if (typeof this.$options.Lifecycle.Valid.Message === 'string') {
+        this.addMessage(
+          this.$options.Lifecycle.Valid.Message,
+          this.$options.ValidClassName
+        )
+      }
     } else {
-      this.$element.classList.remove(this.$options.ValidClassName);
-      this.$element.classList.add(this.$options.ErrorClassName);
+      this.$element.classList.remove(this.$options.ValidClassName)
+      this.$element.classList.add(this.$options.ErrorClassName)
 
-      this.$options.Lifecycle.Invalid.CB.forEach(CB => CB.call(this))
-      this.addMessage(
-        this.$options.Lifecycle.Invalid.Message,
-        this.$options.ErrorClassName
-      )
+      if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
+        this.$options.Lifecycle.Invalid.CB.forEach(CB => CB.call(this))
+      }
+
+      if (typeof this.$options.Lifecycle.Invalid.Message === 'string') {
+        this.addMessage(
+          this.$options.Lifecycle.Invalid.Message,
+          this.$options.ErrorClassName
+        )
+      }
 
       if (this.$options.ScrollTo === true) {
         if (typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
-          this.$options.ScrollAnchor.scrollIntoView({ behavior: 'smooth' });
+          this.$options.ScrollAnchor.scrollIntoView({ behavior: 'smooth' })
         } else {
-          debug('[VP] Element Scrolling failed.');
+          debug('[VP] Element Scrolling failed.')
         }
       }
     }
   }
 
-  setLifecycle(lifecycle: ValidationLifecycle): void {
+  setLifecycle (lifecycle: ValidationLifecycle): void {
+    const isValidationLifecycle = function (lifecycle: any): lifecycle is ValidationLifecycle {
+      return isSet(lifecycle)
+        && 'Valid' in lifecycle
+        && 'Invalid' in lifecycle
+    }
+
     this.$options.Lifecycle = {
-      Valid: {
-        Message: '',
-        CB: []
-      },
-      Invalid: {
-        Message: 'Input is invalid',
-        CB: []
-      }
+      Valid: { },
+      Invalid: { }
     }
 
-    if (typeof lifecycle !== 'object' || lifecycle === null) {
-      debug('[VP] Lifecycle expected to follow ValidationLifecycle Interface.')
-      return
-    }
-
-    if (lifecycle.Valid) {
+    if (isValidationLifecycle(lifecycle)) {
       if (typeof lifecycle.Valid.Message === 'string') {
         this.$options.Lifecycle.Valid.Message = lifecycle.Valid.Message
       }
       if (Array.isArray(lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB = lifecycle.Valid.CB
       }
-    } else if (lifecycle.Invalid) {
       if (typeof lifecycle.Invalid.Message === 'string') {
         this.$options.Lifecycle.Invalid.Message = lifecycle.Invalid.Message
       }
@@ -114,11 +126,13 @@ export default DOMMessaging(EventEmitter(class Validatable {
     }
   }
 
-  isElementVisible(element: HTMLElement): boolean {
+  isElementVisible (element: HTMLElement): boolean {
     if (element instanceof HTMLElement) {
       return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
-    } else {
-      return null
     }
+
+    return false
   }
-}));
+}
+
+export default EventEmitter(Validatable)
