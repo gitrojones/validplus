@@ -2,9 +2,9 @@ import debug from '@/util/debug'
 import mergeDeep from '@/util/mergeDeep'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
-import ValidationStrategy from '@/interfaces/ValidationStrategy'
-import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
-import CustomValidationRule from '@/interfaces/CustomValidationRule'
+import ValidationStrategy from '@/interfaces/validation/ValidationStrategy'
+import ValidationLifecycle from '@/interfaces/validation/ValidationLifecycle'
+import CustomValidationRule from '@/interfaces/validation/CustomValidationRule'
 
 import VPField from '@/Field'
 import Validatable from '@/Validatable'
@@ -77,7 +77,7 @@ class VPFieldset extends Validatable {
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    field.addEventListener('onValidate', (e: Event, isValid: boolean) => {
+    field.addEventListener('onValidate', () => {
       const valid = this.isValid()
       const emit = this.$isValid !== null
 
@@ -89,7 +89,7 @@ class VPFieldset extends Validatable {
 
   addField (field: VPField) {
     if (!(field instanceof VPField)) {
-      throw new Error('[VPFieldset] Field must be an instanceof VPField');
+      throw new Error('[VPFieldset] Field must be an instanceof VPField')
     }
     debug('[VPFieldset] Adding field')
 
@@ -106,35 +106,35 @@ class VPFieldset extends Validatable {
     onValidate: ValidationLifecycle
   ) {
     if (!(el instanceof Element)) {
-      throw new Error(
-        '[VPFieldset] Field Element must be a valid DOMElement.'
-      );
+      throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
     }
 
-    const field = new VPField(el, options, customRules, onValidate);
-    this.$fields.push(field);
+    const field = new VPField(el, options, customRules, onValidate)
+    this.$fields.push(field)
     if (this.$options.Watch === true) {
-      this.watchField(field);
+      this.watchField(field)
     }
 
-    return field;
+    return field
   }
 
-  findFields() {
-    const vm = this;
+  findFields () {
     let fields = Array.from(
-      this.$element.getElementsByClassName(this.$options.fieldClass)
-    );
+      this.$element.getElementsByClassName(this.$options.FieldClass)
+    )
 
     // TODO: Attribute parsing to fill in the gaps
-    this.$fields = fields.map(field => {
-      const _field = new VPField(field, {});
+    this.$fields = fields.map((field: Element) => {
+      const _field = new VPField(
+        field as HTMLElement,
+        {} as VPFieldOptions,
+        [])
       if (this.$options.Watch === true) {
-        this.watchField(_field);
+        this.watchField(_field)
       }
 
-      return _field;
-    });
+      return _field
+    })
   }
 }
 

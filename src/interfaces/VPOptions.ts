@@ -1,8 +1,8 @@
 import { VerticalPosition } from '@/enums/Positions'
-import ValidationRules from '@/interfaces/HTMLValidationRules'
-import CustomValidationRule from '@/interfaces/CustomValidationRule'
-import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
-import ValidationStrategy from './ValidationStrategy'
+import ValidationRules from '@/interfaces/validation/HTMLValidationRules'
+import CustomValidationRule from '@/interfaces/validation/CustomValidationRule'
+import ValidationLifecycle from '@/interfaces/validation/ValidationLifecycle'
+import ValidationStrategy from '@/interfaces/validation/ValidationStrategy'
 
 export interface VPOptions {
   // ControlFlow
@@ -48,8 +48,12 @@ export interface VPFieldOptions extends VPOptions {
   // ValidationOptions
   ForceRules: boolean,
   InputFormatter: {
-    pre: (innerHTML: string, dispatchEvent: ((eventName: string) => void)) => string,
-    post: (innerHTML: string, dispatchEvent: ((eventName: string) => void)) => string
+    pre: (
+      innerHTML: HTMLElement,
+      dispatchEvent: ((eventName: string) => void)) => string,
+    post: (
+      innerHTML: HTMLElement,
+      dispatchEvent: ((eventName: string) => void)) => string
   },
   InputRules: ValidationRules,
   CustomRules: CustomValidationRule[],

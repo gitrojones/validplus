@@ -1,6 +1,8 @@
 import debug from '@/util/debug'
 import mergeDeep from '@/util/mergeDeep'
-import toBoolean from '@/util/toBoolean'
+import toBoolean from '@/util/casts/toBoolean'
+import toNumber from '@/util/casts/toNumber'
+import toRegexp from '@/util/casts/toRegexp'
 import filterNullObj from '@/util/filterNullObject'
 import isSet from '@/util/isSet'
 
@@ -112,12 +114,12 @@ class VPField extends Validatable {
     }
 
     const inputRules: HTMLValidationRules = filterNullObj({
-      min: this.$input.getAttribute('min'),
-      minLength: this.$input.getAttribute('minlength'),
-      max: this.$input.getAttribute('max'),
-      maxLength: this.$input.getAttribute('maxlength'),
-      pattern: this.$input.getAttribute('pattern'),
-      required: this.$input.getAttribute('required')
+      min: toNumber(this.$input.getAttribute('min')),
+      minLength: toNumber(this.$input.getAttribute('minlength')),
+      max: toNumber(this.$input.getAttribute('max')),
+      maxLength: toNumber(this.$input.getAttribute('maxlength')),
+      pattern: toRegexp(this.$input.getAttribute('pattern')),
+      required: toBoolean(this.$input.getAttribute('required'), false)
     })
 
     const rules = this.$options.ForceRules
@@ -158,7 +160,7 @@ class VPField extends Validatable {
         throw new Error('[VPField] Cannot format Input as it is unset.')
       }
 
-      this.$options.InputFormatter.pre(this.$input.innerHTML, (eventName: string) => {
+      this.$options.InputFormatter.pre(this.$input, (eventName: string) => {
         if (this.$input instanceof HTMLElement) {
           this.$input.dispatchEvent(this.createEvent(eventName))
         }
@@ -168,21 +170,25 @@ class VPField extends Validatable {
     let attributes = this.parseInput()
     let { value, checked, type, name, rules } = attributes
 
-    let errors: boolean[] = []
-    errors.concat(this.$options.CustomRules.map((func) => {
-      if (typeof func === 'function') {
-        return func(attributes, this.$element, this.$input)
-      }
+    let errors: (boolean | string)[] = []
+    const resolvedCustomRules = this.$options.CustomRules.map((func) => {
+      return func(attributes, this.$element, this.$input as HTMLInputElement)
+    })
 
-      return true
-    }))
+    Promise.all(resolvedCustomRules).then((isValid) => {
+      errors.concat(isValid.filter(v => v !== true))
+    }).catch((err) => {
+      debug('[VPField] Custom Validation', err)
+    })
 
     if (isSet(rules.min)) {
-      errors.push(
-        +value >= +rules.min
-          ? true
-          : `${name} must be more than ${rules.min}.`
-      );
+      const numValue = toNumber(value)
+
+      if (numValue) {
+        errors.push(numValue < rules.min 
+          ? `${name} must be more than ${rules.min}.`
+          : true)
+      }
     }
     if (isSet(rules.max)) {
       errors.push(
@@ -207,30 +213,30 @@ class VPField extends Validatable {
     }
     if (isSet(rules.pattern)) {
       errors.push(
-        (rules.pattern instanceof RegExp
-        ? rules.pattern.test(value)
-        : new RegExp(rules.pattern).test(value))
-          ? true
-          : `${name} is incorrectly formatted.`
-      );
+      (rules.pattern instanceof RegExp
+      ? rules.pattern.test(value)
+      : new RegExp(rules.pattern).test(value))
+        ? true
+        : `${name} is incorrectly formatted.`
+      )
     }
 
     switch (type) {
-      case 'radio':
-      case 'checkbox':
-        // One should always be selected if required
-        if (isSet(rules.required) && rules.required) {
-          errors.push(checked ? true : `${name} is required.`);
-        }
-        break;
-      default:
-        if (isSet(rules.required) && rules.required) {
-          errors.push(value.length > 0 ? true : `${name} is required.`);
-        }
+    case 'radio':
+    case 'checkbox':
+      // One should always be selected if required
+      if (isSet(rules.required) && rules.required) {
+        errors.push(checked ? true : `${name} is required.`)
+      }
+      break
+    default:
+      if (isSet(rules.required) && rules.required) {
+        errors.push(value.length > 0 ? true : `${name} is required.`)
+      }
     }
 
-    this.clearMessages();
-    this.$isValid = errors.every(err => err === true);
+    this.clearMessages()
+    this.$isValid = errors.every(err => err === true)
 
     if (typeof this.$options.InputFormatter.pre === 'string') {
       this.addMessage(this.$options.InputFormatter.pre, '-isInfo');

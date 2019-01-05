@@ -64,7 +64,8 @@ class Validatable extends DOMMessaging {
       this.$element.classList.add(this.$options.ValidClassName)
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
-        this.$options.Lifecycle.Valid.CB.forEach(CB => CB.call(this))
+        this.$options.Lifecycle.Valid.CB
+          .forEach((CB: () => null) => CB.call(this))
       }
 
       if (typeof this.$options.Lifecycle.Valid.Message === 'string') {
@@ -78,7 +79,8 @@ class Validatable extends DOMMessaging {
       this.$element.classList.add(this.$options.ErrorClassName)
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
-        this.$options.Lifecycle.Invalid.CB.forEach(CB => CB.call(this))
+        this.$options.Lifecycle.Invalid.CB
+          .forEach((CB: () => null) => CB.call(this))
       }
 
       if (typeof this.$options.Lifecycle.Invalid.Message === 'string') {
@@ -100,9 +102,8 @@ class Validatable extends DOMMessaging {
 
   setLifecycle (lifecycle: ValidationLifecycle): void {
     const isValidationLifecycle = function (lifecycle: any): lifecycle is ValidationLifecycle {
-      return isSet(lifecycle)
-        && 'Valid' in lifecycle
-        && 'Invalid' in lifecycle
+      return isSet(lifecycle) &&
+        ('Valid' in lifecycle || 'Invalid' in lifecycle)
     }
 
     this.$options.Lifecycle = {
@@ -111,17 +112,21 @@ class Validatable extends DOMMessaging {
     }
 
     if (isValidationLifecycle(lifecycle)) {
-      if (typeof lifecycle.Valid.Message === 'string') {
-        this.$options.Lifecycle.Valid.Message = lifecycle.Valid.Message
+      if (lifecycle.Valid) {
+        if (typeof lifecycle.Valid.Message === 'string') {
+          this.$options.Lifecycle.Valid.Message = lifecycle.Valid.Message
+        }
+        if (Array.isArray(lifecycle.Valid.CB)) {
+          this.$options.Lifecycle.Valid.CB = lifecycle.Valid.CB
+        }
       }
-      if (Array.isArray(lifecycle.Valid.CB)) {
-        this.$options.Lifecycle.Valid.CB = lifecycle.Valid.CB
-      }
-      if (typeof lifecycle.Invalid.Message === 'string') {
-        this.$options.Lifecycle.Invalid.Message = lifecycle.Invalid.Message
-      }
-      if (Array.isArray(lifecycle.Invalid.CB)) {
-        this.$options.Lifecycle.Invalid.CB = lifecycle.Invalid.CB
+      if (lifecycle.Invalid) {
+        if (typeof lifecycle.Invalid.Message === 'string') {
+          this.$options.Lifecycle.Invalid.Message = lifecycle.Invalid.Message
+        }
+        if (Array.isArray(lifecycle.Invalid.CB)) {
+          this.$options.Lifecycle.Invalid.CB = lifecycle.Invalid.CB
+        }
       }
     }
   }

@@ -43,8 +43,9 @@ class VPValidator extends Validatable {
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     let isValid
     if (this.$options.ValidateLazy) {
-      isValid = fieldsets.every(fieldset => {
-        return fieldset.isValid()
+      isValid = fieldsets.every((fieldset: VPFieldset) => {
+        const isValid = fieldset.isValid()
+        return isValid || false
       })
     } else {
       isValid = fieldsets.reduce((isValid, fieldset) => {
@@ -62,7 +63,7 @@ class VPValidator extends Validatable {
 
   // TODO: Child state checks
   // TODO: Add MutationObserver on children
-  addFieldset(fieldset: VPFieldset) {
+  addFieldset (fieldset: VPFieldset) {
     if (!(fieldset instanceof VPFieldset)) {
       throw new Error('[Validator] Fieldset must be an instanceof VPFieldset')
     }
@@ -86,7 +87,7 @@ class VPValidator extends Validatable {
     fieldset.addEventListener('onValidate', CB)
   }
 
-  removeFieldset(fieldset) {
+  removeFieldset (fieldset: VPFieldset) {
     const index = this.$fieldsets.indexOf(fieldset)
     if (index !== -1) {
       const removedField = this.$fieldsets.splice(index, 1)
@@ -97,12 +98,11 @@ class VPValidator extends Validatable {
   // TODO: Append Predefined Fields w/ CB logic
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
-  createFieldset(fs: HTMLElement,
+  createFieldset (fs: HTMLElement,
     strategy: VPValidatorStrategy,
     options: VPFieldsetOptions,
     fields: VPField[], onValidate = null) {
-    const fieldset = new VPFieldset(fs, strategy, options, onValidate)
-    fields.forEach(field => {
+      const fieldset = new VPFieldset(fs, strategy, options, onValidate) fields.forEach(field => {
       fieldset.addField(field)
     })
 
