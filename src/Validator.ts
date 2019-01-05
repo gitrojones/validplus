@@ -102,7 +102,9 @@ class VPValidator extends Validatable {
     strategy: VPValidatorStrategy,
     options: VPFieldsetOptions,
     fields: VPField[], onValidate = null) {
-      const fieldset = new VPFieldset(fs, strategy, options, onValidate) fields.forEach(field => {
+    const fieldset = new VPFieldset(fs, strategy, options, onValidate)
+
+    fields.forEach(field => {
       fieldset.addField(field)
     })
 
