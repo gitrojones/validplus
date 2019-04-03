@@ -1,7 +1,8 @@
 <template>
   <div class="test-field">
     <slot></slot>
-    <input id="testField" name="test" type="text" :value="true">
+    <input id="testField" name="test" type="text" :value="value" required="true">
+    <button @click="VPField.isValid()">Validate</button>
   </div>
 </template>
 
@@ -9,13 +10,38 @@
 import VPVue from "VPVue";
 
 export default {
-  props: {},
+  props: {
+    value: {
+      default: null
+    }
+  },
   mixins: [VPVue.Field],
   data() {
     return {};
+  },
+  beforeCreate() {
+    this.VPOptions$ = {
+      Lifecycle: {
+        Invalid: {
+          Message: 'Invalid Field'
+        },
+        Valid: {
+          Message: 'Valid Field'
+        }
+      }
+    }
   },
   computed: {}
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.test-field {
+  &.-isError {
+    color: red;
+  }
+  &.-isValid {
+    color: green;
+  }
+}
+</style>

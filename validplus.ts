@@ -14,3 +14,5 @@ export const ValidPlus = {
   Fieldset,
   Field
 }
+
+export default ValidPlus

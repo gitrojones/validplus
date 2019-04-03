@@ -5,7 +5,7 @@
     <vp-fieldset>
       <span>Hello World</span>
 
-      <vp-field id="external" :VPOptions="{ watch: false }">
+      <vp-field id="external" :VPOptions="{ watch: false }" value="foo">
         external
       </vp-field>
     </vp-fieldset>

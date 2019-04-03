@@ -77,6 +77,18 @@ describe('ValidPlus', function() {
       it('Implements CreateEvent Helper', function () {
         expect(validatable.every(v => typeof v.createEvent === 'function')).to.be.true
       })
+      it('Throws on missing anchor', function () {
+        expect(() => {
+          validatable = new ValidPlus.Validator({})
+        }).to.throw('anchor must be an HTMLElement');
+      })
+      it('Does not throw if anchor is deferred', function () {
+        expect(() => {
+          validatable = new ValidPlus.Validator({
+            DeferredMessageAnchor: true
+          })
+        }).to.not.throw('anchor must be an HTMLElement');
+      })
     })
   })
 

@@ -13,3 +13,4 @@ export declare const ValidPlus: {
     Fieldset: typeof Fieldset;
     Field: typeof Field;
 };
+export default ValidPlus;

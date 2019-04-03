@@ -1,5 +1,5 @@
 const { mount, shallowMount } = require('@vue/test-utils');
-const VPVue = require('VPVue').default;
+const VPVue = require('VPVue').VPVue;
 
 const TestingGround = require('#/testing-ground').default;
 const Fieldset = require('#/components/fieldset').default;

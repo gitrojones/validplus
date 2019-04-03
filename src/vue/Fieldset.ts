@@ -1,6 +1,6 @@
-import Validatable from './Validatable'
+import { Validatable } from './Validatable'
 
-export default {
+export const Fieldset = {
   props: {
     VPOptions: {
       type: Object
@@ -44,8 +44,8 @@ export default {
       VPFields$: this.VPFields || [],
       VPOptions$: this.VPOptions || {},
       VPValid$: this.VPValid || {
-        isInvalid: {
-          message: 'Input is invalid'
+        Invalid: {
+          Message: 'Input is invalid'
         }
       }
     }

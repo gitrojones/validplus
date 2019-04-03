@@ -1,4 +1,4 @@
-export default {
+export const Validatable = {
   props: {
     validator: {
       type: Object,
@@ -12,16 +12,24 @@ export default {
     }
   },
   beforeMount () {
-    this.VP = require('validplus').default
+    this.VP = require('validplus').ValidPlus
   },
   mounted () {
+    // Fulfill anchor requirements deferred
+    // when elements are available
     if (this.VPNewValidator) {
-      this.validator.element = this.$el
+      this.validator.$element = this.$el
+      this.validator.$options.MessageAnchor = this.$el
+      this.validator.$MessageAnchor = this.$el
+      this.validator.generateMessageNode()
     }
   },
   provide () {
     let providing = {}
-    if (this.VPProvideValidator) providing.VPValidator = this.validator
+    if (this.VPProvideValidator) {
+      providing['VPValidator'] = this.validator
+    }
+
     return providing
   },
   inject: {
@@ -29,8 +37,10 @@ export default {
       default () {
         this.VPNewValidator = true
         console.log('[VPVue] Validator not provided, injecting new validator.')
-        const VP = require('validplus').default
-        return new VP.Validator({})
+        const VP = require('validplus').ValidPlus
+        return new VP.Validator({
+          DeferredMessageAnchor: true
+        })
       }
     }
   },

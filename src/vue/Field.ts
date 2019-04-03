@@ -1,6 +1,6 @@
-import Validatable from './Validatable'
+import { Validatable } from './Validatable'
 
-export default {
+export const Field = {
   props: {
     VPOptions: {
       type: Object
@@ -14,7 +14,7 @@ export default {
   },
   mixins: [ Validatable ],
   watch: {
-    'VPField._isValid': function (isValid) {
+    'VPField.$valid': function (isValid) {
       if (isValid) {
         this.$emit('isValid', this)
       } else {
@@ -38,7 +38,7 @@ export default {
     return {
       VPField: null,
       VPOptions$: this.VPOptions || {},
-      VPRules$: this.VPRules || {},
+      VPRules$: this.VPRules || [],
       VPValid$: this.VPValid || {}
     }
   },
