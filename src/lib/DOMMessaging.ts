@@ -33,6 +33,8 @@ export class DOMMessaging {
       anchor.prepend(this.$MessageNode)
     } else if (pos === VerticalPosition.bottom) {
       anchor.appendChild(this.$MessageNode)
+    } else {
+      console.log('NoPos', pos, this.$MessageNodePOS)
     }
   }
 

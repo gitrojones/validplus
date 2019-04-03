@@ -115,11 +115,11 @@ export class VPField extends Validatable {
 
     const inputRules: HTMLValidationRules = filterNullObject({
       min: toNumber(this.$input.getAttribute('min')),
-      minLength: toNumber(this.$input.getAttribute('minlength')),
+      minlength: toNumber(this.$input.getAttribute('minlength')),
       max: toNumber(this.$input.getAttribute('max')),
-      maxLength: toNumber(this.$input.getAttribute('maxlength')),
+      maxlength: toNumber(this.$input.getAttribute('maxlength')),
       pattern: toRegexp(this.$input.getAttribute('pattern')),
-      required: toBoolean(this.$input.getAttribute('required'), false)
+      required: toBoolean(this.$input.getAttribute('required'), null)
     })
 
     const rules = this.$options.ForceRules

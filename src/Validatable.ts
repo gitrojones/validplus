@@ -28,7 +28,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       ValidClassName: '-isValid',
       MessageClassName: 'VPMessage',
       MessageAnchor: element,
-      MessagePOS: 'bottom',
+      MessagePOS: 'BOTTOM', // VerticalPosition.bottom
       ScrollTo: true,
       ScrollAnchor: element,
       Watch: false

@@ -1,5 +1,5 @@
 export interface HTMLValidationRules {
-  required: boolean,
+  required: (boolean | null),
   // All below depend on upon being required
   min?: number,
   max?: number,

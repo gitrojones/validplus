@@ -480,8 +480,6 @@ describe('ValidPlus', function() {
       );
       fieldset.addField(new ValidPlus.Field(testField, {}));
 
-      console.log('fieldset', fieldset);
-
       expect(fieldset.isValid()).to.be.true;
       expect(testFieldset.children.length).to.equal(2);
       expect(testFieldset.children[1].className).to.equal('VPMessages');
@@ -573,8 +571,8 @@ describe('ValidPlus', function() {
         testInput.setAttribute('required', true);
         testInput.value = null;
         let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         });
 
@@ -707,8 +705,8 @@ describe('ValidPlus', function() {
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -729,8 +727,8 @@ describe('ValidPlus', function() {
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -750,8 +748,8 @@ describe('ValidPlus', function() {
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -760,19 +758,19 @@ describe('ValidPlus', function() {
         testInput.value = 6;
         expect(field.isValid()).to.be.false;
       });
-      it('Should validate maxLength', function() {
+      it('Should validate maxlength', function() {
         testInput.value = 'hello';
         let field = new ValidPlus.Field(
           testField,
           {
             InputRules: {
-              maxLength: 5,
+              maxlength: 5,
             },
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -783,19 +781,20 @@ describe('ValidPlus', function() {
         testInput.value = 'hello world';
         expect(field.isValid()).to.be.false;
       });
-      it('Should validate minLength', function() {
+
+      it('Should validate minlength', function() {
         testInput.value = 'hello';
         let field = new ValidPlus.Field(
           testField,
           {
             InputRules: {
-              minLength: 5,
+              minlength: 5,
             },
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -806,6 +805,7 @@ describe('ValidPlus', function() {
         testInput.value = 'hello world';
         expect(field.isValid()).to.be.true;
       });
+
       it('Should validate pattern', function() {
         testInput.value = 'hello';
         let field = new ValidPlus.Field(
@@ -817,8 +817,8 @@ describe('ValidPlus', function() {
           },
           [],
           {
-            isInvalid: {
-              message: 'Hello, World',
+            Invalid: {
+              Message: 'Hello, World',
             },
           }
         );
@@ -838,13 +838,13 @@ describe('ValidPlus', function() {
         testField,
         {
           InputRules: {
-            maxLength: 5,
+            maxlength: 5,
           },
         },
         [],
         {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         }
       );
@@ -912,7 +912,7 @@ describe('ValidPlus', function() {
     });
 
     it ('Should append message for pre/post formatters', function () {
-      const Message = 'Hello, World'
+      const message = 'Hello, World'
 
       let field = new ValidPlus.Field(
         testField,
@@ -924,14 +924,14 @@ describe('ValidPlus', function() {
         },
         [],
         {
-          isInvalid: {
-            message: Message
+          Invalid: {
+            Message: message
           },
         }
       );
 
       field.isValid();
-      expect(field.$MessageNode.children[1].innerHTML === Message)
+      expect(field.$MessageAnchor.children[1].innerHTML === message)
     })
 
     it('Should fire update events on pre/post formatters', function() {
@@ -968,14 +968,16 @@ describe('ValidPlus', function() {
       let field = new ValidPlus.Field(
         testField,
         {
-          ValidateOnBlur: true,
+          ValidateOn: {
+            blur: true
+          },
           DirtyOnBlur: true,
           Watch: true
         },
         [],
         {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         }
       );
@@ -1008,13 +1010,13 @@ describe('ValidPlus', function() {
       testField.setAttribute('vp-watch', false);
 
       let field = new ValidPlus.Field(testField, {}, [], {
-        isInvalid: {
-          message: 'Foo',
+        Invalid: {
+          Message: 'Foo',
         },
       });
 
       expect(field.$options.DirtyOnBlur).to.be.true;
-      expect(field.$options.ValidateOnBlur).to.be.false;
+      expect(field.$options.ValidateOn.blur).to.be.false;
       expect(field.$options.Watch).to.be.false;
     });
 
