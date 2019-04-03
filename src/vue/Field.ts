@@ -43,6 +43,14 @@ export const Field = {
     }
   },
   methods: {
+    VPAddRule (rule) {
+      if (typeof rule === 'function') {
+        this.VPField.$options.CustomRules.push(rule)
+      } else {
+        console.error('[VPField] Rule must be a function that resolves to a promise')
+      }
+    },
+
     VPGatherFields () {
       Object.keys(this.$slots).forEach((slot) => {
         const data = this.$slots[slot]
