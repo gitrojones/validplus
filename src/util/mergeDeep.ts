@@ -1,4 +1,4 @@
-import isObject from '@/util/isObject'
+import { isObject } from '@/util/isObject'
 
 /**
  * Deep merge two objects, left most takes priority
@@ -6,7 +6,7 @@ import isObject from '@/util/isObject'
  * @param target - The object to merge onto
  * @param sources - The object(s) to merge into the target
  */
-const mergeDeep = function (target: any, ...sources: any[]): object {
+export const mergeDeep = function (target: any, ...sources: any[]): object {
   if (!Array.isArray(sources) || sources.length < 1) return target
   const source = sources.shift()
 
@@ -23,5 +23,3 @@ const mergeDeep = function (target: any, ...sources: any[]): object {
 
   return mergeDeep(target, ...sources)
 }
-
-export default mergeDeep

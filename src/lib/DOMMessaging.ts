@@ -8,7 +8,7 @@ import { VerticalPosition } from '@/enums/Positions'
  * @requires ClassName - The name to use as the base class name
  */
 
-export default class DOMMessaging {
+export class DOMMessaging {
   $MessageClassName: string = 'DOMMessage'
   $MessageNode: HTMLElement | null = null
   $MessageAnchor: HTMLElement | null = null

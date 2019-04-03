@@ -6,8 +6,3 @@ export enum HorizontalPosition {
   left = 'LEFT',
   right = 'RIGHT'
 }
-
-export default {
-  VerticalPosition,
-  HorizontalPosition
-}

@@ -1,26 +1,26 @@
-import mergeDeep from '@/util/mergeDeep'
-import debug from '@/util/debug'
-import isSet from '@/util/isSet'
+import { mergeDeep } from '@/util/mergeDeep'
+import { debug } from '@/util/debug'
+import { isSet } from '@/util/isSet'
 
 import { VPOptions } from '@/interfaces/VPOptions'
-import { ValidationStrategies } from '@/interfaces/ValidationStrategy'
-import ValidationLifecycle from '@/interfaces/ValidationLifecycle'
+import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy'
+import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 
-import DOMMessaging from '@/lib/DOMMessaging'
+import { DOMMessaging } from '@/lib/DOMMessaging'
 
-import EventEmitter from '@/mixins/EventEmitter'
+import { EventEmitter } from '@/mixins/EventEmitter'
 
-class Validatable extends DOMMessaging {
+export const Validatable = EventEmitter(class extends DOMMessaging {
   $options: VPOptions
   $element: HTMLElement
   $strategies: ValidationStrategies
-  $ISVALID: boolean | null
+  $valid: boolean | null
 
   constructor (options: VPOptions, element: HTMLElement) {
     super()
 
     this.$element = element
-    this.$ISVALID = null
+    this.$valid = null
 
     // Set some logical defaults
     this.$options = mergeDeep({
@@ -52,11 +52,11 @@ class Validatable extends DOMMessaging {
   }
 
   get $isValid (): boolean | null {
-    return this.$ISVALID
+    return this.$valid
   }
 
   set $isValid (isValid: boolean | null) {
-    this.$ISVALID = isValid
+    this.$valid = isValid
     this.clearMessages()
 
     if (isValid) {
@@ -91,6 +91,8 @@ class Validatable extends DOMMessaging {
       }
 
       if (this.$options.ScrollTo === true) {
+        // While always true, we check due to limitations with JSDOM
+        // tslint:disable-next-line: strict-type-predicates
         if (typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
           this.$options.ScrollAnchor.scrollIntoView({ behavior: 'smooth' })
         } else {
@@ -138,6 +140,4 @@ class Validatable extends DOMMessaging {
 
     return false
   }
-}
-
-export default EventEmitter(Validatable)
+})

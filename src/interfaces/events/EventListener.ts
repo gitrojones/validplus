@@ -1,5 +1,5 @@
-import EventCallback from '@/interfaces/events/EventCallback'
+import { EventCallback } from '@/interfaces/events/EventCallback'
 
-export default interface EventListener {
+export interface EventListener {
   [eventName: string]: EventCallback[]
 }

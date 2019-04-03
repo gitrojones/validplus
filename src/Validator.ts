@@ -1,11 +1,14 @@
-import debug from '@/util/debug'
-import mergeDeep from '@/util/mergeDeep'
+// import { debug } from '@/util/debug'
+import { mergeDeep } from '@/util/mergeDeep'
 
-import { VPValidatorOptions } from '@/interfaces/VPOptions'
-import EventCallback from '@/interfaces/events/EventCallback'
+import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
+import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
+import { VPValidatorOptions, VPFieldsetOptions } from '@/interfaces/VPOptions'
+import { EventCallback } from '@/interfaces/events/EventCallback'
 
-import Validatable from '@/Validatable'
-import VPFieldset from '@/Fieldset'
+import { Validatable } from '@/Validatable'
+import { VPFieldset } from '@/Fieldset'
+import { VPField } from '@/Field'
 
 /**
  * ValidPlus Validator instance, the container
@@ -13,7 +16,7 @@ import VPFieldset from '@/Fieldset'
  *
  * @name VPValidator
  */
-class VPValidator extends Validatable {
+export class VPValidator extends Validatable {
   $options: VPValidatorOptions = this.$options
 
   private $fieldsets: VPFieldset[]
@@ -90,7 +93,7 @@ class VPValidator extends Validatable {
   removeFieldset (fieldset: VPFieldset) {
     const index = this.$fieldsets.indexOf(fieldset)
     if (index !== -1) {
-      const removedField = this.$fieldsets.splice(index, 1)
+      this.$fieldsets.splice(index, 1)
       // TODO: Remove MutationObserver
     }
   }
@@ -99,9 +102,11 @@ class VPValidator extends Validatable {
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
   createFieldset (fs: HTMLElement,
-    strategy: VPValidatorStrategy,
+    strategy: ValidationStrategy,
     options: VPFieldsetOptions,
-    fields: VPField[], onValidate = null) {
+    fields: VPField[],
+    onValidate: ValidationLifecycle) {
+
     const fieldset = new VPFieldset(fs, strategy, options, onValidate)
 
     fields.forEach(field => {
@@ -116,5 +121,3 @@ class VPValidator extends Validatable {
     return fieldset
   }
 }
-
-export default VPValidator

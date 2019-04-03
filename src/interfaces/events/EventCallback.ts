@@ -1,3 +1,3 @@
-export default interface EventCallback {
+export interface EventCallback {
   (event: Event, data: any): void
 }

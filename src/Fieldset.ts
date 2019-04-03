@@ -1,15 +1,15 @@
-import debug from '@/util/debug'
-import mergeDeep from '@/util/mergeDeep'
+import { debug } from '@/util/debug'
+import { mergeDeep } from '@/util/mergeDeep'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
-import ValidationStrategy from '@/interfaces/validation/ValidationStrategy'
-import ValidationLifecycle from '@/interfaces/validation/ValidationLifecycle'
-import CustomValidationRule from '@/interfaces/validation/CustomValidationRule'
+import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
+import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
+import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 
-import VPField from '@/Field'
-import Validatable from '@/Validatable'
+import { VPField } from '@/Field'
+import { Validatable } from '@/Validatable'
 
-class VPFieldset extends Validatable {
+export class VPFieldset extends Validatable {
   $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
@@ -102,7 +102,7 @@ class VPFieldset extends Validatable {
   createField (
     el: HTMLElement,
     options: VPFieldOptions,
-    customRules: CustomValidationRule,
+    customRules: CustomValidationRule[],
     onValidate: ValidationLifecycle
   ) {
     if (!(el instanceof Element)) {
@@ -128,7 +128,8 @@ class VPFieldset extends Validatable {
       const _field = new VPField(
         field as HTMLElement,
         {} as VPFieldOptions,
-        [])
+        [] as CustomValidationRule[],
+        { Valid: {}, Invalid: {} } as ValidationLifecycle)
       if (this.$options.Watch === true) {
         this.watchField(_field)
       }
@@ -137,5 +138,3 @@ class VPFieldset extends Validatable {
     })
   }
 }
-
-export default VPFieldset;

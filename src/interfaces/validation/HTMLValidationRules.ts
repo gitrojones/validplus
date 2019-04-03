@@ -1,4 +1,4 @@
-export default interface HTMLValidationRules {
+export interface HTMLValidationRules {
   required: boolean,
   // All below depend on upon being required
   min?: number,

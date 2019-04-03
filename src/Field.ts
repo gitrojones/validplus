@@ -1,20 +1,20 @@
-import debug from '@/util/debug'
-import mergeDeep from '@/util/mergeDeep'
-import toBoolean from '@/util/casts/toBoolean'
-import toNumber from '@/util/casts/toNumber'
-import toRegexp from '@/util/casts/toRegexp'
-import filterNullObj from '@/util/filterNullObject'
-import isSet from '@/util/isSet'
+import { debug } from '@/util/debug'
+import { mergeDeep } from '@/util/mergeDeep'
+import { toBoolean } from '@/util/casts/toBoolean'
+import { toNumber } from '@/util/casts/toNumber'
+import { toRegexp } from '@/util/casts/toRegexp'
+import { filterNullObject } from '@/util/filterNullObject'
+import { isSet } from '@/util/isSet'
 
 import { VPFieldOptions } from '@/interfaces/VPOptions'
-import CustomValidationRule from '@/interfaces/validation/CustomValidationRule'
-import ValidationLifecycle from '@/interfaces/validation/ValidationLifecycle'
-import ValidationAttributes from '@/interfaces/validation/ValidationAttributes'
-import HTMLValidationRules from '@/interfaces/validation/HTMLValidationRules'
+import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
+import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
+import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
+import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
-import Validatable from '@/Validatable'
+import { Validatable } from '@/Validatable'
 
-class VPField extends Validatable {
+export class VPField extends Validatable {
   $options: VPFieldOptions = this.$options
   $dirty: boolean = false
   $input: (HTMLInputElement | null) = null
@@ -113,7 +113,7 @@ class VPField extends Validatable {
       throw new Error('[VPField] Input must be an instance of Element')
     }
 
-    const inputRules: HTMLValidationRules = filterNullObj({
+    const inputRules: HTMLValidationRules = filterNullObject({
       min: toNumber(this.$input.getAttribute('min')),
       minLength: toNumber(this.$input.getAttribute('minlength')),
       max: toNumber(this.$input.getAttribute('max')),
@@ -155,6 +155,8 @@ class VPField extends Validatable {
 
   isValid () {
     this.$canValidate = false
+
+    // tslint:disable-next-line: strict-type-predicates
     if (typeof this.$options.InputFormatter.pre === 'function') {
       if (this.$input === null) {
         throw new Error('[VPField] Cannot format Input as it is unset.')
@@ -183,39 +185,50 @@ class VPField extends Validatable {
 
     if (isSet(rules.min)) {
       const numValue = toNumber(value)
+      const rule: number = rules.min as number
 
       if (numValue) {
-        errors.push(numValue < rules.min 
+        errors.push(numValue < +rule
           ? `${name} must be more than ${rules.min}.`
           : true)
       }
     }
+
     if (isSet(rules.max)) {
+      const rule: number = rules.max as number
+
       errors.push(
-        +value <= +rules.max
+        +value <= +rule
           ? true
           : `${name} must be less than ${rules.max}.`
-      );
+      )
     }
-    if (isSet(rules.minLength)) {
+
+    if (isSet(rules.minlength)) {
+      const rule: number = rules.minlength as number
       errors.push(
-        value.length >= +rules.minLength
+        value.length >= +rule
           ? true
-          : `${name} must be ${rules.minLength} characters or more.`
-      );
+          : `${name} must be ${rules.minlength} characters or more.`
+      )
     }
-    if (isSet(rules.maxLength)) {
+
+    if (isSet(rules.maxlength)) {
+      const rule: number = rules.maxlength as number
       errors.push(
-        value.length <= +rules.maxLength
+        value.length <= +rule
           ? true
-          : `${name} must be ${rules.maxLength} characters or less.`
-      );
+          : `${name} must be ${rules.maxlength} characters or less.`
+      )
     }
+
     if (isSet(rules.pattern)) {
+      const rule: (RegExp | string) = rules.pattern as RegExp
+
       errors.push(
       (rules.pattern instanceof RegExp
       ? rules.pattern.test(value)
-      : new RegExp(rules.pattern).test(value))
+      : new RegExp(rule).test(value))
         ? true
         : `${name} is incorrectly formatted.`
       )
@@ -238,20 +251,24 @@ class VPField extends Validatable {
     this.clearMessages()
     this.$isValid = errors.every(err => err === true)
 
+    // Check is required for testing limitations, JSDOM
+    // tslint:disable-next-line: strict-type-predicates
     if (typeof this.$options.InputFormatter.pre === 'string') {
-      this.addMessage(this.$options.InputFormatter.pre, '-isInfo');
+      this.addMessage(this.$options.InputFormatter.pre, '-isInfo')
     }
+    // Check is required for testing limitations, JSDOM
+    // tslint:disable-next-line: strict-type-predicates
     if (typeof this.$options.InputFormatter.post === 'function') {
-      this.$options.InputFormatter.post(this.$input, eventName => {
-        if (this.$input instanceof HTMLElement) {
-          this.$input.dispatchEvent(this.createEvent(eventName))
-        }
-      });
+      if (this.$input instanceof HTMLInputElement) {
+        this.$options.InputFormatter.post(this.$input, (eventName: string) => {
+          if (this.$input instanceof HTMLElement) {
+            this.$input.dispatchEvent(this.createEvent(eventName))
+          }
+        })
+      }
     }
 
-    this.$canValidate = true;
-    return this.$isValid;
+    this.$canValidate = true
+    return this.$isValid
   }
 }
-
-export default VPField;

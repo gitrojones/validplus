@@ -1,10 +1,11 @@
-import EventListener from '@/interfaces/events/EventListener'
-import EventCallback from '@/interfaces/events/EventCallback'
+import { createEvent } from '@/util/createEvent'
+
+import { EventListener } from '@/interfaces/events/EventListener'
+import { EventCallback } from '@/interfaces/events/EventCallback'
 
 /**
  * Basic EventEmitter Mixin implementing EventTarget API
  */
-
 interface BasicEventTarget {
   addEventListener (type: string, callback: () => void): void,
   removeEventListener (type: string, callback: () => void): void,
@@ -14,7 +15,7 @@ interface BasicEventTarget {
 
 type Constructor<T = {}> = new (...args: any[]) => T
 
-export default function EventEmitter<TBase extends Constructor> (Base: TBase) {
+export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
     $listeners: EventListener = {}
 
@@ -53,19 +54,9 @@ export default function EventEmitter<TBase extends Constructor> (Base: TBase) {
 
       return !event.defaultPrevented
     }
-    /**
-     * Helper for supporting old browsers (IE8+)
-     */
-    createEvent (eventName: string): Event {
-      let event
-      if (typeof(Event) === 'function') {
-        event = new Event(eventName)
-      } else {
-        event = document.createEvent('Event')
-        event.initEvent(eventName, true, true)
-      }
 
-      return event
+    createEvent (eventName: string): Event {
+      return createEvent(eventName)
     }
   }
 }

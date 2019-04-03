@@ -3,7 +3,7 @@ describe('ValidPlus', function() {
   let ValidPlus;
 
   beforeEach(done => {
-    ValidPlus = require('validplus').default;
+    ValidPlus = require('validplus').ValidPlus;
     done();
   });
   afterEach(done => {
@@ -63,7 +63,7 @@ describe('ValidPlus', function() {
       })
       it('DispatchEvent fires an event upwards', function (done) {
         let count = 0
-        validatable.forEach(v => {
+        validatable.forEach((v) => {
           v.addEventListener('click', function () {
             expect(true).to.be.true
             count++
@@ -479,6 +479,8 @@ describe('ValidPlus', function() {
         }
       );
       fieldset.addField(new ValidPlus.Field(testField, {}));
+
+      console.log('fieldset', fieldset);
 
       expect(fieldset.isValid()).to.be.true;
       expect(testFieldset.children.length).to.equal(2);

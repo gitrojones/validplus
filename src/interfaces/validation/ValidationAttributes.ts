@@ -1,6 +1,6 @@
-import HTMLValidationRules from '@/interfaces/validation/HTMLValidationRules'
+import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
-export default interface ValidationAttributes {
+export interface ValidationAttributes {
   value: string,
   checked: boolean,
   type: string | null,

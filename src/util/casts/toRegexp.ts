@@ -1,6 +1,6 @@
-import debug from '@/util/debug'
+import { debug } from '@/util/debug'
 
-export default function (value: any): (RegExp | null) {
+export function toRegexp (value: any): (RegExp | null) {
   try {
     if (value instanceof RegExp) return value
     return new RegExp(value)

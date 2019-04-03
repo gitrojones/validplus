@@ -1,4 +1,4 @@
-export default (param: string | number | null, _default: boolean): boolean => {
+export function toBoolean (param: string | number | null, _default: boolean): boolean {
   if (param === null) return _default
 
   switch (typeof param) {

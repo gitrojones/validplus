@@ -1,4 +1,4 @@
-export default (obj: any): any => {
+export function filterNullObject (obj: any): any {
   return Object.keys(obj).reduce((newObj: any, key: string) => {
     const value = obj[key]
 

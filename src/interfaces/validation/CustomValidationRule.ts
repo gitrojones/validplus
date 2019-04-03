@@ -1,6 +1,6 @@
-import ValidationAttributes from '@/interfaces/validation/ValidationAttributes'
+import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
 
-export default interface CustomValidationRule {
+export interface CustomValidationRule {
   (
     inputAttributes: ValidationAttributes,
     element: HTMLElement,

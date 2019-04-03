@@ -1,4 +1,4 @@
-export default function (value: any): (Number | null) {
+export function toNumber (value: any): (Number | null) {
   if (typeof value === 'number') {
     return value
   }

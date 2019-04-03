@@ -1,6 +1,6 @@
 // JQuery $(element).is(':visible')
-export default function (element) {
-  if (element instanceof Element) {
+export function isElemVisible (element: HTMLElement) {
+  if (element instanceof HTMLElement) {
     return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
   } else {
     return null

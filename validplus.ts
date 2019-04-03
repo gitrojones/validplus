@@ -1,8 +1,7 @@
-import Validator from '@/Validator'
-import Fieldset from '@/Fieldset'
-import Field from '@/Field'
-
 import '@lib/polyfills'
+import { VPValidator as Validator } from '@/Validator'
+import { VPFieldset as Fieldset } from '@/Fieldset'
+import { VPField as Field } from '@/Field'
 
 /**
   * Main export
@@ -10,10 +9,8 @@ import '@lib/polyfills'
   * @param {VPFieldset} Fieldset - ValidPlus Fieldset
   * @param {VPField} Field - ValidPlus Field
   */
-const ValidPlus = {
+export const ValidPlus = {
   Validator,
   Fieldset,
   Field
 }
-
-export default ValidPlus
