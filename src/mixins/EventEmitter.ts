@@ -1,19 +1,10 @@
 import { createEvent } from '@/util/createEvent'
 
+import { Constructor } from '@/types/Constructor'
+
+import { BasicEventTarget } from '@/interfaces/events/BasicEventTarget'
 import { EventListener } from '@/interfaces/events/EventListener'
 import { EventCallback } from '@/interfaces/events/EventCallback'
-
-/**
- * Basic EventEmitter Mixin implementing EventTarget API
- */
-interface BasicEventTarget {
-  addEventListener (type: string, callback: () => void): void,
-  removeEventListener (type: string, callback: () => void): void,
-  dispatchEvent (event: Event, data: any): boolean | void,
-  createEvent (eventName: string): Event
-}
-
-type Constructor<T = {}> = new (...args: any[]) => T
 
 export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
