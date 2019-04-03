@@ -29,7 +29,7 @@ module.exports = {
   externals: [nodeExternals()],
 
   resolve: {
-    extensions: ['.js', '.json', '.vue'],
+    extensions: ['.js', '.ts', '.json', '.vue'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@lib': path.resolve(__dirname, './lib'),
@@ -47,11 +47,11 @@ module.exports = {
       ...(isCoverage
         ? [
             {
-              test: /\.js/,
-              resourceQuery: /blockType=test/,
-              include: file => /src/.test(file) || /dev\/src/.test(file),
-              exclude: file => /src\/vue\//.test(file),
+              test: /\.(js|ts)x?$/,
+              include: file => /src/.test(file),
+              exclude: file => /src\/vue/.test(file) || /dev/.test(file),
               loader: 'istanbul-instrumenter-loader',
+              enforce: 'post',
               query: {
                 esModules: true,
               },
@@ -60,6 +60,11 @@ module.exports = {
         : []),
       {
         test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
+      },
+      {
+        test: /\.(js|ts)x?$/,
         exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
         use: [
           {
@@ -72,7 +77,13 @@ module.exports = {
                     targets: '>0.25%, not dead',
                     useBuiltIns: 'usage',
                   },
+                  '@babel/preset-typescript',
                 ],
+              ],
+              plugins: [
+                '@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-object-rest-spread'
               ],
             },
           },

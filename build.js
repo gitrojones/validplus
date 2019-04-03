@@ -63,4 +63,3 @@ if (process.env.TEST === 'true') {
 }
 
 buildBundle(require('./build.webpack.js'))
-
