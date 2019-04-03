@@ -8,9 +8,10 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development APP=true node --inspect build.js",
-    "build": "npm run build:prod",
+    "build": "npm run build:prod && npm run docs",
     "build:prod": "NODE_ENV=production node build.js",
     "build:dev": "NODE_ENV=development node build.js",
+    "docs": "typedoc --out docs ./src",
     "test": "npm run test:prod",
     "test:prod": "NODE_ENV=production npm run _test",
     "test:dev": "NODE_ENV=development npm run _test",

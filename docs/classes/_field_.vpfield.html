@@ -73,7 +73,9 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="tsd-signature-type">(Anonymous class)</span>
+						<span class="tsd-signature-type">(Anonymous class)</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">(Anonymous class)</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">&gt;</span>
+						<span class="tsd-signature-symbol"> &amp; </span>
+						<span class="tsd-signature-type">(Anonymous class)</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">this</span><span class="tsd-signature-symbol">&gt;</span>
 						<ul class="tsd-hierarchy">
 							<li>
 								<span class="target">VPField</span>
@@ -90,7 +92,6 @@
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="_field_.vpfield.html#constructor" class="tsd-kind-icon">constructor</a></li>
-								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#constructor-1" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -99,19 +100,15 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_field_.vpfield.html#_canvalidate" class="tsd-kind-icon">$can<wbr>Validate</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_field_.vpfield.html#_dirty" class="tsd-kind-icon">$dirty</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_field_.vpfield.html#_input" class="tsd-kind-icon">$input</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#_messageclassname" class="tsd-kind-icon">$<wbr>Message<wbr>Class<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_field_.vpfield.html#_options" class="tsd-kind-icon">$options</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#getinput" class="tsd-kind-icon">get<wbr>Input</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#parseinput" class="tsd-kind-icon">parse<wbr>Input</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#addmessage" class="tsd-kind-icon">add<wbr>Message</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#clearmessages" class="tsd-kind-icon">clear<wbr>Messages</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#generatemessagenode" class="tsd-kind-icon">generate<wbr>Message<wbr>Node</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static"><a href="_field_.vpfield.html#removemessage" class="tsd-kind-icon">remove<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#setinput" class="tsd-kind-icon">set<wbr>Input</a></li>
 							</ul>
 						</section>
 					</div>
@@ -123,13 +120,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new VPField<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldsetoptions.html" class="tsd-signature-type">VPFieldsetOptions</a>, customRules<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, onValidate<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
+						<li class="tsd-signature tsd-kind-icon">new VPField<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a>, customRules<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span>, onValidate<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L27">Field.ts:27</a></li>
+									<li>Defined in Field.ts:21</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -138,37 +135,13 @@
 									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
 								</li>
 								<li>
-									<h5>options: <a href="../interfaces/_interfaces_vpoptions_.vpfieldsetoptions.html" class="tsd-signature-type">VPFieldsetOptions</a></h5>
+									<h5>options: <a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a></h5>
 								</li>
 								<li>
-									<h5>customRules: <span class="tsd-signature-type">any</span></h5>
+									<h5>customRules: <a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 								<li>
-									<h5>onValidate: <span class="tsd-signature-type">any</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="constructor-1" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> constructor</h3>
-					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">new VPField<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">...</span>args<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from (Anonymous class).__constructor</p>
-								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L14">mixins/DOMMessaging.ts:14</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagRest">Rest</span> <span class="tsd-signature-symbol">...</span>args: <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h5>
+									<h5>onValidate: <a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></h4>
@@ -181,41 +154,40 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_canvalidate" class="tsd-anchor"></a>
 					<h3>$can<wbr>Validate</h3>
-					<div class="tsd-signature tsd-kind-icon">$can<wbr>Validate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">$can<wbr>Validate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L27">Field.ts:27</a></li>
+							<li>Defined in Field.ts:21</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_dirty" class="tsd-anchor"></a>
 					<h3>$dirty</h3>
-					<div class="tsd-signature tsd-kind-icon">$dirty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<div class="tsd-signature tsd-kind-icon">$dirty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L25">Field.ts:25</a></li>
+							<li>Defined in Field.ts:19</li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_input" class="tsd-anchor"></a>
 					<h3>$input</h3>
-					<div class="tsd-signature tsd-kind-icon">$input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLInputElement</span></div>
+					<div class="tsd-signature tsd-kind-icon">$input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLInputElement</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L26">Field.ts:26</a></li>
+							<li>Defined in Field.ts:20</li>
 						</ul>
 					</aside>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="_messageclassname" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> $<wbr>Message<wbr>Class<wbr>Name</h3>
-					<div class="tsd-signature tsd-kind-icon">$<wbr>Message<wbr>Class<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_options" class="tsd-anchor"></a>
+					<h3>$options</h3>
+					<div class="tsd-signature tsd-kind-icon">$options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a><span class="tsd-signature-symbol"> =&nbsp;this.$options</span></div>
 					<aside class="tsd-sources">
-						<p>Inherited from (Anonymous class).$MessageClassName</p>
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L11">mixins/DOMMessaging.ts:11</a></li>
+							<li>Defined in Field.ts:18</li>
 						</ul>
 					</aside>
 				</section>
@@ -223,36 +195,19 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="getinput" class="tsd-anchor"></a>
-					<h3>get<wbr>Input</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">get<wbr>Input<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L124">Field.ts:124</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="isvalid" class="tsd-anchor"></a>
 					<h3>is<wbr>Valid</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L142">Field.ts:142</a></li>
+									<li>Defined in Field.ts:156</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -260,128 +215,32 @@
 					<a name="parseinput" class="tsd-anchor"></a>
 					<h3>parse<wbr>Input</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">parse<wbr>Input<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span></li>
+						<li class="tsd-signature tsd-kind-icon">parse<wbr>Input<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_validationattributes_.validationattributes.html" class="tsd-signature-type">ValidationAttributes</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/Field.ts#L94">Field.ts:94</a></li>
+									<li>Defined in Field.ts:111</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">object</span></h4>
-							<ul class="tsd-parameters">
-								<li class="tsd-parameter">
-									<h5>checked<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
-								</li>
-								<li class="tsd-parameter">
-									<h5>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li class="tsd-parameter">
-									<h5>rules<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span></h5>
-								</li>
-								<li class="tsd-parameter">
-									<h5>type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li class="tsd-parameter">
-									<h5>value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_interfaces_validation_validationattributes_.validationattributes.html" class="tsd-signature-type">ValidationAttributes</a></h4>
 						</li>
 					</ul>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="addmessage" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> add<wbr>Message</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="setinput" class="tsd-anchor"></a>
+					<h3>set<wbr>Input</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Input<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Inherited from (Anonymous class).addMessage</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L50">mixins/DOMMessaging.ts:50</a></li>
+									<li>Defined in Field.ts:141</li>
 								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>message: <span class="tsd-signature-type">string</span></h5>
-								</li>
-								<li>
-									<h5>status: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="clearmessages" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> clear<wbr>Messages</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">clear<wbr>Messages<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from (Anonymous class).clearMessages</p>
-								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L69">mixins/DOMMessaging.ts:69</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="generatemessagenode" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> generate<wbr>Message<wbr>Node</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">generate<wbr>Message<wbr>Node<span class="tsd-signature-symbol">(</span>pos<span class="tsd-signature-symbol">?: </span><a href="../enums/_enums_positions_.verticalposition.html" class="tsd-signature-type">VerticalPosition</a>, anchor<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from (Anonymous class).generateMessageNode</p>
-								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L40">mixins/DOMMessaging.ts:40</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> pos: <a href="../enums/_enums_positions_.verticalposition.html" class="tsd-signature-type">VerticalPosition</a><span class="tsd-signature-symbol"> =&nbsp;this.$MessageNodePOS</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> anchor: <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> =&nbsp;this.$MessageAnchor</span></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-					<a name="removemessage" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> remove<wbr>Message</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Message<span class="tsd-signature-symbol">(</span>message<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<p>Inherited from (Anonymous class).removeMessage</p>
-								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/593352a/src/mixins/DOMMessaging.ts#L60">mixins/DOMMessaging.ts:60</a></li>
-								</ul>
-							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>message: <span class="tsd-signature-type">string</span></h5>
-								</li>
-							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -397,45 +256,6 @@
 					<li class="current tsd-kind-external-module">
 						<a href="../modules/_field_.html">"<wbr>Field"</a>
 					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_fieldset_.html">"<wbr>Fieldset"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_validatable_.html">"<wbr>Validatable"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_validator_.html">"<wbr>Validator"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_enums_positions_.html">"enums/<wbr>Positions"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_interfaces_vpoptions_.html">"interfaces/VPOptions"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_interfaces_validationlifecycle_.html">"interfaces/<wbr>Validation<wbr>Lifecycle"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_interfaces_validationrules_.html">"interfaces/<wbr>Validation<wbr>Rules"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_interfaces_validationstrategy_.html">"interfaces/<wbr>Validation<wbr>Strategy"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_mixins_dommessaging_.html">"mixins/DOMMessaging"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_mixins_eventemitter_.html">"mixins/<wbr>Event<wbr>Emitter"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_util_debug_.html">"util/debug"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_util_mergedeep_.html">"util/merge<wbr>Deep"</a>
-					</li>
-					<li class=" tsd-kind-external-module">
-						<a href="../modules/_util_toboolean_.html">"util/to<wbr>Boolean"</a>
-					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
@@ -448,9 +268,6 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#constructor-1" class="tsd-kind-icon">constructor</a>
-							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#_canvalidate" class="tsd-kind-icon">$can<wbr>Validate</a>
 							</li>
@@ -460,11 +277,8 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#_input" class="tsd-kind-icon">$input</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#_messageclassname" class="tsd-kind-icon">$<wbr>Message<wbr>Class<wbr>Name</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="_field_.vpfield.html#getinput" class="tsd-kind-icon">get<wbr>Input</a>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_field_.vpfield.html#_options" class="tsd-kind-icon">$options</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a>
@@ -472,28 +286,13 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#parseinput" class="tsd-kind-icon">parse<wbr>Input</a>
 							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#addmessage" class="tsd-kind-icon">add<wbr>Message</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#clearmessages" class="tsd-kind-icon">clear<wbr>Messages</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#generatemessagenode" class="tsd-kind-icon">generate<wbr>Message<wbr>Node</a>
-							</li>
-							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-static">
-								<a href="_field_.vpfield.html#removemessage" class="tsd-kind-icon">remove<wbr>Message</a>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_field_.vpfield.html#setinput" class="tsd-kind-icon">set<wbr>Input</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_field_.html#filternullobj" class="tsd-kind-icon">filter<wbr>Null<wbr>Obj</a>
-					</li>
-					<li class=" tsd-kind-function tsd-parent-kind-external-module tsd-is-not-exported">
-						<a href="../modules/_field_.html#isvalidrule" class="tsd-kind-icon">is<wbr>Valid<wbr>Rule</a>
-					</li>
 				</ul>
 			</nav>
 		</div>
