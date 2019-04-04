@@ -3,6 +3,7 @@ import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule';
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
+import { InputFormatters } from '@/interfaces/inputFormatters';
 export interface VPOptions {
     Watch: boolean;
     Lifecycle: ValidationLifecycle;
@@ -34,11 +35,11 @@ export interface VPFieldOptions extends VPOptions {
     };
     DirtyOnBlur: boolean;
     ForceRules: boolean;
-    InputFormatter: {
-        pre: (innerHTML: HTMLElement, dispatchEvent: ((eventName: string) => void)) => string;
-        post: (innerHTML: HTMLElement, dispatchEvent: ((eventName: string) => void)) => string;
-    };
+    InputFormatter: InputFormatters;
     InputRules: HTMLValidationRules;
     CustomRules: CustomValidationRule[];
-    ShowFieldErrors: boolean;
+    ShowFieldRuleErrors: boolean;
+    ShowCustomRuleErrors: boolean;
+    ValidateLazyFieldRules: boolean;
+    ValidateLazyCustomRules: boolean;
 }

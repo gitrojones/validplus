@@ -25,6 +25,7 @@ export declare const Validatable: {
         DOMCreateElement(innerHTML: string, className: string): HTMLElement;
         generateMessageNode(pos?: import("./enums/Positions").VerticalPosition, anchor?: HTMLElement | null): void;
         addMessage(message: string, status: string): void;
+        addMessages(messages: string[], status: string): void;
         removeMessage(message: string): void;
         clearMessages(): void;
     };

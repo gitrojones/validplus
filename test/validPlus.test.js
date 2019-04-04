@@ -198,6 +198,79 @@ describe('ValidPlus', function() {
       expect(fieldsetTwo.$isValid).to.equal(null);
     });
 
+    it ('Validator should async evaluate w/ lazy if basic true', function (done) {
+      let validator = new ValidPlus.Validator(
+        {
+          ValidateVisible: false,
+          ScrollTo: false,
+        },
+        testForm
+      );
+
+      let testFieldset = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
+
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
+
+      let testInput = window.document.createElement('input');
+      testInput.setAttribute('required', true);
+      testInput.value = 'test';
+      testField.append(testInput);
+      testFieldset.append(testField);
+
+      const fieldset = validator.createFieldset(
+        testFieldset,
+        'all',
+        {
+          ValidateVisible: false,
+          ScrollTo: false,
+        },
+        [new ValidPlus.Field(testField, {}, [
+          (attributes, el, input) => new Promise((resolve) => resolve(false))
+        ], {})]
+      );
+
+      expect(validator.isValid()).to.eventually.be.false.notify(done);
+      // expect(fieldset.isValid()).to.eventually.be.false;
+    })
+
+    it ('Validator should sync evaluate w/ lazy if basic false', function () {
+      let validator = new ValidPlus.Validator(
+        {
+          ValidateVisible: false,
+          ScrollTo: false,
+        },
+        testForm
+      );
+
+      let testFieldset = window.document.createElement('div');
+      testFieldset.className = 'fieldset';
+
+      let testField = window.document.createElement('div');
+      testField.className = 'VPField';
+
+      let testInput = window.document.createElement('input');
+      testInput.setAttribute('required', true);
+      testField.append(testInput);
+      testFieldset.append(testField);
+
+      const fieldset = validator.createFieldset(
+        testFieldset,
+        'all',
+        {
+          ValidateVisible: false,
+          ScrollTo: false,
+        },
+        [new ValidPlus.Field(testField, {}, [
+          (attributes, el, input) => new Promise((resolve) => resolve(false))
+        ], {})]
+      );
+
+      expect(validator.isValid()).to.be.false;
+      expect(fieldset.isValid()).to.be.false;
+    })
+
     it('Validator should evaluate all fieldsets with lazy off', function() {
       let validator = new ValidPlus.Validator(
         {
@@ -611,21 +684,107 @@ describe('ValidPlus', function() {
         })
       })
 
-      it('Should return a promise on isValid if customRule is a promise', function () {
-        const errorMessage = 'Foo bar baz'
-        let field = new ValidPlus.Field(testField, {}, [
-          (attributes, el, input) => errorMessage,
-          (attributes, el, input) => new Promise((resolve, reject) => {
-            return resolve(true)
-          })
-        ], {});
+      describe('Lazy Evaluation (default)', function () {
+        it('Should return false, regardless of customRule, if basicAttributes are false', function () {
+          const errorMessage = 'Foo bar baz'
+          testInput.value = ''
+          testInput.setAttribute('required', true)
 
-        let isValid = field.isValid();
-        expect(typeof isValid.then).to.equal('function')
-        expect(isValid).to.eventually.equal(false)
+          let field = new ValidPlus.Field(testField, {
+            scrollTo: false
+          }, [
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.be.false
+        })
+
+        it('Should skip async if any sync is false', function () {
+          const errorMessage = 'Foo bar baz'
+          let field = new ValidPlus.Field(testField, {
+            scrollTo: false
+          }, [
+            (attributes, el, input) => errorMessage,
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.be.false
+        })
+
+        it('Should evaluate async if async CustomRule and all sync are true', function (done) {
+          let field = new ValidPlus.Field(testField, {
+            scrollTo: false
+          }, [
+            (attributes, el, input) => true,
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.eventually.be.true.notify(done)
+        })
       })
 
-      it('Should return synchronously if customRules a re synchronous', function () {
+      describe('Full Validation', function () {
+        it('Should return all sync attributes as async if customRule is async', function (done) {
+          const errorMessage = 'Foo bar baz'
+          let field = new ValidPlus.Field(testField, {
+            ValidateLazyFieldRules: false,
+            ValidateLazyCustomRules: false,
+            scrollTo: false
+          }, [
+            (attributes, el, input) => errorMessage,
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.eventually.be.false.notify(done)
+        })
+
+        it('Should correctly validate sync as async true', function (done) {
+          testInput.setAttribute('required', true)
+          testInput.value = 'Foo Bar'
+
+          let field = new ValidPlus.Field(testField, {
+            ValidateLazyFieldRules: false,
+            ValidateLazyCustomRules: false,
+            scrollTo: false
+          }, [
+            (attributes, el, input) => true,
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.eventually.be.true.notify(done)
+        })
+
+        it('Should async regardless if sync is false', function (done) {
+          const errorMessage = 'Foo bar baz'
+          testInput.setAttribute('required', true)
+          testInput.value = 'Foo Bar'
+
+          let field = new ValidPlus.Field(testField, {
+            ValidateLazyFieldRules: false,
+            ValidateLazyCustomRules: false,
+            scrollTo: false
+          }, [
+            (attributes, el, input) => errorMessage,
+            (attributes, el, input) => new Promise((resolve, reject) => {
+              return resolve(true)
+            })
+          ], {});
+
+          expect(field.isValid()).to.eventually.be.false.notify(done)
+        })
+      })
+
+      it('Should return synchronously if customRules are synchronous', function () {
         const errorMessage = 'Foo bar baz'
         let field = new ValidPlus.Field(testField, {}, [
           (attributes, el, input) => errorMessage
@@ -635,7 +794,7 @@ describe('ValidPlus', function() {
         expect(isValid).to.be.false;
       })
 
-      it('Should append customRule error messages by default', function() {
+      it('Should append customRule error messages by default', function(done) {
         const errorMessage = 'Foo bar baz'
         let field = new ValidPlus.Field(testField, {}, [
           (attributes, el, input) => new Promise((resolve, reject) => {
@@ -647,13 +806,16 @@ describe('ValidPlus', function() {
         ], {});
 
         // Will be valid until it isn't
-        expect(field.isValid()).to.be.true;
-        setTimeout(() => {
-          console.log('Deferred')
-          expect(field.$valid).to.be.false;
-          expect(field.$MessageNode.children.length).to.equal(1);
-          expect(field.$MessageNode.children[0].innerHTML).to.equal(errorMessage);
-        }, 100)
+        expect(field.isValid()).to.eventually.be.true.notify(() => {
+          const valid = field.$valid === false;
+          const children = field.$MessageNode.children.length === 1;
+          if (children) {
+            const innerHTML = field.$MessageNode.children[0].innerHTML === errorMessage;
+            done(valid && children && innerHTML)
+          }
+
+          done(false)
+        });
       })
     })
 

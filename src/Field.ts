@@ -1,5 +1,6 @@
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
+import { isAsync } from '@/util/isAsync'
 import { mergeDeep } from '@/util/mergeDeep'
 import { toBoolean } from '@/util/casts/toBoolean'
 import { toNumber } from '@/util/casts/toNumber'
@@ -14,6 +15,7 @@ import { ValidationAttributes } from '@/interfaces/validation/ValidationAttribut
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
 import { Validatable } from '@/Validatable'
+import { InputFormatter } from './types/InputFormatter'
 
 export class VPField extends Validatable {
   $options: VPFieldOptions = this.$options
@@ -34,8 +36,10 @@ export class VPField extends Validatable {
       InputRules: {},
       CustomRules: customRules,
       InputFormatter: {},
-      ShowFieldErrors: false,
+      ShowFieldRuleErrors: false,
       ShowCustomRuleErrors: true,
+      ValidateLazyCustomRules: true,
+      ValidateLazyFieldRules: true,
       DirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
       ValidateOn: {
         blur: toBoolean(element.getAttribute('vp-blur'), false),
@@ -157,109 +161,249 @@ export class VPField extends Validatable {
 
   isValid (): (boolean | Promise<boolean>) {
     this.$canValidate = false
+
     // Clear last cycle messages
     this.clearMessages()
-
-    // tslint:disable-next-line: strict-type-predicates
-    if (typeof this.$options.InputFormatter.pre === 'function') {
-      if (this.$input === null) {
-        throw new Error('[VPField] Cannot format Input as it is unset.')
-      }
-
-      this.$options.InputFormatter.pre(this.$input, (eventName: string) => {
-        if (this.$input instanceof HTMLElement) {
-          this.$input.dispatchEvent(this.createEvent(eventName))
-        }
-      })
-    }
+    this.formatInput().pre()
 
     // Main validation loop
     let attributes = this.parseInput()
     let { value, checked, type, name, rules } = attributes
-    let errors: (boolean | string)[] = []
+    let attributeRules: (() => (boolean | string))[] = [
+      () => {
+        if (isSet(rules.min)) {
+          const numValue = toNumber(value)
+          const rule: number = rules.min as number
 
-    if (isSet(rules.min)) {
-      const numValue = toNumber(value)
-      const rule: number = rules.min as number
-
-      if (numValue) {
-        errors.push(numValue < +rule
-          ? `${name} must be more than ${rules.min}.`
-          : true)
-      }
-    }
-
-    if (isSet(rules.max)) {
-      const rule: number = rules.max as number
-
-      errors.push(
-        +value <= +rule
-          ? true
-          : `${name} must be less than ${rules.max}.`
-      )
-    }
-
-    if (isSet(rules.minlength)) {
-      const rule: number = rules.minlength as number
-      errors.push(
-        value.length >= +rule
-          ? true
-          : `${name} must be ${rules.minlength} characters or more.`
-      )
-    }
-
-    if (isSet(rules.maxlength)) {
-      const rule: number = rules.maxlength as number
-      errors.push(
-        value.length <= +rule
-          ? true
-          : `${name} must be ${rules.maxlength} characters or less.`
-      )
-    }
-
-    if (isSet(rules.pattern)) {
-      const rule: (RegExp | string) = rules.pattern as RegExp
-
-      errors.push(
-      (rules.pattern instanceof RegExp
-      ? rules.pattern.test(value)
-      : new RegExp(rule).test(value))
-        ? true
-        : `${name} is incorrectly formatted.`
-      )
-    }
-
-    switch (type) {
-    case 'radio':
-    case 'checkbox':
-      // One should always be selected if required
-      if (isSet(rules.required) && rules.required) {
-        errors.push(checked ? true : `${name} is required.`)
-      }
-      break
-    default:
-      if (isSet(rules.required) && rules.required) {
-        errors.push(value.length > 0 ? true : `${name} is required.`)
-      }
-    }
-
-    if (this.$options.ShowFieldErrors) {
-      errors.forEach((error) => {
-        if (typeof error === 'string' && error.length > 0) {
-          this.addMessage(error, '-isError')
+          if (numValue) {
+            return (numValue < +rule)
+              ? `${name} must be more than ${rules.min}.`
+              : true
+          }
         }
+
+        return true
+      },
+      () => {
+        if (isSet(rules.max)) {
+          const rule: number = rules.max as number
+
+          return (+value <= +rule)
+            ? true
+            : `${name} must be less than ${rules.max}.`
+        }
+
+        return true
+      },
+      () => {
+        if (isSet(rules.minlength)) {
+          const rule: number = rules.minlength as number
+          return (value.length >= +rule)
+            ? true
+            : `${name} must be ${rules.minlength} characters or more.`
+        }
+
+        return true
+      },
+      () => {
+        if (isSet(rules.maxlength)) {
+          const rule: number = rules.maxlength as number
+          return (value.length <= +rule)
+            ? true
+            : `${name} must be ${rules.maxlength} characters or less.`
+        }
+
+        return true
+      },
+      () => {
+        if (isSet(rules.pattern)) {
+          const rule: (RegExp | string) = rules.pattern as RegExp
+
+          return (rules.pattern instanceof RegExp)
+            ? rules.pattern.test(value)
+            : (new RegExp(rule).test(value))
+              ? true
+              : `${name} is incorrectly formatted.`
+        }
+
+        return true
+      },
+      () => {
+        switch (type) {
+        case 'radio':
+        case 'checkbox':
+          // One should always be selected if required
+          if (isSet(rules.required) && rules.required) {
+            return checked ? true : `${name} is required.`
+          }
+          break
+        default:
+          if (isSet(rules.required) && rules.required) {
+            return value.length > 0 ? true : `${name} is required.`
+          }
+        }
+
+        return true
+      }
+    ]
+
+    let errors: (boolean | string)[]
+    let hasErrors: boolean = false
+    if (this.$options.ValidateLazyFieldRules) {
+      debug('ValidateLazyFieldRules')
+      errors = attributeRules
+        .reduce((errors: (boolean | string)[], rule: () => (boolean | string)) => {
+          if (hasErrors) return errors
+          let isValid = rule()
+          if (isValid !== true) {
+            debug('EndEvaluationEarly')
+            hasErrors = true
+          }
+
+          errors.push(isValid)
+          return errors
+        }, [])
+    } else {
+      debug('ValidateFullFieldRules')
+      errors = attributeRules
+        .map((rule: () => (boolean | string)) => {
+          return rule()
+        })
+    }
+
+    if (this.$options.ShowFieldRuleErrors) {
+      debug('ShowFieldRuleErrors')
+      let messages: string[] = errors.filter((error) => typeof error === 'string' && error.length > 0) as string[]
+      this.addMessages(messages, this.$options.ErrorClassName)
+    }
+
+    // Abort early if we have errors
+    if (hasErrors) {
+      debug('AbortFieldEarly')
+      this.$isValid = false
+      this.$canValidate = true
+
+      return this.$isValid
+    }
+
+    // Custom validation loop
+    let customRules = this.$options.CustomRules
+    let customErrors: (boolean | string | Promise<boolean | string>)[]
+    let hasCustomErrors: boolean = false
+    if (this.$options.ValidateLazyCustomRules) {
+      debug('ValidateLazyCustomRules')
+      customErrors = customRules
+        .reduce((errors: (boolean | string | Promise<(boolean | string)>)[], rule: CustomValidationRule) => {
+          if (hasCustomErrors) return errors
+          let isValid = rule(attributes, this.$element, this.$input as HTMLInputElement)
+          if (!isAsync(isValid) && isValid !== true) {
+            debug('EndEvaluationEarly')
+            hasCustomErrors = true
+          }
+
+          errors.push(isValid)
+          return errors
+        }, [])
+    } else {
+      debug('ValidateFullCustomRules')
+      customErrors = customRules.map((func) => {
+        return func(attributes, this.$element, this.$input as HTMLInputElement)
       })
     }
 
-    // tslint:disable-next-line: strict-type-predicates
-    if (typeof this.$options.InputFormatter.post === 'string') {
-      this.addMessage(this.$options.InputFormatter.post, '-isInfo')
+    // Show custom error messages up to this point
+    if (this.$options.ShowCustomRuleErrors) {
+      debug('ShowCustomRuleErrors')
+      let messages: string[] = customErrors
+        .filter((error) => typeof error === 'string' && error.length > 0) as string[]
+      this.addMessages(messages, this.$options.ErrorClassName)
     }
 
-    // tslint:disable-next-line: strict-type-predicates
-    if (typeof this.$options.InputFormatter.post === 'function') {
-      if (this.$input instanceof HTMLInputElement) {
-        this.$options.InputFormatter.post(this.$input, (eventName: string) => {
+    // Abort early if we have errors
+    if (hasCustomErrors) {
+      debug('AbortCustomEarly')
+      this.$isValid = false
+      this.$canValidate = true
+
+      return this.$isValid
+    }
+
+    if (hasAsync(customErrors)) {
+      return new Promise((resolve) => {
+        let promises: Promise<(boolean | string)>[]
+
+        // Abort on first issue, omit existing values
+        if (this.$options.ValidateLazyCustomRules) {
+          promises = (customErrors.filter(isAsync) as Promise<(boolean | string)>[])
+            .map((promise: Promise<(boolean | string)>) => {
+              return new Promise((resolve, reject) => {
+                promise.then((isValid) => {
+                  if (isValid === true) {
+                    return resolve(true)
+                  }
+
+                  return reject(isValid)
+                }).catch((err: Error) => {
+                  return reject(err)
+                })
+              })
+            })
+        // Resolve everything
+        } else {
+          promises = customErrors.map((error) => {
+            if (isAsync(error)) return error
+            else return Promise.resolve(error as (boolean | string))
+          }) as Promise<(boolean | string)>[]
+        }
+
+        Promise.all(promises)
+          .then((isValid) => {
+            debug('Resolved Async', isValid)
+            const customErrors = isValid.filter((e) => e !== true)
+
+            if (this.$options.ShowCustomRuleErrors) {
+              let messages = customErrors.filter((e) => typeof e === 'string' && e.length > 0) as string[]
+              this.addMessages(messages, this.$options.ErrorClassName)
+            }
+
+            this.$isValid = isValid.every((err) => err === true)
+            this.$canValidate = true
+            return resolve(this.$isValid)
+          })
+          .catch((err: (boolean | string | Error)) => {
+            console.error('[VPField] Failed CustomRule Validation', err)
+
+            if (this.$options.ShowCustomRuleErrors) {
+              if (err instanceof Error && err.message.length > 0) {
+                this.addMessage(err.message, this.$options.ErrorClassName)
+              } else if (typeof err === 'string' && err.length > 0) {
+                this.addMessage(err, this.$options.ErrorClassName)
+              }
+            }
+
+            this.formatInput().post()
+            this.$isValid = false
+            this.$canValidate = true
+            return resolve(this.$isValid)
+          })
+      })
+    } else {
+      this.formatInput().post()
+      this.$isValid = [...errors, ...customErrors]
+        .every((err) => err === true)
+      this.$canValidate = true
+      return this.$isValid
+    }
+  }
+
+  formatInput () {
+    const InputFormatterMethod = (formatter: InputFormatter) => () => {
+      if (this.$input === null) {
+        throw new Error('[VPField] Cannot format Input as it is unset.')
+      }
+
+      if (typeof formatter === 'function') {
+        formatter(this.$input, (eventName: string) => {
           if (this.$input instanceof HTMLElement) {
             this.$input.dispatchEvent(this.createEvent(eventName))
           }
@@ -267,54 +411,9 @@ export class VPField extends Validatable {
       }
     }
 
-    // Custom validation loop
-    let resolvedCustomRules = this.$options.CustomRules.map((func) => {
-      return func(attributes, this.$element, this.$input as HTMLInputElement)
-    })
-
-    if (hasAsync(resolvedCustomRules)) {
-      return new Promise((resolve) => {
-        let customRulesAsPromise = resolvedCustomRules.map((rule) => {
-          // Check if value
-          if (typeof rule === 'string' || typeof rule === 'boolean') {
-            return Promise.resolve(rule)
-          // Check if promise
-          // tslint:disable-next-line: strict-type-predicates
-          } else if (typeof rule.then === 'function') {
-            return rule
-          } else {
-            throw new Error('[VPField] Unknown customRule format')
-          }
-        })
-
-        Promise.all(customRulesAsPromise)
-          .then((errors) => {
-            const customErrors = errors.filter((e) => e !== true)
-            this.$isValid = errors.every((err) => err === true)
-
-            if (this.$options.ShowCustomRuleErrors) {
-              customErrors.forEach((error) => {
-                if (typeof error === 'string' && error.length > 0) {
-                  this.addMessage(error, '-isError')
-                }
-              })
-            }
-
-            this.$canValidate = true
-            return resolve(this.$isValid)
-          })
-          .catch((err) => {
-            console.error('[VPField] Failed CustomRule Validation', err)
-            this.$isValid = false
-            this.$canValidate = true
-            return resolve(this.$isValid)
-          })
-      })
-    } else {
-      this.$isValid = [...errors, ...resolvedCustomRules]
-        .every((err) => err === true)
-      this.$canValidate = true
-      return this.$isValid
+    return {
+      pre: InputFormatterMethod(this.$options.InputFormatter.pre),
+      post: InputFormatterMethod(this.$options.InputFormatter.post)
     }
   }
 }

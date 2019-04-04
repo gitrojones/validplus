@@ -1,5 +1,6 @@
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
+import { isAsync } from '@/util/isAsync'
 import { mergeDeep } from '@/util/mergeDeep'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
@@ -52,23 +53,16 @@ export class VPFieldset extends Validatable {
       ? this.$visibleFields
       : this.$fields
 
-    const fieldsetStatus = fields.reduce((status: (boolean | Promise<boolean>)[], field: VPField, index: number) => {
-      debug('[VPFieldset] Validating field', index)
-      status.push(field.isValid())
-
-      return status
-    }, [])
+    const fieldsetStatus: (boolean | Promise<boolean>)[] = fields
+      .map((field: VPField, index: number) => {
+        debug('[VPFieldset] Validating field', index)
+        return field.isValid()
+      })
 
     if (hasAsync(fieldsetStatus)) {
       let deferredFieldsetStatus = fieldsetStatus.map((status: (boolean | Promise<boolean>)) => {
-        if (typeof status === 'boolean') {
-          return Promise.resolve(status)
-        // tslint:disable-next-line: strict-type-predicates
-        } else if (typeof status.then === 'function') {
-          return status
-        } else {
-          throw new Error('[VPFieldset] Unexpected Fieldset Status Type')
-        }
+        if (isAsync(status)) return status
+        else return Promise.resolve(status as boolean)
       })
 
       return new Promise((resolve) => {

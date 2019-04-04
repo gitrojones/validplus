@@ -1,5 +1,7 @@
-// import { debug } from '@/util/debug'
+import { debug } from '@/util/debug'
 import { mergeDeep } from '@/util/mergeDeep'
+import { hasAsync } from '@/util/hasAsync'
+import { isAsync } from '@/util/isAsync'
 
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
@@ -44,26 +46,70 @@ export class VPValidator extends Validatable {
 
   isValid () {
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
-    let isValid
-
-    // TODO: ValidateLazy
-    if (this.$options.ValidateLazy) {
-      isValid = fieldsets.every((fieldset: VPFieldset) => {
-        const isValid = fieldset.isValid()
-        return isValid || false
-      })
-    } else {
-      isValid = fieldsets.reduce((isValid, fieldset) => {
-        if (!fieldset.isValid()) {
-          isValid = false
+    // Bad practice to mutate outwards, but exception for now
+    let isValid: (boolean | Promise<boolean[]>) = true
+    let resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
+      .reduce((resolved: any[], fieldset) => {
+        if (isValid === false && this.$options.ValidateLazy) return resolved
+        const valid = fieldset.isValid()
+        if (this.$options.ValidateLazy && valid === false) {
+          isValid = valid
         }
 
-        return isValid
-      }, true)
-    }
+        resolved.push(valid)
+        return resolved
+      }, [])
 
-    this.$isValid = isValid
-    return isValid
+    if (hasAsync(resolvedIsValid)) {
+      let promises: Promise<boolean>[]
+      let asyncIsValid: Promise<boolean>[] = resolvedIsValid
+        .filter(isAsync) as Promise<boolean>[]
+
+      if (this.$options.ValidateLazy) {
+        // Return early if we're already invalid and lazy
+        if (!isValid) {
+          this.$isValid = isValid
+          return isValid
+        }
+
+        promises = asyncIsValid
+          .map((promise: Promise<boolean>) => {
+            return new Promise((resolve, reject) => {
+              promise.then((isValid: boolean) => {
+                // We reject since we want execution to stop at first error
+                if (isValid) resolve(true)
+                else reject(false)
+              }).catch((err: Error) => {
+                debug('[VPValidator] Caught Fieldset Exception')
+                reject(err)
+              })
+            })
+          })
+      } else {
+        promises = asyncIsValid
+      }
+
+      // Return the promise for async
+      return new Promise((resolve) => {
+        Promise.all(promises).then((isValid: boolean[]) => {
+          this.$isValid = isValid.every((valid) => valid === true)
+          return resolve(this.$isValid)
+        }).catch((err) => {
+          debug('[VPValidator] Async Validation failed: ' + err.message, err)
+          this.$isValid = false
+          return resolve(this.$isValid)
+        })
+      })
+    } else {
+      // Only if we're not already false
+      if (isValid) {
+        isValid = resolvedIsValid.every((valid) => valid === true)
+      }
+
+      // Otherwise business as usual
+      this.$isValid = isValid
+      return isValid
+    }
   }
 
   // TODO: Child state checks

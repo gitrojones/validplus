@@ -1,4 +1,5 @@
 import { VerticalPosition } from '@/enums/Positions'
+import { debug } from '@/util/debug'
 
 /**
  * Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement
@@ -54,7 +55,16 @@ export class DOMMessaging {
       } else if (this.$MessageNodePOS === VerticalPosition.bottom) {
         this.$MessageNode.appendChild(DOMMessage)
       }
+      console.dir(this.$MessageNode)
+    } else {
+      debug('Message exists', message)
     }
+  }
+
+  addMessages (messages: string[], status: string): void {
+    messages.forEach((message) => {
+      this.addMessage(message, status)
+    })
   }
 
   removeMessage (message: string): void {

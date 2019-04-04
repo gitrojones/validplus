@@ -47,6 +47,7 @@ export const Field = {
       this.VPField.$options.MessageAnchor = el
       this.VPField.$MessageAnchor = el
       this.VPField.generateMessageNode()
+      console.log('Changed anchor', this.VPField)
     },
 
     VPAddRule (rule) {

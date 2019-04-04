@@ -5,9 +5,7 @@
     <button @click="VPField.isValid()">Validate</button>
 
     <div class="error-anchor">
-      <div class="errors" ref="errors">
-        This should be replaced
-      </div>
+      <div class="errors" ref="errors"></div>
     </div>
   </div>
 </template>

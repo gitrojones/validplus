@@ -62,11 +62,8 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
   set $isValid (isValid: boolean | null) {
     this.$valid = isValid
-    this.clearMessages()
 
     if (isValid) {
-      this.$element.classList.remove(this.$options.ErrorClassName)
-      this.$element.classList.add(this.$options.ValidClassName)
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB

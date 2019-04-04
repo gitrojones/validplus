@@ -19,7 +19,7 @@ export declare class VPValidator extends Validatable {
      * @param element - Validator Anchor Element (Typically a form)
      */
     constructor(options: VPValidatorOptions, element: HTMLElement);
-    isValid(): boolean;
+    isValid(): boolean | Promise<{}>;
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
     removeFieldset(fieldset: VPFieldset): void;
