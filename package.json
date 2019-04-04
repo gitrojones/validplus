@@ -88,9 +88,9 @@
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2",
+    "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.11"
   },
   "dependencies": {
-    "chai-as-promised": "^7.1.1"
   }
 }
