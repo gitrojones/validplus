@@ -82,3 +82,5 @@ export const Validatable = {
     }
   }
 }
+
+export default Validatable

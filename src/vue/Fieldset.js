@@ -80,3 +80,5 @@ export const Fieldset = {
     }
   }
 }
+
+export default Fieldset

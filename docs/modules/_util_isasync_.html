@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&quot;Validatable&quot; | validplus</title>
+	<title>&quot;util/isAsync&quot; | validplus</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../globals.html">Globals</a>
 				</li>
 				<li>
-					<a href="_validatable_.html">&quot;Validatable&quot;</a>
+					<a href="_util_isasync_.html">&quot;util/isAsync&quot;</a>
 				</li>
 			</ul>
-			<h1>External module &quot;Validatable&quot;</h1>
+			<h1>External module &quot;util/isAsync&quot;</h1>
 		</div>
 	</div>
 </header>
@@ -71,25 +71,38 @@
 				<section class="tsd-panel tsd-index-panel">
 					<div class="tsd-index-content">
 						<section class="tsd-index-section ">
-							<h3>Variables</h3>
+							<h3>Functions</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-variable tsd-parent-kind-external-module"><a href="_validatable_.html#validatable" class="tsd-kind-icon">Validatable</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-external-module"><a href="_util_isasync_.html#isasync" class="tsd-kind-icon">is<wbr>Async</a></li>
 							</ul>
 						</section>
 					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
-				<h2>Variables</h2>
-				<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-external-module">
-					<a name="validatable" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagConst">Const</span> Validatable</h3>
-					<div class="tsd-signature tsd-kind-icon">Validatable<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">(Anonymous class)</span><span class="tsd-signature-symbol"> &amp; </span><span class="tsd-signature-type">(Anonymous class)</span><span class="tsd-signature-symbol"> =&nbsp;EventEmitter(class extends DOMMessaging {$options: VPOptions$element: HTMLElement$strategies: ValidationStrategies$valid: boolean | nullconstructor (options: VPOptions, element: HTMLElement) {super()this.$element &#x3D; elementthis.$valid &#x3D; null// Set some logical defaultsthis.$options &#x3D; mergeDeep({ErrorClassName: &#x27;-isError&#x27;,ValidClassName: &#x27;-isValid&#x27;,MessageClassName: &#x27;VPMessage&#x27;,DeferredMessageAnchor: false,MessageAnchor: element,MessagePOS: &#x27;BOTTOM&#x27;, // VerticalPosition.bottomScrollTo: true,ScrollAnchor: element,Watch: false}, options) as VPOptionsthis.setLifecycle(this.$options.Lifecycle)this.$strategies &#x3D; {all: (fieldstatus: boolean[]) &#x3D;&gt; fieldstatus.every((f: boolean) &#x3D;&gt; f),some: (fieldstatus: boolean[]) &#x3D;&gt; fieldstatus.some((f: boolean) &#x3D;&gt; f),none: (fieldstatus: boolean[]) &#x3D;&gt; fieldstatus.every((f: boolean) &#x3D;&gt; !f),one: (fieldstatus: boolean[]) &#x3D;&gt; fieldstatus.filter((f: boolean) &#x3D;&gt; f).length &#x3D;&#x3D;&#x3D; 1}// DOMMessagingthis.$MessageClassName &#x3D; this.$options.MessageClassNamethis.$MessageAnchor &#x3D; this.$options.MessageAnchorthis.$MessageNodePOS &#x3D; this.$options.MessagePOS// Allow for manually calling the messageNodeBuilder if it cannot be accomplished right away// Used in Vue Bindingsif (!this.$options.DeferredMessageAnchor) {this.generateMessageNode()}// END DOMMessaging}get $isValid (): boolean | null {return this.$valid}set $isValid (isValid: boolean | null) {this.$valid &#x3D; isValidif (isValid) {if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {this.$options.Lifecycle.Valid.CB.forEach((CB: () &#x3D;&gt; null) &#x3D;&gt; CB.call(this))}if (typeof this.$options.Lifecycle.Valid.Message &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {this.addMessage(this.$options.Lifecycle.Valid.Message,this.$options.ValidClassName)}} else {this.$element.classList.remove(this.$options.ValidClassName)this.$element.classList.add(this.$options.ErrorClassName)if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {this.$options.Lifecycle.Invalid.CB.forEach((CB: () &#x3D;&gt; null) &#x3D;&gt; CB.call(this))}if (typeof this.$options.Lifecycle.Invalid.Message &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {this.addMessage(this.$options.Lifecycle.Invalid.Message,this.$options.ErrorClassName)}if (this.$options.ScrollTo &#x3D;&#x3D;&#x3D; true) {// While always true, we check due to limitations with JSDOM// tslint:disable-next-line: strict-type-predicatesif (typeof this.$options.ScrollAnchor.scrollIntoView &#x3D;&#x3D;&#x3D; &#x27;function&#x27;) {this.$options.ScrollAnchor.scrollIntoView({ behavior: &#x27;smooth&#x27; })} else {debug(&#x27;[VP] Element Scrolling failed.&#x27;)}}}}setLifecycle (lifecycle: ValidationLifecycle): void {const isValidationLifecycle &#x3D; function (lifecycle: any): lifecycle is ValidationLifecycle {return isSet(lifecycle) &amp;&amp;(&#x27;Valid&#x27; in lifecycle || &#x27;Invalid&#x27; in lifecycle)}this.$options.Lifecycle &#x3D; {Valid: { },Invalid: { }}if (isValidationLifecycle(lifecycle)) {if (lifecycle.Valid) {if (typeof lifecycle.Valid.Message &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {this.$options.Lifecycle.Valid.Message &#x3D; lifecycle.Valid.Message}if (Array.isArray(lifecycle.Valid.CB)) {this.$options.Lifecycle.Valid.CB &#x3D; lifecycle.Valid.CB}}if (lifecycle.Invalid) {if (typeof lifecycle.Invalid.Message &#x3D;&#x3D;&#x3D; &#x27;string&#x27;) {this.$options.Lifecycle.Invalid.Message &#x3D; lifecycle.Invalid.Message}if (Array.isArray(lifecycle.Invalid.CB)) {this.$options.Lifecycle.Invalid.CB &#x3D; lifecycle.Invalid.CB}}}}isElementVisible (element: HTMLElement): boolean {if (element instanceof HTMLElement) {return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)}return false}})</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in Validatable.ts:13</li>
-						</ul>
-					</aside>
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-external-module">
+					<a name="isasync" class="tsd-anchor"></a>
+					<h3>is<wbr>Async</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-external-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Async<span class="tsd-signature-symbol">(</span>item<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in util/isAsync.ts:1</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>item: <span class="tsd-signature-type">any</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -100,14 +113,14 @@
 						<a href="../globals.html"><em>Globals</em></a>
 					</li>
 					<li class="current tsd-kind-external-module">
-						<a href="_validatable_.html">"<wbr>Validatable"</a>
+						<a href="_util_isasync_.html">"util/is<wbr>Async"</a>
 					</li>
 				</ul>
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-variable tsd-parent-kind-external-module">
-						<a href="_validatable_.html#validatable" class="tsd-kind-icon">Validatable</a>
+					<li class=" tsd-kind-function tsd-parent-kind-external-module">
+						<a href="_util_isasync_.html#isasync" class="tsd-kind-icon">is<wbr>Async</a>
 					</li>
 				</ul>
 			</nav>

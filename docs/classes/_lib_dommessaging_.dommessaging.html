@@ -113,6 +113,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#domcreateelement" class="tsd-kind-icon">DOMCreate<wbr>Element</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#addmessage" class="tsd-kind-icon">add<wbr>Message</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#addmessages" class="tsd-kind-icon">add<wbr>Messages</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#clearmessages" class="tsd-kind-icon">clear<wbr>Messages</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#generatemessagenode" class="tsd-kind-icon">generate<wbr>Message<wbr>Node</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_lib_dommessaging_.dommessaging.html#removemessage" class="tsd-kind-icon">remove<wbr>Message</a></li>
@@ -129,7 +130,7 @@
 					<div class="tsd-signature tsd-kind-icon">$<wbr>Message<wbr>Anchor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in lib/DOMMessaging.ts:14</li>
+							<li>Defined in lib/DOMMessaging.ts:15</li>
 						</ul>
 					</aside>
 				</section>
@@ -139,7 +140,7 @@
 					<div class="tsd-signature tsd-kind-icon">$<wbr>Message<wbr>Class<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;DOMMessage&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in lib/DOMMessaging.ts:12</li>
+							<li>Defined in lib/DOMMessaging.ts:13</li>
 						</ul>
 					</aside>
 				</section>
@@ -149,7 +150,7 @@
 					<div class="tsd-signature tsd-kind-icon">$<wbr>Message<wbr>Node<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in lib/DOMMessaging.ts:13</li>
+							<li>Defined in lib/DOMMessaging.ts:14</li>
 						</ul>
 					</aside>
 				</section>
@@ -159,7 +160,7 @@
 					<div class="tsd-signature tsd-kind-icon">$<wbr>Message<wbr>NodePOS<span class="tsd-signature-symbol">:</span> <a href="../enums/_enums_positions_.verticalposition.html" class="tsd-signature-type">VerticalPosition</a><span class="tsd-signature-symbol"> =&nbsp;VerticalPosition.bottom</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in lib/DOMMessaging.ts:15</li>
+							<li>Defined in lib/DOMMessaging.ts:16</li>
 						</ul>
 					</aside>
 				</section>
@@ -176,7 +177,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in lib/DOMMessaging.ts:17</li>
+									<li>Defined in lib/DOMMessaging.ts:18</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -202,13 +203,39 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in lib/DOMMessaging.ts:41</li>
+									<li>Defined in lib/DOMMessaging.ts:42</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>message: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>status: <span class="tsd-signature-type">string</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addmessages" class="tsd-anchor"></a>
+					<h3>add<wbr>Messages</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Messages<span class="tsd-signature-symbol">(</span>messages<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span>, status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in lib/DOMMessaging.ts:64</li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>messages: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h5>
 								</li>
 								<li>
 									<h5>status: <span class="tsd-signature-type">string</span></h5>
@@ -228,7 +255,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in lib/DOMMessaging.ts:75</li>
+									<li>Defined in lib/DOMMessaging.ts:85</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -245,7 +272,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in lib/DOMMessaging.ts:25</li>
+									<li>Defined in lib/DOMMessaging.ts:26</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -271,7 +298,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in lib/DOMMessaging.ts:60</li>
+									<li>Defined in lib/DOMMessaging.ts:70</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -321,6 +348,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_lib_dommessaging_.dommessaging.html#addmessage" class="tsd-kind-icon">add<wbr>Message</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_lib_dommessaging_.dommessaging.html#addmessages" class="tsd-kind-icon">add<wbr>Messages</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_lib_dommessaging_.dommessaging.html#clearmessages" class="tsd-kind-icon">clear<wbr>Messages</a>
