@@ -43,6 +43,12 @@ export const Field = {
     }
   },
   methods: {
+    VPChangeAnchor (el) {
+      this.VPField.$options.MessageAnchor = el
+      this.VPField.$MessageAnchor = el
+      this.VPField.generateMessageNode()
+    },
+
     VPAddRule (rule) {
       if (typeof rule === 'function') {
         this.VPField.$options.CustomRules.push(rule)

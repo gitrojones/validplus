@@ -51,6 +51,12 @@ export const Fieldset = {
     }
   },
   methods: {
+    VPChangeAnchor (el) {
+      this.VPFieldset.$options.MessageAnchor = el
+      this.VPFieldset.$MessageAnchor = el
+      this.VPFieldset.generateMessageNode()
+    },
+
     VPGatherFields () {
       Object.keys(this.$slots).forEach((slot) => {
         const data = this.$slots[slot]

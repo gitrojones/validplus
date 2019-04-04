@@ -3,6 +3,12 @@
     <slot></slot>
     <input id="testField" name="test" type="text" :value="value" required="true">
     <button @click="VPField.isValid()">Validate</button>
+
+    <div class="error-anchor">
+      <div class="errors" ref="errors">
+        This should be replaced
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +19,15 @@ export default {
   props: {
     value: {
       default: null
+    },
+    VPOptions: {
+      default() {
+        return {
+          ValidateOn: {
+            blur: true
+          }
+        }
+      }
     }
   },
   mixins: [VPVue.Field],
@@ -30,6 +45,9 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    this.VPChangeAnchor(this.$refs.errors)
   },
   computed: {}
 };

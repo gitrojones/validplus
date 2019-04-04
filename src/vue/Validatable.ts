@@ -19,9 +19,6 @@ export const Validatable = {
     // when elements are available
     if (this.VPNewValidator) {
       this.validator.$element = this.$el
-      this.validator.$options.MessageAnchor = this.$el
-      this.validator.$MessageAnchor = this.$el
-      this.validator.generateMessageNode()
     }
   },
   provide () {
@@ -53,6 +50,11 @@ export const Validatable = {
       this.VPFieldSets.push(fieldset)
 
       return fieldset
+    },
+    VPChangeAnchor (el) {
+      this.validator.$options.MessageAnchor = el
+      this.validator.$MessageAnchor = el
+      this.validator.generateMessageNode()
     },
     VPisValid () {
       if ((this.VPField && this.VPField.isValid()) ||
