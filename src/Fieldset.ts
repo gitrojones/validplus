@@ -1,4 +1,5 @@
 import { debug } from '@/util/debug'
+import { hasAsync } from '@/util/hasAsync'
 import { mergeDeep } from '@/util/mergeDeep'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
@@ -46,17 +47,46 @@ export class VPFieldset extends Validatable {
     this.$fields = []
   }
 
-  isValid () {
-    const fields = this.$options.ValidateVisible ? this.$visibleFields : this.$fields
-    const fieldSetStatus = fields.reduce((status: boolean[], field, index) => {
+  isValid (): (boolean | Promise<boolean>) {
+    const fields = this.$options.ValidateVisible
+      ? this.$visibleFields
+      : this.$fields
+
+    const fieldsetStatus = fields.reduce((status: (boolean | Promise<boolean>)[], field: VPField, index: number) => {
       debug('[VPFieldset] Validating field', index)
       status.push(field.isValid())
 
       return status
     }, [])
 
-    this.$isValid = this.$strategy(fieldSetStatus)
-    return this.$isValid
+    if (hasAsync(fieldsetStatus)) {
+      let deferredFieldsetStatus = fieldsetStatus.map((status: (boolean | Promise<boolean>)) => {
+        if (typeof status === 'boolean') {
+          return Promise.resolve(status)
+        // tslint:disable-next-line: strict-type-predicates
+        } else if (typeof status.then === 'function') {
+          return status
+        } else {
+          throw new Error('[VPFieldset] Unexpected Fieldset Status Type')
+        }
+      })
+
+      return new Promise((resolve) => {
+        Promise.all(deferredFieldsetStatus)
+          .then((fieldsetStatus) => {
+            this.$isValid = this.$strategy(fieldsetStatus)
+            return resolve(this.$isValid)
+          })
+          .catch((err) => {
+            console.error('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
+            this.$isValid = false
+            return resolve(this.$isValid)
+          })
+      })
+    } else {
+      this.$isValid = this.$strategy(fieldsetStatus as boolean[])
+      return this.$isValid
+    }
   }
 
   removeField (field: VPField) {

@@ -45,6 +45,8 @@ export class VPValidator extends Validatable {
   isValid () {
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     let isValid
+
+    // TODO: ValidateLazy
     if (this.$options.ValidateLazy) {
       isValid = fieldsets.every((fieldset: VPFieldset) => {
         const isValid = fieldset.isValid()

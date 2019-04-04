@@ -578,6 +578,85 @@ describe('ValidPlus', function() {
       });
     });
 
+    describe('Field Error Messaging', function () {
+      describe('CustomRules', function () {
+        describe('Attributes', function () {
+          it('Should provide attributes', function () {
+            let field = new ValidPlus.Field(testField, {}, [
+              (attributes, el, input) => new Promise((resolve, reject) => {
+                expect(Object.keys(attributes)).to.equal(
+                  ['value', 'checked', 'type', 'name', 'rules']);
+                return resolve(true)
+              })
+            ], {});
+          })
+
+          it('Should provide the element', function () {
+            let field = new ValidPlus.Field(testField, {}, [
+              (attributes, el, input) => new Promise((resolve, reject) => {
+                expect(el).to.equal(testField)
+                return resolve(true)
+              })
+            ], {});
+          })
+
+          it('Should provide the input', function () {
+            let field = new ValidPlus.Field(testField, {}, [
+              (attributes, el, input) => new Promise((resolve, reject) => {
+                expect(input).to.equal(testInput)
+                return resolve(true)
+              })
+            ], {});
+          })
+        })
+      })
+
+      it('Should return a promise on isValid if customRule is a promise', function () {
+        const errorMessage = 'Foo bar baz'
+        let field = new ValidPlus.Field(testField, {}, [
+          (attributes, el, input) => errorMessage,
+          (attributes, el, input) => new Promise((resolve, reject) => {
+            return resolve(true)
+          })
+        ], {});
+
+        let isValid = field.isValid();
+        expect(typeof isValid.then).to.equal('function')
+        expect(isValid).to.eventually.equal(false)
+      })
+
+      it('Should return synchronously if customRules a re synchronous', function () {
+        const errorMessage = 'Foo bar baz'
+        let field = new ValidPlus.Field(testField, {}, [
+          (attributes, el, input) => errorMessage
+        ], {});
+
+        let isValid = field.isValid();
+        expect(isValid).to.be.false;
+      })
+
+      it('Should append customRule error messages by default', function() {
+        const errorMessage = 'Foo bar baz'
+        let field = new ValidPlus.Field(testField, {}, [
+          (attributes, el, input) => new Promise((resolve, reject) => {
+            return resolve(errorMessage)
+          }),
+          (attributes, el, input) => new Promise((resolve, reject) => {
+            return resolve(true)
+          })
+        ], {});
+
+        // Will be valid until it isn't
+        expect(field.isValid()).to.be.true;
+        setTimeout(() => {
+          console.log('Deferred')
+          expect(field.$valid).to.be.false;
+          expect(field.$MessageNode.children.length).to.equal(1);
+          expect(field.$MessageNode.children[0].innerHTML).to.equal(errorMessage);
+        }, 100)
+      })
+    })
+
     describe('Fields Default Validation Types', function() {
       it('Should validate required (standard)', function() {
         testInput.setAttribute('required', true);
@@ -609,14 +688,14 @@ describe('ValidPlus', function() {
         testInput.setAttribute('required', true);
         testInput.checked = false;
         let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Foo',
+          Invalid: {
+            Message: 'Foo',
           },
         });
 
         let fieldTwo = new ValidPlus.Field(testFieldTwo, {}, [], {
-          isInvalid: {
-            message: 'Bar',
+          Invalid: {
+            Message: 'Bar',
           },
         });
 
@@ -636,8 +715,8 @@ describe('ValidPlus', function() {
         testInput.setAttribute('min', 5);
         testInput.value = 3;
         let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         });
 
@@ -649,8 +728,8 @@ describe('ValidPlus', function() {
         testInput.setAttribute('max', 5);
         testInput.value = 3;
         let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         });
 
@@ -662,8 +741,8 @@ describe('ValidPlus', function() {
         testInput.setAttribute('maxlength', 5);
         testInput.value = 'hello';
         let field = new ValidPlus.Field(testField, {}, [], {
-          isInvalid: {
-            message: 'Hello, World',
+          Invalid: {
+            Message: 'Hello, World',
           },
         });
 

@@ -90,5 +90,7 @@
     "webpack-node-externals": "^1.7.2",
     "lodash": "^4.17.11"
   },
-  "dependencies": {}
+  "dependencies": {
+    "chai-as-promised": "^7.1.1"
+  }
 }

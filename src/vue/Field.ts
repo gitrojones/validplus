@@ -6,7 +6,7 @@ export const Field = {
       type: Object
     },
     VPRules: {
-      type: Object
+      type: Array
     },
     VPValid: {
       type: Object

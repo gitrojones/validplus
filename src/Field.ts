@@ -1,4 +1,5 @@
 import { debug } from '@/util/debug'
+import { hasAsync } from '@/util/hasAsync'
 import { mergeDeep } from '@/util/mergeDeep'
 import { toBoolean } from '@/util/casts/toBoolean'
 import { toNumber } from '@/util/casts/toNumber'
@@ -34,6 +35,7 @@ export class VPField extends Validatable {
       CustomRules: customRules,
       InputFormatter: {},
       ShowFieldErrors: false,
+      ShowCustomRuleErrors: true,
       DirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
       ValidateOn: {
         blur: toBoolean(element.getAttribute('vp-blur'), false),
@@ -153,8 +155,10 @@ export class VPField extends Validatable {
     this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as HTMLInputElement
   }
 
-  isValid () {
+  isValid (): (boolean | Promise<boolean>) {
     this.$canValidate = false
+    // Clear last cycle messages
+    this.clearMessages()
 
     // tslint:disable-next-line: strict-type-predicates
     if (typeof this.$options.InputFormatter.pre === 'function') {
@@ -169,19 +173,10 @@ export class VPField extends Validatable {
       })
     }
 
+    // Main validation loop
     let attributes = this.parseInput()
     let { value, checked, type, name, rules } = attributes
-
     let errors: (boolean | string)[] = []
-    const resolvedCustomRules = this.$options.CustomRules.map((func) => {
-      return func(attributes, this.$element, this.$input as HTMLInputElement)
-    })
-
-    Promise.all(resolvedCustomRules).then((isValid) => {
-      errors.concat(isValid.filter(v => v !== true))
-    }).catch((err) => {
-      debug('[VPField] Custom Validation', err)
-    })
 
     if (isSet(rules.min)) {
       const numValue = toNumber(value)
@@ -248,15 +243,19 @@ export class VPField extends Validatable {
       }
     }
 
-    this.clearMessages()
-    this.$isValid = errors.every(err => err === true)
-
-    // Check is required for testing limitations, JSDOM
-    // tslint:disable-next-line: strict-type-predicates
-    if (typeof this.$options.InputFormatter.pre === 'string') {
-      this.addMessage(this.$options.InputFormatter.pre, '-isInfo')
+    if (this.$options.ShowFieldErrors) {
+      errors.forEach((error) => {
+        if (typeof error === 'string' && error.length > 0) {
+          this.addMessage(error, '-isError')
+        }
+      })
     }
-    // Check is required for testing limitations, JSDOM
+
+    // tslint:disable-next-line: strict-type-predicates
+    if (typeof this.$options.InputFormatter.post === 'string') {
+      this.addMessage(this.$options.InputFormatter.post, '-isInfo')
+    }
+
     // tslint:disable-next-line: strict-type-predicates
     if (typeof this.$options.InputFormatter.post === 'function') {
       if (this.$input instanceof HTMLInputElement) {
@@ -268,7 +267,54 @@ export class VPField extends Validatable {
       }
     }
 
-    this.$canValidate = true
-    return this.$isValid
+    // Custom validation loop
+    let resolvedCustomRules = this.$options.CustomRules.map((func) => {
+      return func(attributes, this.$element, this.$input as HTMLInputElement)
+    })
+
+    if (hasAsync(resolvedCustomRules)) {
+      return new Promise((resolve) => {
+        let customRulesAsPromise = resolvedCustomRules.map((rule) => {
+          // Check if value
+          if (typeof rule === 'string' || typeof rule === 'boolean') {
+            return Promise.resolve(rule)
+          // Check if promise
+          // tslint:disable-next-line: strict-type-predicates
+          } else if (typeof rule.then === 'function') {
+            return rule
+          } else {
+            throw new Error('[VPField] Unknown customRule format')
+          }
+        })
+
+        Promise.all(customRulesAsPromise)
+          .then((errors) => {
+            const customErrors = errors.filter((e) => e !== true)
+            this.$isValid = errors.every((err) => err === true)
+
+            if (this.$options.ShowCustomRuleErrors) {
+              customErrors.forEach((error) => {
+                if (typeof error === 'string' && error.length > 0) {
+                  this.addMessage(error, '-isError')
+                }
+              })
+            }
+
+            this.$canValidate = true
+            return resolve(this.$isValid)
+          })
+          .catch((err) => {
+            console.error('[VPField] Failed CustomRule Validation', err)
+            this.$isValid = false
+            this.$canValidate = true
+            return resolve(this.$isValid)
+          })
+      })
+    } else {
+      this.$isValid = [...errors, ...resolvedCustomRules]
+        .every((err) => err === true)
+      this.$canValidate = true
+      return this.$isValid
+    }
   }
 }

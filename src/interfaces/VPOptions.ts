@@ -50,15 +50,16 @@ export interface VPFieldOptions extends VPOptions {
   ForceRules: boolean,
   InputFormatter: {
     pre: (
-      innerHTML: HTMLElement,
+      element: HTMLElement,
       dispatchEvent: ((eventName: string) => void)) => string,
     post: (
-      innerHTML: HTMLElement,
+      element: HTMLElement,
       dispatchEvent: ((eventName: string) => void)) => string
   },
   InputRules: HTMLValidationRules,
   CustomRules: CustomValidationRule[],
 
   // Messaging
-  ShowFieldErrors: boolean
+  ShowFieldErrors: boolean,
+  ShowCustomRuleErrors: boolean
 }
