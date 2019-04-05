@@ -4,7 +4,7 @@ import { isSet } from '@/util/isSet'
 
 import { VPOptions } from '@/interfaces/VPOptions'
 import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
+import { ValidationLifecycle, ValidationCB } from '@/interfaces/validation/ValidationLifecycle'
 
 import { DOMMessaging } from '@/lib/DOMMessaging'
 
@@ -33,6 +33,16 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       MessagePOS: 'BOTTOM', // VerticalPosition.bottom
       ScrollTo: true,
       ScrollAnchor: element,
+      Lifecycle: {
+        Valid: {
+          CB: [],
+          Message: ''
+        },
+        Invalid: {
+          CB: [],
+          Message: ''
+        }
+      },
       Watch: false
     }, options) as VPOptions
     this.setLifecycle(this.$options.Lifecycle)
@@ -70,9 +80,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB
-          .forEach((CB: () => null) => (CB as Function).call([ this ]))
-      } else if (typeof this.$options.Lifecycle.Valid.CB === 'function') {
-        (this.$options.Lifecycle.Valid.CB as Function).call([ this ])
+          .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
       }
 
       if (typeof this.$options.Lifecycle.Valid.Message === 'string') {
@@ -87,9 +95,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
         this.$options.Lifecycle.Invalid.CB
-          .forEach((CB: () => null) => (CB as Function).call([ this ]))
-      } else if (typeof this.$options.Lifecycle.Invalid.CB === 'function') {
-        (this.$options.Lifecycle.Invalid.CB as Function).call([ this ])
+          .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
       }
 
       if (typeof this.$options.Lifecycle.Invalid.Message === 'string') {
@@ -127,8 +133,15 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         if (typeof lifecycle.Valid.Message === 'string') {
           this.$options.Lifecycle.Valid.Message = lifecycle.Valid.Message
         }
+
         if (Array.isArray(lifecycle.Valid.CB)) {
           this.$options.Lifecycle.Valid.CB = lifecycle.Valid.CB
+        } else if (typeof lifecycle.Valid.CB === 'function') {
+          if (!Array.isArray(this.$options.Lifecycle.Valid.CB)) {
+            this.$options.Lifecycle.Valid.CB = []
+          }
+
+          this.$options.Lifecycle.Valid.CB.push(lifecycle.Valid.CB)
         }
       }
       if (lifecycle.Invalid) {
@@ -137,6 +150,12 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         }
         if (Array.isArray(lifecycle.Invalid.CB)) {
           this.$options.Lifecycle.Invalid.CB = lifecycle.Invalid.CB
+        } else if (typeof lifecycle.Invalid.CB === 'function') {
+          if (!Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
+            this.$options.Lifecycle.Invalid.CB = []
+          }
+
+          this.$options.Lifecycle.Invalid.CB.push(lifecycle.Invalid.CB)
         }
       }
     }
