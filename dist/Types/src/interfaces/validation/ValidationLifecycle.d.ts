@@ -1,7 +1,7 @@
 export interface ValidationLifecycle {
     Valid: {
         Message?: string;
-        CB?: Array<() => null>;
+        CB?: Array<(VPAny?: any) => null>;
     };
     Invalid: {
         Message?: string;

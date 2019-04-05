@@ -70,7 +70,9 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB
-          .forEach((CB: () => null) => CB.call(this))
+          .forEach((CB: () => null) => (CB as Function).call([ this ]))
+      } else if (typeof this.$options.Lifecycle.Valid.CB === 'function') {
+        (this.$options.Lifecycle.Valid.CB as Function).call([ this ])
       }
 
       if (typeof this.$options.Lifecycle.Valid.Message === 'string') {
@@ -85,7 +87,9 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
         this.$options.Lifecycle.Invalid.CB
-          .forEach((CB: () => null) => CB.call(this))
+          .forEach((CB: () => null) => (CB as Function).call([ this ]))
+      } else if (typeof this.$options.Lifecycle.Invalid.CB === 'function') {
+        (this.$options.Lifecycle.Invalid.CB as Function).call([ this ])
       }
 
       if (typeof this.$options.Lifecycle.Invalid.Message === 'string') {

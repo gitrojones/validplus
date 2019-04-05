@@ -325,6 +325,12 @@ describe('ValidPlus', function() {
     // TODO: Implement Cypress E2E testing for visual
     it('Validator should ignore hidden fieldsets by default');
 
+    describe('Validator Lifecycle', function () {
+      it('Should append Message if Valid/Invalid')
+      it('Should append Call CB if Valid/Invalid')
+      it('Should pass instance to CB')
+    })
+
     describe('Validator Error Handling', function() {
       it('Should append the errorClass on invalid', function() {
         const MockFieldset = { isValid: () => false, element: {} };
