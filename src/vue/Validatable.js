@@ -52,22 +52,37 @@ export const Validatable = {
       return fieldset
     },
     VPChangeAnchor (el) {
-      this.validator.$options.MessageAnchor = el
-      this.validator.$MessageAnchor = el
-      this.validator.generateMessageNode()
+      this.validator.generateMessageNode(el)
     },
     VPisValid () {
-      if ((this.VPField && this.VPField.isValid()) ||
-          (this.VPFieldset && this.VPFieldset.isValid()) ||
-          this.validator.isValid()) {
-        this.$nextTick(() => {
-          this.$emit('isValid')
-        })
-
-        return true
+      let isValid
+      if (this.VPField) {
+        isValid = this.VPField.isValid()
+      } else if (this.VPFieldset) {
+        isValid = this.VPFieldset.isValid()
+      } else {
+        isValid = this.validator.isValid()
       }
 
-      return false
+      const dispatchValidationStatus = (isValid) => {
+        this.$nextTick(() => {
+          if (isValid) {
+            this.$emit('isValid')
+          } else {
+            this.$emit('isInvalid')
+          }
+        })
+      }
+
+      if (typeof isValid === 'boolean') {
+        dispatchValidationStatus(isValid)
+        return isValid
+      } else if (typeof isValid.then === 'function') {
+        return isValid.then((isValid) => {
+          dispatchValidationStatus(isValid)
+          return isValid
+        })
+      }
     }
   },
   beforeDestroy () {

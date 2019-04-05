@@ -15,13 +15,16 @@ import { ValidationAttributes } from '@/interfaces/validation/ValidationAttribut
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
 import { Validatable } from '@/Validatable'
-import { InputFormatter } from './types/InputFormatter'
 
 export class VPField extends Validatable {
   $options: VPFieldOptions = this.$options
   $dirty: boolean = false
   $input: (HTMLInputElement | null) = null
   $canValidate: boolean = true
+  $formatterEvent: { pre: boolean, post: boolean } = {
+    pre: false,
+    post: false
+  }
 
   constructor (
     element: HTMLElement,
@@ -50,66 +53,50 @@ export class VPField extends Validatable {
     this.setLifecycle(onValidate)
     this.setInput()
 
+    const handleEventDefault = () => {
+      if (this.$options.DirtyOnBlur === false) {
+        this.$dirty = true
+      }
+
+      if (this.$formatterEvent.pre === false) this.formatInputPre()
+      else this.$formatterEvent.pre = false
+      if (this.$canValidate === true && this.$dirty === true) {
+        const emit = this.$isValid !== null
+
+        let valid = this.isValid(true)
+        if (this.$formatterEvent.post === false) this.formatInputPost()
+        else this.$formatterEvent.post = false
+        if (emit) {
+          this.dispatchEvent(this.createEvent('onValidate'), valid)
+        }
+      }
+    }
+
     if (this.$input instanceof HTMLInputElement) {
       if (this.$options.Watch === true) {
         if (['radio', 'checkbox'].includes(this.$input.getAttribute('type') || '')) {
-          this.$input.addEventListener('change', () => {
-            if (this.$options.DirtyOnBlur === false) {
-              this.$dirty = true
-            }
-
-            if (this.$canValidate === true && this.$dirty === true) {
-              const emit = this.$isValid !== null
-
-              let valid = this.isValid()
-              if (emit) {
-                this.dispatchEvent(this.createEvent('onValidate'), valid)
-              }
-            }
-          })
+          this.$input.addEventListener('change', handleEventDefault)
         } else {
-          this.$input.addEventListener('input', () => {
-            if (this.$options.DirtyOnBlur === false) {
-              this.$dirty = true
-            }
-
-            if (this.$canValidate === true && this.$dirty === true) {
-              const emit = this.$isValid !== null
-
-              let valid = this.isValid()
-              if (emit) {
-                this.dispatchEvent(this.createEvent('onValidate'), valid)
-              }
-            }
-          })
+          this.$input.addEventListener('input', handleEventDefault)
         }
       }
 
       if (this.$options.ValidateOn.blur) {
         this.$input.addEventListener('blur', () => {
-          this.$dirty = true
+          if (this.$options.DirtyOnBlur === true) {
+            this.$dirty = true
+          }
 
-          let valid = this.isValid()
-          this.dispatchEvent(this.createEvent('onValidate'), valid)
+          handleEventDefault()
         })
       }
 
       if (this.$options.ValidateOn.change) {
-        this.$input.addEventListener('change', () => {
-          this.$dirty = true
-
-          let valid = this.isValid()
-          this.dispatchEvent(this.createEvent('onValidate'), valid)
-        })
+        this.$input.addEventListener('change', handleEventDefault)
       }
 
       if (this.$options.ValidateOn.mouseleave) {
-        this.$input.addEventListener('mouseleave', () => {
-          this.$dirty = true
-
-          let valid = this.isValid()
-          this.dispatchEvent(this.createEvent('onValidate'), valid)
-        })
+        this.$input.addEventListener('mouseleave', handleEventDefault)
       }
     }
   }
@@ -159,12 +146,11 @@ export class VPField extends Validatable {
     this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as HTMLInputElement
   }
 
-  isValid (): (boolean | Promise<boolean>) {
+  isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {
     this.$canValidate = false
-
-    // Clear last cycle messages
+    if (!formattedExternal) this.formatInputPre()
+    // TODO: Diff messages
     this.clearMessages()
-    this.formatInput().pre()
 
     // Main validation loop
     let attributes = this.parseInput()
@@ -328,7 +314,9 @@ export class VPField extends Validatable {
       return this.$isValid
     }
 
+    if (!formattedExternal) this.formatInputPost()
     if (hasAsync(customErrors)) {
+      debug('Returning Async')
       return new Promise((resolve) => {
         let promises: Promise<(boolean | string)>[]
 
@@ -381,14 +369,12 @@ export class VPField extends Validatable {
               }
             }
 
-            this.formatInput().post()
             this.$isValid = false
             this.$canValidate = true
             return resolve(this.$isValid)
           })
       })
     } else {
-      this.formatInput().post()
       this.$isValid = [...errors, ...customErrors]
         .every((err) => err === true)
       this.$canValidate = true
@@ -396,24 +382,35 @@ export class VPField extends Validatable {
     }
   }
 
-  formatInput () {
-    const InputFormatterMethod = (formatter: InputFormatter) => () => {
-      if (this.$input === null) {
-        throw new Error('[VPField] Cannot format Input as it is unset.')
-      }
-
-      if (typeof formatter === 'function') {
-        formatter(this.$input, (eventName: string) => {
-          if (this.$input instanceof HTMLElement) {
-            this.$input.dispatchEvent(this.createEvent(eventName))
-          }
-        })
-      }
+  formatInputPre () {
+    const formatter = this.$options.InputFormatter.pre
+    if (this.$input === null) {
+      throw new Error('[VPField] Cannot format Input as it is unset.')
     }
 
-    return {
-      pre: InputFormatterMethod(this.$options.InputFormatter.pre),
-      post: InputFormatterMethod(this.$options.InputFormatter.post)
+    if (typeof formatter === 'function') {
+      formatter(this.$input, (eventName: string) => {
+        if (this.$input instanceof HTMLElement) {
+          this.$formatterEvent.pre = true
+          this.$input.dispatchEvent(this.createEvent(eventName))
+        }
+      })
+    }
+  }
+
+  formatInputPost () {
+    const formatter = this.$options.InputFormatter.post
+    if (this.$input === null) {
+      throw new Error('[VPField] Cannot format Input as it is unset.')
+    }
+
+    if (typeof formatter === 'function') {
+      formatter(this.$input, (eventName: string) => {
+        if (this.$input instanceof HTMLElement) {
+          this.$formatterEvent.post = true
+          this.$input.dispatchEvent(this.createEvent(eventName))
+        }
+      })
     }
   }
 }

@@ -52,9 +52,7 @@ export const Fieldset = {
   },
   methods: {
     VPChangeAnchor (el) {
-      this.VPFieldset.$options.MessageAnchor = el
-      this.VPFieldset.$MessageAnchor = el
-      this.VPFieldset.generateMessageNode()
+      this.VPFieldset.generateMessageNode(el)
     },
 
     VPGatherFields () {

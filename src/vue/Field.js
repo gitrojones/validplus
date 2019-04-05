@@ -36,7 +36,7 @@ export const Field = {
   },
   data () {
     return {
-      VPField: null,
+      VPField: {},
       VPOptions$: this.VPOptions || {},
       VPRules$: this.VPRules || [],
       VPValid$: this.VPValid || {}
@@ -44,10 +44,7 @@ export const Field = {
   },
   methods: {
     VPChangeAnchor (el) {
-      this.VPField.$options.MessageAnchor = el
-      this.VPField.$MessageAnchor = el
-      this.VPField.generateMessageNode()
-      console.log('Changed anchor', this.VPField)
+      this.VPField.generateMessageNode(el)
     },
 
     VPAddRule (rule) {
