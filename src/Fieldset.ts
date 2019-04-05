@@ -49,6 +49,7 @@ export class VPFieldset extends Validatable {
   }
 
   isValid (): (boolean | Promise<boolean>) {
+    this.clearMessages()
     const fields = this.$options.ValidateVisible
       ? this.$visibleFields
       : this.$fields

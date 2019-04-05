@@ -45,6 +45,7 @@ export class VPValidator extends Validatable {
   }
 
   isValid () {
+    this.clearMessages()
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
     let isValid: (boolean | Promise<boolean[]>) = true
