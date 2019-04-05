@@ -27,6 +27,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       ErrorClassName: '-isError',
       ValidClassName: '-isValid',
       MessageClassName: 'VPMessage',
+      MessageContainerClassName: 'VPMessages',
       DeferredMessageAnchor: false,
       MessageAnchor: element,
       MessagePOS: 'BOTTOM', // VerticalPosition.bottom
@@ -45,13 +46,13 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     // DOMMessaging
     this.$MessageClassName = this.$options.MessageClassName
-    this.$MessageAnchor = this.$options.MessageAnchor
+    this.$MessageContainerClassName = this.$options.MessageContainerClassName
     this.$MessageNodePOS = this.$options.MessagePOS
 
     // Allow for manually calling the messageNodeBuilder if it cannot be accomplished right away
     // Used in Vue Bindings
     if (!this.$options.DeferredMessageAnchor) {
-      this.generateMessageNode()
+      this.generateMessageNode(this.$options.MessageAnchor)
     }
     // END DOMMessaging
   }
@@ -64,6 +65,8 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     this.$valid = isValid
 
     if (isValid) {
+      this.$element.classList.add(this.$options.ValidClassName)
+      this.$element.classList.remove(this.$options.ErrorClassName)
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB

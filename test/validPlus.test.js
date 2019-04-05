@@ -340,11 +340,13 @@ describe('ValidPlus', function() {
         expect(validator.isValid()).to.be.false;
         expect(testForm.classList.contains('-isError')).to.be.true;
       });
+
       it('Should append the validClass on valid', function() {
         const validator = new ValidPlus.Validator({}, testForm);
         expect(validator.isValid()).to.be.true;
         expect(testForm.classList.contains('-isValid')).to.be.true;
       });
+
       it('Should append a custom options.errorClass on invalid', function() {
         const errorClass = '-helloWorld';
         const MockFieldset = { isValid: () => false, element: {} };
@@ -809,12 +811,20 @@ describe('ValidPlus', function() {
         expect(field.isValid()).to.eventually.be.true.notify(() => {
           const valid = field.$valid === false;
           const children = field.$MessageNode.children.length === 1;
+          let innerHTML
           if (children) {
-            const innerHTML = field.$MessageNode.children[0].innerHTML === errorMessage;
-            done(valid && children && innerHTML)
+            innerHTML = field.$MessageNode.children[0].innerHTML === errorMessage;
+            if (valid && children && innerHTML) {
+              return done()
+            }
           }
+          if (valid === false) {
+            done(new Error('Field invalid'))
+          } else if (children === false) {
+            done(new Error('Invalid children length'))
+          } else if (innerHTML === false) {
 
-          done(false)
+          }
         });
       })
     })

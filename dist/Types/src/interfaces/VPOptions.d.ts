@@ -11,6 +11,7 @@ export interface VPOptions {
     ErrorClassName: string;
     ValidClassName: string;
     MessageClassName: string;
+    MessageContainerClassName: string;
     MessageAnchor: HTMLElement;
     DeferredMessageAnchor: boolean;
     MessagePOS: VerticalPosition;

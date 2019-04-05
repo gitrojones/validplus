@@ -10,6 +10,7 @@ import { debug } from '@/util/debug'
  */
 
 export class DOMMessaging {
+  $MessageContainerClassName: string = 'DOMMessages'
   $MessageClassName: string = 'DOMMessage'
   $MessageNode: HTMLElement | null = null
   $MessageAnchor: HTMLElement | null = null
@@ -23,13 +24,32 @@ export class DOMMessaging {
     return el
   }
 
-  generateMessageNode (pos: VerticalPosition = this.$MessageNodePOS,
-    anchor: HTMLElement | null = this.$MessageAnchor): void {
+  generateMessageNode (anchor: HTMLElement | null = null,
+    pos: VerticalPosition = this.$MessageNodePOS): void {
     if (!(anchor instanceof HTMLElement)) {
-      throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
+      debug('Using existing anchor')
+      anchor = this.$MessageAnchor
+
+      if (!(anchor instanceof HTMLElement)) {
+        throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
+      }
+    } else {
+      debug('Appending anchor')
+      this.$MessageAnchor = anchor
     }
 
-    this.$MessageNode = this.DOMCreateElement('', `${this.$MessageClassName}s`)
+    // Override POS here
+    if (pos !== this.$MessageNodePOS) {
+      this.$MessageNodePOS = pos
+    }
+
+    if (this.$MessageNode instanceof HTMLElement) {
+      debug('Removing MessageNode')
+      this.$MessageNode.remove()
+    }
+
+    debug('Creating message node', this.$MessageContainerClassName)
+    this.$MessageNode = this.DOMCreateElement('', this.$MessageContainerClassName)
     if (pos === VerticalPosition.top) {
       anchor.prepend(this.$MessageNode)
     } else if (pos === VerticalPosition.bottom) {
@@ -55,7 +75,6 @@ export class DOMMessaging {
       } else if (this.$MessageNodePOS === VerticalPosition.bottom) {
         this.$MessageNode.appendChild(DOMMessage)
       }
-      console.dir(this.$MessageNode)
     } else {
       debug('Message exists', message)
     }

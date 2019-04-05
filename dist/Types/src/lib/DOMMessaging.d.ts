@@ -7,12 +7,13 @@ import { VerticalPosition } from '@/enums/Positions';
  * @requires ClassName - The name to use as the base class name
  */
 export declare class DOMMessaging {
+    $MessageContainerClassName: string;
     $MessageClassName: string;
     $MessageNode: HTMLElement | null;
     $MessageAnchor: HTMLElement | null;
     $MessageNodePOS: VerticalPosition;
     DOMCreateElement(innerHTML: string, className: string): HTMLElement;
-    generateMessageNode(pos?: VerticalPosition, anchor?: HTMLElement | null): void;
+    generateMessageNode(anchor?: HTMLElement | null, pos?: VerticalPosition): void;
     addMessage(message: string, status: string): void;
     addMessages(messages: string[], status: string): void;
     removeMessage(message: string): void;

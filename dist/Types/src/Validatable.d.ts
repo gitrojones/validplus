@@ -18,12 +18,13 @@ export declare const Validatable: {
         $isValid: boolean | null;
         setLifecycle(lifecycle: ValidationLifecycle): void;
         isElementVisible(element: HTMLElement): boolean;
+        $MessageContainerClassName: string;
         $MessageClassName: string;
         $MessageNode: HTMLElement | null;
         $MessageAnchor: HTMLElement | null;
         $MessageNodePOS: import("./enums/Positions").VerticalPosition;
         DOMCreateElement(innerHTML: string, className: string): HTMLElement;
-        generateMessageNode(pos?: import("./enums/Positions").VerticalPosition, anchor?: HTMLElement | null): void;
+        generateMessageNode(anchor?: HTMLElement | null, pos?: import("./enums/Positions").VerticalPosition): void;
         addMessage(message: string, status: string): void;
         addMessages(messages: string[], status: string): void;
         removeMessage(message: string): void;

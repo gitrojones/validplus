@@ -371,7 +371,7 @@ export class VPField extends Validatable {
             return resolve(this.$isValid)
           })
           .catch((err: (boolean | string | Error)) => {
-            console.error('[VPField] Failed CustomRule Validation', err)
+            debug('[VPField] Failed CustomRule Validation', err)
 
             if (this.$options.ShowCustomRuleErrors) {
               if (err instanceof Error && err.message.length > 0) {

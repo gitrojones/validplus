@@ -72,7 +72,7 @@ export class VPFieldset extends Validatable {
             return resolve(this.$isValid)
           })
           .catch((err) => {
-            console.error('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
+            debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
             this.$isValid = false
             return resolve(this.$isValid)
           })
