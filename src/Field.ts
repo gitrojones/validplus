@@ -1,6 +1,7 @@
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
+import { isValidInput } from '@/util/isValidInput'
 import { mergeDeep } from '@/util/mergeDeep'
 import { toBoolean } from '@/util/casts/toBoolean'
 import { toNumber } from '@/util/casts/toNumber'
@@ -14,13 +15,14 @@ import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle
 import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
+import { ValidInput } from '@/types/ValidInput'
 import { Validatable } from '@/Validatable'
 
 export class VPField extends Validatable {
   $options: VPFieldOptions = this.$options
   $dirty: boolean = false
-  $input: (HTMLInputElement | null) = null
   $canValidate: boolean = true
+  $Input: (ValidInput | null) = null
   $formatterEvent: { pre: boolean, post: boolean } = {
     pre: false,
     post: false
@@ -50,9 +52,13 @@ export class VPField extends Validatable {
         mouseLeave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
     }, options)
+
     this.setLifecycle(onValidate)
     this.setInput()
+  }
 
+  get $input () { return this.$Input as ValidInput }
+  set $input (input: ValidInput) {
     const handleEventDefault = () => {
       if (this.$options.DirtyOnBlur === false) {
         this.$dirty = true
@@ -72,17 +78,21 @@ export class VPField extends Validatable {
       }
     }
 
-    if (this.$input instanceof HTMLInputElement) {
-      if (this.$options.Watch === true) {
-        if (['radio', 'checkbox'].includes(this.$input.getAttribute('type') || '')) {
-          this.$input.addEventListener('change', handleEventDefault)
-        } else {
-          this.$input.addEventListener('input', handleEventDefault)
+    if (input && isValidInput(input)) {
+      this.$Input = input
+
+      if (input instanceof HTMLInputElement) {
+        if (this.$options.Watch === true) {
+          if (['radio', 'checkbox'].includes(this.$input.getAttribute('type') || '')) {
+            input.addEventListener('change', handleEventDefault)
+          } else {
+            input.addEventListener('input', handleEventDefault)
+          }
         }
       }
 
       if (this.$options.ValidateOn.blur) {
-        this.$input.addEventListener('blur', () => {
+        input.addEventListener('blur', () => {
           if (this.$options.DirtyOnBlur === true) {
             this.$dirty = true
           }
@@ -92,18 +102,20 @@ export class VPField extends Validatable {
       }
 
       if (this.$options.ValidateOn.change) {
-        this.$input.addEventListener('change', handleEventDefault)
+        input.addEventListener('change', handleEventDefault)
       }
 
       if (this.$options.ValidateOn.mouseleave) {
-        this.$input.addEventListener('mouseleave', handleEventDefault)
+        input.addEventListener('mouseleave', handleEventDefault)
       }
+    } else {
+      console.warn('[VPField] Input is missing')
     }
   }
 
   parseInput (): ValidationAttributes {
-    if (!(this.$input instanceof HTMLInputElement)) {
-      throw new Error('[VPField] Input must be an instance of Element')
+    if (this.$input && !isValidInput(this.$input)) {
+      throw new Error('[VPField] Input must be Input/Select/TextArea')
     }
 
     const inputRules: HTMLValidationRules = filterNullObject({
@@ -121,7 +133,9 @@ export class VPField extends Validatable {
 
     return {
       value: this.$input.value,
-      checked: this.$input.checked,
+      checked: (this.$input instanceof HTMLSelectElement)
+        ? false
+        : (this.$input as HTMLInputElement).checked,
       type: this.$input.getAttribute('type'),
       name:
         this.$input.getAttribute('data-name') ||
@@ -143,7 +157,7 @@ export class VPField extends Validatable {
     if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
 
     // TODO: Add logic for specifying prefered input type
-    this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as HTMLInputElement
+    this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as ValidInput
   }
 
   isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {
