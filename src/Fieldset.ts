@@ -42,7 +42,8 @@ export class VPFieldset extends Validatable {
     mergeDeep(this.$options, {
       ValidationStrategy: validationStrategy,
       ValidateVisible: true,
-      FieldClass: 'VPField'
+      FieldClass: 'VPField',
+      Watch: false
     }, options)
 
     this.setLifecycle(onValidate)
@@ -110,6 +111,7 @@ export class VPFieldset extends Validatable {
       return new Promise((resolve) => {
         Promise.all(deferredFieldsetStatus)
           .then((fieldsetStatus) => {
+            debug('[VPFieldset] Resolved deferred', fieldsetStatus)
             this.$isValid = this.$strategy(fieldsetStatus)
             this.$emitFields = []
             return resolve(this.$isValid)

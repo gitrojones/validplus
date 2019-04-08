@@ -9,6 +9,14 @@
         external
       </vp-field>
     </vp-fieldset>
+
+    <vp-fieldset style="marginTop: 2em;">
+      <span>Should not Validate</span>
+
+      <vp-field id="external" :VPOptions="validationOptions2" :VPValid="valid" value="foo">
+        external
+      </vp-field>
+    </vp-fieldset>
   </div>
 </div>
 </template>
@@ -36,6 +44,16 @@ export default {
       },
       validationOptions: {
         Watch: false
+      },
+      validationOptions2: {
+        Watch: false,
+        CustomRules: [
+          () => new Promise((resolve, reject) => {
+            window.setTimeout(() => {
+              return resolve(true)
+            }, 1000)
+          })
+        ]
       }
     }
   },

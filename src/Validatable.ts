@@ -115,7 +115,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       if (this.$options.ScrollTo === true) {
         // While always true, we check due to limitations with JSDOM
         // tslint:disable-next-line: strict-type-predicates
-        if (typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
+        if (this.$options.ScrollAnchor && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
           this.$options.ScrollAnchor.scrollIntoView({ behavior: 'smooth' })
         } else {
           debug('[VP] Element Scrolling failed.')

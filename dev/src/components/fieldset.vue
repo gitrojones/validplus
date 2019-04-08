@@ -1,6 +1,6 @@
 <template>
   <div class="test-fieldset">
-    <VPField id="internal" :VPRules="complexRules" :VPOptions="fieldOptions">internal</VPField>
+    <VPField id="internal" :VPRules="complexRules" :VPOptions="fieldOptions" :value="test">internal</VPField>
 
     <!-- External Fields -->
     <slot></slot>
@@ -13,9 +13,14 @@ import VPField from "./field";
 
 export default {
   props: {
-    VPOptions: {
+    VPValid: {
       default() {
         return {
+          Valid: {
+            CB: [
+              () => console.log('valid', this.test)
+            ]
+          }
         }
       }
     }
@@ -23,6 +28,7 @@ export default {
   mixins: [VPVue.Fieldset],
   data() {
     return {
+      test: 'foo bar',
       complexRules: [
         (atttributes, element, input) => {
           return new Promise((resolve, reject) => {
@@ -37,16 +43,6 @@ export default {
         DirtyOnBlur: false,
         ValidateOn: {
           change: true
-        },
-        InputFormatter: {
-          pre: (el, dispatchEvent) => {
-            el.value = el.value.replace(/[^0-9]/g, '')
-            if (el.value.length > 5) {
-              el.value = el.value.substr(0, 5)
-            }
-
-            dispatchEvent('input')
-          }
         }
       }
     };

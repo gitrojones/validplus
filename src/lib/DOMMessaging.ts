@@ -44,12 +44,12 @@ export class DOMMessaging {
     }
 
     if (this.$MessageNode instanceof HTMLElement) {
-      debug('Removing MessageNode')
+      debug('Removing MessageNode', this.$MessageNode)
       this.$MessageNode.remove()
     }
 
-    debug('Creating message node', this.$MessageContainerClassName)
     this.$MessageNode = this.DOMCreateElement('', this.$MessageContainerClassName)
+    debug('Creating message node', this.$MessageContainerClassName, this.$MessageNode)
     if (pos === VerticalPosition.top) {
       anchor.prepend(this.$MessageNode)
     } else if (pos === VerticalPosition.bottom) {
@@ -103,6 +103,7 @@ export class DOMMessaging {
 
   clearMessages (): void {
     if (!(this.$MessageNode instanceof HTMLElement)) {
+      debug('MessageNode', this.$MessageNode)
       throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
     }
 

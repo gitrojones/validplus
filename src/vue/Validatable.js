@@ -19,6 +19,7 @@ export const Validatable = {
     // when elements are available
     if (this.VPNewValidator) {
       this.validator.$element = this.$el
+      this.validator.generateMessageNode(this.$el)
     }
   },
   provide () {
