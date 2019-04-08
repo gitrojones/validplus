@@ -6,6 +6,8 @@ import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 import { InputFormatters } from '@/interfaces/inputFormatters'
 
 export interface VPOptions {
+  [property: string]: any,
+
   // ControlFlow
   Watch: boolean, // Emit upwards if anything changes
   Lifecycle: ValidationLifecycle,

@@ -5,6 +5,7 @@ import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
 import { InputFormatters } from '@/interfaces/inputFormatters';
 export interface VPOptions {
+    [property: string]: any;
     Watch: boolean;
     Lifecycle: ValidationLifecycle;
     ClassName: string;

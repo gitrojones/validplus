@@ -159,26 +159,24 @@ export class VPField extends Validatable {
     if (select.length > 0) debug('[VPField] Found select', select)
     if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
 
-    // TODO: Add logic for specifying prefered input type
+    // TODO: Add logic for specifying preferred input type
+    let flipflop = () => {
+      ['ValidateOn', 'DirtyOn', 'FormatOn'].forEach((property) => {
+        const options = this.$options[property]
+        if (options.input === true && options.change === false) {
+          options.input = false
+          options.change = true
+        }
+      })
+    }
+
     let _input: ValidInput = (input.item(0) || select.item(0) || textarea.item(0)) as ValidInput
     if (_input instanceof HTMLInputElement) {
-      // Flipflop for change on radio/checkbox, since input unreliable
       if (['radio', 'checkbox'].includes(_input.getAttribute('type') || '')) {
-        if (this.$options.ValidateOn.input === true && this.$options.ValidateOn.change === false) {
-          this.$options.ValidateOn.change = true
-          this.$options.ValidateOn.input = false
-        }
-
-        if (this.$options.DirtyOn.input === true && this.$options.DirtyOn.change === false) {
-          this.$options.DirtyOn.change = true
-          this.$options.DirtyOn.input = false
-        }
-
-        if (this.$options.FormatOn.input === true && this.$options.FormatOn.change === false) {
-          this.$options.FormatOn.change = true
-          this.$options.FormatOn.input = false
-        }
+        flipflop()
       }
+    } else if (_input instanceof HTMLSelectElement) {
+      flipflop()
     }
 
     this.$input = _input
