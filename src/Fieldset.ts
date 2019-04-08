@@ -152,12 +152,7 @@ export class VPFieldset extends Validatable {
       _e.stopPropagation()
       this.$emitFields.push(trigger)
 
-      const valid = this.isValid(false)
-      const emit = this.$isValid !== null
-
-      if (emit) {
-        this.dispatchEvent(this.createEvent('onValidate'), valid)
-      }
+      this.isValid(false)
     })
   }
 
