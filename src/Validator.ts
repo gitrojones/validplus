@@ -161,6 +161,8 @@ export class VPValidator extends Validatable {
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
     fieldset.addEventListener('onValidate', (_e: Event, trigger: VPFieldset) => {
+      _e.stopPropagation()
+
       this.$emitFieldsets.push(trigger)
       this.isValid()
     })
