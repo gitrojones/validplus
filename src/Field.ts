@@ -36,6 +36,10 @@ export class VPField extends Validatable {
   ) {
     super(options, element)
 
+    if (!(element instanceof HTMLElement)) {
+      throw new Error('[VPField] Expected element')
+    }
+
     mergeDeep(this.$options, {
       ForceRules: false,
       InputRules: {},

@@ -31,7 +31,6 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       ValidClassName: '-isValid',
       MessageClassName: 'VPMessage',
       MessageContainerClassName: 'VPMessages',
-      DeferredMessageAnchor: false,
       MessageAnchor: element,
       MessagePOS: 'BOTTOM', // VerticalPosition.bottom
       ScrollTo: true,
@@ -68,7 +67,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     // Allow for manually calling the messageNodeBuilder if it cannot be accomplished right away
     // Used in Vue Bindings
-    if (!this.$options.DeferredMessageAnchor) {
+    if (this.$options.MessageAnchor instanceof HTMLElement) {
       this.generateMessageNode(this.$options.MessageAnchor)
     }
     // END DOMMessaging

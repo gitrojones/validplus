@@ -31,6 +31,10 @@ export class VPFieldset extends Validatable {
   ) {
     super(options, element)
 
+    if (!(element instanceof HTMLElement)) {
+      throw new Error('[VPFieldset] Expected element')
+    }
+
     let validationStrategy = strategy
     if (typeof strategy === 'string') {
       validationStrategy = this.$strategies[strategy]

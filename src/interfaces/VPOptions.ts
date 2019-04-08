@@ -19,7 +19,6 @@ export interface VPOptions {
   MessageClassName: string,
   MessageContainerClassName: string,
   MessageAnchor: HTMLElement,
-  DeferredMessageAnchor: boolean,
   MessagePOS: VerticalPosition,
   ScrollTo: boolean,
   ScrollAnchor: HTMLElement
