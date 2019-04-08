@@ -333,7 +333,7 @@ describe('ValidPlus', function() {
 
     describe('Validator Error Handling', function() {
       it('Should append the errorClass on invalid', function() {
-        const MockFieldset = { isValid: () => false, element: {} };
+        const MockFieldset = { isValid: () => false, element: {}, $options: { Watch: true } };
         const validator = new ValidPlus.Validator(
           {
             ScrollTo: false,
@@ -355,7 +355,7 @@ describe('ValidPlus', function() {
 
       it('Should append a custom options.errorClass on invalid', function() {
         const errorClass = '-helloWorld';
-        const MockFieldset = { isValid: () => false, element: {} };
+        const MockFieldset = { isValid: () => false, element: {}, $options: { Watch: true } };
         const validator = new ValidPlus.Validator(
           {
             ErrorClassName: errorClass,
@@ -1125,11 +1125,13 @@ describe('ValidPlus', function() {
 
     it('Should format pre/post and include an eventDispatch method', function() {
       let uppercasePre = (input, dispatchEvent) => {
+        console.log('called pre')
         input.value = input.value.toUpperCase();
         input.value = input.value += '-world';
         dispatchEvent('input');
       };
       let lowercasePost = (input, dispatchEvent) => {
+        console.log('called post')
         input.value = input.value.toLowerCase();
         dispatchEvent('input');
       };
@@ -1162,11 +1164,9 @@ describe('ValidPlus', function() {
 
     it('Should listen for changes on input/change by default', function() {
       const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid');
-      let field = new ValidPlus.Field(testField, {
-        Watch: true
-      }, [], {
-        isInvalid: {
-          message: 'Hello, World',
+      let field = new ValidPlus.Field(testField, {}, [], {
+        Invalid: {
+          Message: 'Hello, World',
         },
       });
       let inputEvent = window.document.createEvent('Event');
@@ -1176,7 +1176,6 @@ describe('ValidPlus', function() {
       testInput.dispatchEvent(inputEvent);
 
       expect(spyIsValid.calledOnce).to.be.true;
-
       ValidPlus.Field.prototype.isValid.restore();
     });
 
@@ -1233,15 +1232,21 @@ describe('ValidPlus', function() {
       expect(inputSpy.called).to.be.true;
     });
 
-    it('Should only validate onBlur w/ dirtyOnBlur', function() {
+    it('Should only validate onBlur w/ DirtyOnBlur', function() {
       let field = new ValidPlus.Field(
         testField,
         {
           ValidateOn: {
-            blur: true
+            blur: true,
+            change: false,
+            mouseleave: false
           },
-          DirtyOnBlur: true,
-          Watch: true
+          DirtyOn: {
+            blur: true,
+            change: false,
+            mouseleave: false
+          },
+          Watch: false
         },
         [],
         {
@@ -1274,8 +1279,13 @@ describe('ValidPlus', function() {
     });
 
     it('Should accept vp-params to toggle options', function() {
-      testField.setAttribute('vp-dirty', true);
+      testField.setAttribute('vp-dirtyBlur', true);
+      testField.setAttribute('vp-dirtyChange', false)
+      testField.setAttribute('vp-dirtyMouseLeave', true)
       testField.setAttribute('vp-blur', false);
+      testField.setAttribute('vp-change', false);
+      testField.setAttribute('vp-mouseleave', true);
+
       testField.setAttribute('vp-watch', false);
 
       let field = new ValidPlus.Field(testField, {}, [], {
@@ -1284,8 +1294,14 @@ describe('ValidPlus', function() {
         },
       });
 
-      expect(field.$options.DirtyOnBlur).to.be.true;
+      expect(field.$options.DirtyOn.blur).to.be.true;
+      expect(field.$options.DirtyOn.change).to.be.false;
+      expect(field.$options.DirtyOn.mouseleave).to.be.true;
+
       expect(field.$options.ValidateOn.blur).to.be.false;
+      expect(field.$options.ValidateOn.change).to.be.false;
+      expect(field.$options.ValidateOn.mouseleave).to.be.true;
+
       expect(field.$options.Watch).to.be.false;
     });
 

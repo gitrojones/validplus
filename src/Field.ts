@@ -45,11 +45,21 @@ export class VPField extends Validatable {
       ShowCustomRuleErrors: true,
       ValidateLazyCustomRules: true,
       ValidateLazyFieldRules: true,
-      DirtyOnBlur: toBoolean(element.getAttribute('vp-dirty'), false),
+      ValidateAsyncResolved: true,
+      DirtyOn: {
+        blur: toBoolean(element.getAttribute('vp-dirtyBlur'), true),
+        change: toBoolean(element.getAttribute('vp-dirtyChange'), true),
+        mouseleave: toBoolean(element.getAttribute('vp-dirtyMouseLeave'), false)
+      },
+      FormatOn: {
+        blur: toBoolean(element.getAttribute('vp-formatBlur'), true),
+        change: toBoolean(element.getAttribute('vp-formatChange'), true),
+        mouseleave: toBoolean(element.getAttribute('vp-formatMouseleave'), false)
+      },
       ValidateOn: {
-        blur: toBoolean(element.getAttribute('vp-blur'), false),
-        change: toBoolean(element.getAttribute('vp-change'), false),
-        mouseLeave: toBoolean(element.getAttribute('vp-mouseleave'), false)
+        blur: toBoolean(element.getAttribute('vp-blur'), true),
+        change: toBoolean(element.getAttribute('vp-change'), true),
+        mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
     }, options)
 
@@ -59,55 +69,37 @@ export class VPField extends Validatable {
 
   get $input () { return this.$Input as ValidInput }
   set $input (input: ValidInput) {
-    const handleEventDefault = () => {
-      if (this.$options.DirtyOnBlur === false) {
+    const handleEventDefault = (e: Event) => {
+      let eventType: string = e.type
+      if (eventType === 'input') eventType = 'change'
+
+      const format: boolean = this.$options.FormatOn[eventType] || false
+      const validate: boolean = this.$options.ValidateOn[eventType] || false
+      const dirty: boolean = this.$options.DirtyOn[eventType] || false
+
+      if (dirty === true) {
         this.$dirty = true
       }
 
-      if (this.$formatterEvent.pre === false) this.formatInputPre()
-      else this.$formatterEvent.pre = false
-      if (this.$canValidate === true && this.$dirty === true) {
-        const emit = this.$isValid !== null
+      // We alias this for our purposes
+      if (format && this.$formatterEvent.pre === false && this.$formatterEvent.post === false) {
+        this.formatInputPre()
+      } else this.$formatterEvent.pre = false
 
-        let valid = this.isValid(true)
-        if (this.$formatterEvent.post === false) this.formatInputPost()
+      if (this.$canValidate === true && this.$dirty === true && validate) {
+        this.isValid(true)
+        if (format && this.$formatterEvent.post === false) this.formatInputPost()
         else this.$formatterEvent.post = false
-        if (emit) {
-          this.dispatchEvent(this.createEvent('onValidate'), valid)
-        }
       }
     }
 
     if (input && isValidInput(input)) {
       this.$Input = input
 
-      if (input instanceof HTMLInputElement) {
-        if (this.$options.Watch === true) {
-          if (['radio', 'checkbox'].includes(this.$input.getAttribute('type') || '')) {
-            input.addEventListener('change', handleEventDefault)
-          } else {
-            input.addEventListener('input', handleEventDefault)
-          }
-        }
-      }
-
-      if (this.$options.ValidateOn.blur) {
-        input.addEventListener('blur', () => {
-          if (this.$options.DirtyOnBlur === true) {
-            this.$dirty = true
-          }
-
-          handleEventDefault()
-        })
-      }
-
-      if (this.$options.ValidateOn.change) {
-        input.addEventListener('change', handleEventDefault)
-      }
-
-      if (this.$options.ValidateOn.mouseleave) {
-        input.addEventListener('mouseleave', handleEventDefault)
-      }
+      input.addEventListener('blur', handleEventDefault)
+      input.addEventListener('input', handleEventDefault)
+      input.addEventListener('change', handleEventDefault)
+      input.addEventListener('mouseleave', handleEventDefault)
     } else {
       console.warn('[VPField] Input is missing')
     }
@@ -331,6 +323,14 @@ export class VPField extends Validatable {
     if (!formattedExternal) this.formatInputPost()
     if (hasAsync(customErrors)) {
       debug('Returning Async')
+
+      // We can validate again if we're going async
+      // Requires validation logic to be debounced
+      // or we can waterfall a lot of requests
+      if (!this.$options.ValidateAsyncResolved) {
+        this.$canValidate = true
+      }
+
       return new Promise((resolve) => {
         let promises: Promise<(boolean | string)>[]
 
@@ -369,7 +369,10 @@ export class VPField extends Validatable {
             }
 
             this.$isValid = isValid.every((err) => err === true)
-            this.$canValidate = true
+            if (this.$options.ValidateAsyncResolved) {
+              this.$canValidate = true
+            }
+
             return resolve(this.$isValid)
           })
           .catch((err: (boolean | string | Error)) => {
@@ -384,7 +387,10 @@ export class VPField extends Validatable {
             }
 
             this.$isValid = false
-            this.$canValidate = true
+            if (this.$options.ValidateAsyncResolved) {
+              this.$canValidate = true
+            }
+
             return resolve(this.$isValid)
           })
       })

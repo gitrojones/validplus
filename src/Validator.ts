@@ -6,7 +6,6 @@ import { isAsync } from '@/util/isAsync'
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 import { VPValidatorOptions, VPFieldsetOptions } from '@/interfaces/VPOptions'
-import { EventCallback } from '@/interfaces/events/EventCallback'
 
 import { Validatable } from '@/Validatable'
 import { VPFieldset } from '@/Fieldset'
@@ -20,8 +19,9 @@ import { VPField } from '@/Field'
  */
 export class VPValidator extends Validatable {
   $options: VPValidatorOptions = this.$options
+  $emitFieldsets: VPFieldset[]
+  $fieldsets: VPFieldset[]
 
-  private $fieldsets: VPFieldset[]
   private get $visibleFieldsets (): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {
       return this.isElementVisible(fieldset.$element)
@@ -35,6 +35,7 @@ export class VPValidator extends Validatable {
   constructor (options: VPValidatorOptions, element: HTMLElement) {
     super(options, element)
 
+    this.$emitFieldsets = []
     this.$fieldsets = []
     mergeDeep(this.$options, {
       ValidateLazy: true,
@@ -50,9 +51,35 @@ export class VPValidator extends Validatable {
     // Bad practice to mutate outwards, but exception for now
     let isValid: (boolean | Promise<boolean[]>) = true
     let resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
-      .reduce((resolved: any[], fieldset) => {
+      .reduce((resolved: any[], fieldset, index) => {
         if (isValid === false && this.$options.ValidateLazy) return resolved
-        const valid = fieldset.isValid()
+
+        let valid: (boolean | Promise<boolean>)
+        if (this.$emitFieldsets.indexOf(fieldset) !== -1 && typeof fieldset.$valid === 'boolean') {
+          debug('[VPValidator] Cached Valid', index)
+          valid = fieldset.$valid
+        } else {
+          let originalWatchValue = fieldset.$options.Watch
+          // Concat to the emitFieldsets watch to prevent
+          // further loops of validation as they trigger
+          this.$emitFieldsets.push(fieldset)
+          fieldset.$options.Watch = false
+          valid = fieldset.isValid()
+          if (isAsync(valid)) {
+            valid = new Promise((resolve, reject) => {
+              return (valid as Promise<boolean>).then((isValid) => {
+                fieldset.$options.Watch = originalWatchValue
+                resolve(isValid)
+              }).catch((err) => {
+                fieldset.$options.Watch = originalWatchValue
+                reject(err)
+              })
+            })
+          } else {
+            fieldset.$options.Watch = originalWatchValue
+          }
+        }
+
         if (this.$options.ValidateLazy && valid === false) {
           isValid = valid
         }
@@ -94,10 +121,12 @@ export class VPValidator extends Validatable {
       return new Promise((resolve) => {
         Promise.all(promises).then((isValid: boolean[]) => {
           this.$isValid = isValid.every((valid) => valid === true)
+          this.$emitFieldsets = []
           return resolve(this.$isValid)
         }).catch((err) => {
           debug('[VPValidator] Async Validation failed: ' + err.message, err)
           this.$isValid = false
+          this.$emitFieldsets = []
           return resolve(this.$isValid)
         })
       })
@@ -109,6 +138,7 @@ export class VPValidator extends Validatable {
 
       // Otherwise business as usual
       this.$isValid = isValid
+      this.$emitFieldsets = []
       return isValid
     }
   }
@@ -121,22 +151,19 @@ export class VPValidator extends Validatable {
     }
 
     this.$fieldsets.push(fieldset)
-    if (this.$options.Watch === true) {
-      this.watchFieldset(fieldset)
-    }
+    this.watchFieldset(fieldset)
   }
 
   // TODO: method to remove watchers
   watchFieldset (fieldset: VPFieldset) {
     if (!(fieldset instanceof VPFieldset)) return
 
-    const CB: EventCallback = () => {
-      this.isValid()
-    }
-
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    fieldset.addEventListener('onValidate', CB)
+    fieldset.addEventListener('onValidate', (_e: Event, trigger: VPFieldset) => {
+      this.$emitFieldsets.push(trigger)
+      this.isValid()
+    })
   }
 
   removeFieldset (fieldset: VPFieldset) {
@@ -163,9 +190,7 @@ export class VPValidator extends Validatable {
     })
 
     this.$fieldsets.push(fieldset)
-    if (this.$options.Watch === true) {
-      this.watchFieldset(fieldset)
-    }
+    this.watchFieldset(fieldset)
 
     return fieldset
   }

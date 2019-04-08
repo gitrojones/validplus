@@ -15,6 +15,8 @@ export class VPFieldset extends Validatable {
   $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
+  $emitFields: VPField[]
+
   get $visibleFields (): VPField[] {
     return this.$fields.filter((field: VPField) => {
       return this.isElementVisible(field.$element)
@@ -46,18 +48,57 @@ export class VPFieldset extends Validatable {
     this.setLifecycle(onValidate)
     this.$strategy = this.$options.ValidationStrategy
     this.$fields = []
+    this.$emitFields = []
   }
 
-  isValid (): (boolean | Promise<boolean>) {
+  isValid (validateDirty: boolean = true): (boolean | Promise<boolean>) {
     this.clearMessages()
-    const fields = this.$options.ValidateVisible
+    let fields = (this.$options.ValidateVisible
       ? this.$visibleFields
-      : this.$fields
+      : this.$fields).filter((field, index) => {
+        let validate = true
+
+        // Don't validate dirty fields
+        if (!validateDirty && field.$dirty === false) {
+          debug('[VPFieldset] Skip dirty field', index)
+          validate = false
+        }
+
+        return validate
+      })
 
     const fieldsetStatus: (boolean | Promise<boolean>)[] = fields
       .map((field: VPField, index: number) => {
         debug('[VPFieldset] Validating field', index)
-        return field.isValid()
+
+        // We already validated this, just take the value
+        let valid: (boolean | Promise<boolean>)
+        if (this.$emitFields.indexOf(field) !== -1 && typeof field.$valid === 'boolean') {
+          debug('[VPFieldset] Cached Valid', index)
+          valid = field.$valid
+        } else {
+          let originalWatchValue = field.$options.Watch
+          // Concat to the emitFields watch to prevent
+          // further loops of validation as they trigger
+          this.$emitFields.push(field)
+          field.$options.Watch = false
+          valid = field.isValid()
+          if (isAsync(valid)) {
+            valid = new Promise((resolve, reject) => {
+              return (valid as Promise<boolean>).then((isValid) => {
+                field.$options.Watch = originalWatchValue
+                resolve(isValid)
+              }).catch((err) => {
+                field.$options.Watch = originalWatchValue
+                reject(err)
+              })
+            })
+          } else {
+            field.$options.Watch = originalWatchValue
+          }
+        }
+
+        return valid
       })
 
     if (hasAsync(fieldsetStatus)) {
@@ -70,16 +111,19 @@ export class VPFieldset extends Validatable {
         Promise.all(deferredFieldsetStatus)
           .then((fieldsetStatus) => {
             this.$isValid = this.$strategy(fieldsetStatus)
+            this.$emitFields = []
             return resolve(this.$isValid)
           })
           .catch((err) => {
             debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
             this.$isValid = false
+            this.$emitFields = []
             return resolve(this.$isValid)
           })
       })
     } else {
       this.$isValid = this.$strategy(fieldsetStatus as boolean[])
+      this.$emitFields = []
       return this.$isValid
     }
   }
@@ -102,8 +146,10 @@ export class VPFieldset extends Validatable {
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    field.addEventListener('onValidate', () => {
-      const valid = this.isValid()
+    field.addEventListener('onValidate', (_e: Event, trigger: VPField) => {
+      this.$emitFields.push(trigger)
+
+      const valid = this.isValid(false)
       const emit = this.$isValid !== null
 
       if (emit) {
@@ -119,9 +165,7 @@ export class VPFieldset extends Validatable {
     debug('[VPFieldset] Adding field')
 
     this.$fields.push(field)
-    if (this.$options.Watch === true) {
-      this.watchField(field)
-    }
+    this.watchField(field)
   }
 
   createField (
@@ -136,9 +180,7 @@ export class VPFieldset extends Validatable {
 
     const field = new VPField(el, options, customRules, onValidate)
     this.$fields.push(field)
-    if (this.$options.Watch === true) {
-      this.watchField(field)
-    }
+    this.watchField(field)
 
     return field
   }
@@ -155,9 +197,7 @@ export class VPFieldset extends Validatable {
         {} as VPFieldOptions,
         [] as CustomValidationRule[],
         { Valid: {}, Invalid: {} } as ValidationLifecycle)
-      if (this.$options.Watch === true) {
-        this.watchField(_field)
-      }
+      this.watchField(_field)
 
       return _field
     })

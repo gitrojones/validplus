@@ -12,7 +12,8 @@ import { VPField } from '@/Field';
  */
 export declare class VPValidator extends Validatable {
     $options: VPValidatorOptions;
-    private $fieldsets;
+    $emitFieldsets: VPFieldset[];
+    $fieldsets: VPFieldset[];
     private readonly $visibleFieldsets;
     /**
      * @param options - Configuration for the Validator

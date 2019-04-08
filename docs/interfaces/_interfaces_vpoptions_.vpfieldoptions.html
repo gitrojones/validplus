@@ -92,9 +92,10 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_interfaces_vpoptions_.vpfieldoptions.html#classname" class="tsd-kind-icon">Class<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#customrules" class="tsd-kind-icon">Custom<wbr>Rules</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_interfaces_vpoptions_.vpfieldoptions.html#deferredmessageanchor" class="tsd-kind-icon">Deferred<wbr>Message<wbr>Anchor</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#dirtyonblur" class="tsd-kind-icon">Dirty<wbr>OnBlur</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#dirtyon" class="tsd-kind-icon">Dirty<wbr>On</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_interfaces_vpoptions_.vpfieldoptions.html#errorclassname" class="tsd-kind-icon">Error<wbr>Class<wbr>Name</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#forcerules" class="tsd-kind-icon">Force<wbr>Rules</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#formaton" class="tsd-kind-icon">Format<wbr>On</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#inputformatter" class="tsd-kind-icon">Input<wbr>Formatter</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#inputrules" class="tsd-kind-icon">Input<wbr>Rules</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_interfaces_vpoptions_.vpfieldoptions.html#lifecycle" class="tsd-kind-icon">Lifecycle</a></li>
@@ -107,6 +108,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#showcustomruleerrors" class="tsd-kind-icon">Show<wbr>Custom<wbr>Rule<wbr>Errors</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#showfieldruleerrors" class="tsd-kind-icon">Show<wbr>Field<wbr>Rule<wbr>Errors</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="_interfaces_vpoptions_.vpfieldoptions.html#validclassname" class="tsd-kind-icon">Valid<wbr>Class<wbr>Name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#validateasyncresolved" class="tsd-kind-icon">Validate<wbr>Async<wbr>Resolved</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#validatelazycustomrules" class="tsd-kind-icon">Validate<wbr>Lazy<wbr>Custom<wbr>Rules</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#validatelazyfieldrules" class="tsd-kind-icon">Validate<wbr>Lazy<wbr>Field<wbr>Rules</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="_interfaces_vpoptions_.vpfieldoptions.html#validateon" class="tsd-kind-icon">Validate<wbr>On</a></li>
@@ -135,7 +137,7 @@
 					<div class="tsd-signature tsd-kind-icon">Custom<wbr>Rules<span class="tsd-signature-symbol">:</span> <a href="_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:55</li>
+							<li>Defined in interfaces/VPOptions.ts:69</li>
 						</ul>
 					</aside>
 				</section>
@@ -151,14 +153,31 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="dirtyonblur" class="tsd-anchor"></a>
-					<h3>Dirty<wbr>OnBlur</h3>
-					<div class="tsd-signature tsd-kind-icon">Dirty<wbr>OnBlur<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="dirtyon" class="tsd-anchor"></a>
+					<h3>Dirty<wbr>On</h3>
+					<div class="tsd-signature tsd-kind-icon">Dirty<wbr>On<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:49</li>
+							<li>Defined in interfaces/VPOptions.ts:51</li>
 						</ul>
 					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>blur<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>change<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>mouseleave<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 					<a name="errorclassname" class="tsd-anchor"></a>
@@ -177,9 +196,36 @@
 					<div class="tsd-signature tsd-kind-icon">Force<wbr>Rules<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:52</li>
+							<li>Defined in interfaces/VPOptions.ts:66</li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="formaton" class="tsd-anchor"></a>
+					<h3>Format<wbr>On</h3>
+					<div class="tsd-signature tsd-kind-icon">Format<wbr>On<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in interfaces/VPOptions.ts:58</li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>blur<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>change<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+							<li class="tsd-parameter">
+								<h5>mouseleave<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
+						</ul>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="inputformatter" class="tsd-anchor"></a>
@@ -187,7 +233,7 @@
 					<div class="tsd-signature tsd-kind-icon">Input<wbr>Formatter<span class="tsd-signature-symbol">:</span> <a href="_interfaces_inputformatters_.inputformatters.html" class="tsd-signature-type">InputFormatters</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:53</li>
+							<li>Defined in interfaces/VPOptions.ts:67</li>
 						</ul>
 					</aside>
 				</section>
@@ -197,7 +243,7 @@
 					<div class="tsd-signature tsd-kind-icon">Input<wbr>Rules<span class="tsd-signature-symbol">:</span> <a href="_interfaces_validation_htmlvalidationrules_.htmlvalidationrules.html" class="tsd-signature-type">HTMLValidationRules</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:54</li>
+							<li>Defined in interfaces/VPOptions.ts:68</li>
 						</ul>
 					</aside>
 				</section>
@@ -284,7 +330,7 @@
 					<div class="tsd-signature tsd-kind-icon">Show<wbr>Custom<wbr>Rule<wbr>Errors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:59</li>
+							<li>Defined in interfaces/VPOptions.ts:74</li>
 						</ul>
 					</aside>
 				</section>
@@ -294,7 +340,7 @@
 					<div class="tsd-signature tsd-kind-icon">Show<wbr>Field<wbr>Rule<wbr>Errors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:58</li>
+							<li>Defined in interfaces/VPOptions.ts:73</li>
 						</ul>
 					</aside>
 				</section>
@@ -310,12 +356,22 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="validateasyncresolved" class="tsd-anchor"></a>
+					<h3>Validate<wbr>Async<wbr>Resolved</h3>
+					<div class="tsd-signature tsd-kind-icon">Validate<wbr>Async<wbr>Resolved<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in interfaces/VPOptions.ts:70</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="validatelazycustomrules" class="tsd-anchor"></a>
 					<h3>Validate<wbr>Lazy<wbr>Custom<wbr>Rules</h3>
 					<div class="tsd-signature tsd-kind-icon">Validate<wbr>Lazy<wbr>Custom<wbr>Rules<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:61</li>
+							<li>Defined in interfaces/VPOptions.ts:76</li>
 						</ul>
 					</aside>
 				</section>
@@ -325,7 +381,7 @@
 					<div class="tsd-signature tsd-kind-icon">Validate<wbr>Lazy<wbr>Field<wbr>Rules<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in interfaces/VPOptions.ts:60</li>
+							<li>Defined in interfaces/VPOptions.ts:75</li>
 						</ul>
 					</aside>
 				</section>
@@ -341,6 +397,9 @@
 					<div class="tsd-type-declaration">
 						<h4>Type declaration</h4>
 						<ul class="tsd-parameters">
+							<li class="tsd-parameter-index-signature">
+								<h5><span class="tsd-signature-symbol">[</span>index: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]: </span><span class="tsd-signature-type">boolean</span></h5>
+							</li>
 							<li class="tsd-parameter">
 								<h5>blur<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></h5>
 							</li>
@@ -394,13 +453,16 @@
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#deferredmessageanchor" class="tsd-kind-icon">Deferred<wbr>Message<wbr>Anchor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="_interfaces_vpoptions_.vpfieldoptions.html#dirtyonblur" class="tsd-kind-icon">Dirty<wbr>OnBlur</a>
+								<a href="_interfaces_vpoptions_.vpfieldoptions.html#dirtyon" class="tsd-kind-icon">Dirty<wbr>On</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#errorclassname" class="tsd-kind-icon">Error<wbr>Class<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#forcerules" class="tsd-kind-icon">Force<wbr>Rules</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interfaces_vpoptions_.vpfieldoptions.html#formaton" class="tsd-kind-icon">Format<wbr>On</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#inputformatter" class="tsd-kind-icon">Input<wbr>Formatter</a>
@@ -437,6 +499,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#validclassname" class="tsd-kind-icon">Valid<wbr>Class<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="_interfaces_vpoptions_.vpfieldoptions.html#validateasyncresolved" class="tsd-kind-icon">Validate<wbr>Async<wbr>Resolved</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="_interfaces_vpoptions_.vpfieldoptions.html#validatelazycustomrules" class="tsd-kind-icon">Validate<wbr>Lazy<wbr>Custom<wbr>Rules</a>

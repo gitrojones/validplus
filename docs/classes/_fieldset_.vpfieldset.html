@@ -97,6 +97,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_fieldset_.vpfieldset.html#_emitfields" class="tsd-kind-icon">$emit<wbr>Fields</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_fieldset_.vpfieldset.html#_fields" class="tsd-kind-icon">$fields</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_fieldset_.vpfieldset.html#_options" class="tsd-kind-icon">$options</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_fieldset_.vpfieldset.html#_strategy" class="tsd-kind-icon">$strategy</a></li>
@@ -134,7 +135,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:22</li>
+									<li>Defined in Fieldset.ts:24</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -159,6 +160,16 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_emitfields" class="tsd-anchor"></a>
+					<h3>$emit<wbr>Fields</h3>
+					<div class="tsd-signature tsd-kind-icon">$emit<wbr>Fields<span class="tsd-signature-symbol">:</span> <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in Fieldset.ts:18</li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_fields" class="tsd-anchor"></a>
 					<h3>$fields</h3>
@@ -202,7 +213,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:18</li>
+									<li>Defined in Fieldset.ts:20</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -222,7 +233,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:115</li>
+									<li>Defined in Fieldset.ts:161</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -245,7 +256,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:127</li>
+									<li>Defined in Fieldset.ts:171</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -277,7 +288,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:146</li>
+									<li>Defined in Fieldset.ts:188</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -288,15 +299,21 @@
 					<a name="isvalid" class="tsd-anchor"></a>
 					<h3>is<wbr>Valid</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Valid<span class="tsd-signature-symbol">(</span>validateDirty<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:51</li>
+									<li>Defined in Fieldset.ts:54</li>
 								</ul>
 							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> validateDirty: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></h5>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">false</span>
 								<span class="tsd-signature-symbol"> | </span>
 								<span class="tsd-signature-type">true</span>
@@ -316,7 +333,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:87</li>
+									<li>Defined in Fieldset.ts:131</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -339,7 +356,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Fieldset.ts:98</li>
+									<li>Defined in Fieldset.ts:142</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -374,6 +391,9 @@
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="_fieldset_.vpfieldset.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_fieldset_.vpfieldset.html#_emitfields" class="tsd-kind-icon">$emit<wbr>Fields</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_fieldset_.vpfieldset.html#_fields" class="tsd-kind-icon">$fields</a>

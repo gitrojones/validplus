@@ -30,15 +30,28 @@ export interface VPFieldsetOptions extends VPOptions {
 }
 export interface VPFieldOptions extends VPOptions {
     ValidateOn: {
+        [index: string]: boolean;
         blur: boolean;
         change: boolean;
         mouseleave: boolean;
     };
-    DirtyOnBlur: boolean;
+    DirtyOn: {
+        [index: string]: boolean;
+        blur: boolean;
+        change: boolean;
+        mouseleave: boolean;
+    };
+    FormatOn: {
+        [index: string]: boolean;
+        blur: boolean;
+        change: boolean;
+        mouseleave: boolean;
+    };
     ForceRules: boolean;
     InputFormatter: InputFormatters;
     InputRules: HTMLValidationRules;
     CustomRules: CustomValidationRule[];
+    ValidateAsyncResolved: boolean;
     ShowFieldRuleErrors: boolean;
     ShowCustomRuleErrors: boolean;
     ValidateLazyFieldRules: boolean;

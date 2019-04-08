@@ -1,6 +1,7 @@
 import { mergeDeep } from '@/util/mergeDeep'
 import { debug } from '@/util/debug'
 import { isSet } from '@/util/isSet'
+import { toBoolean } from '@/util/casts/toBoolean'
 
 import { VPOptions } from '@/interfaces/VPOptions'
 import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy'
@@ -11,6 +12,8 @@ import { DOMMessaging } from '@/lib/DOMMessaging'
 import { EventEmitter } from '@/mixins/EventEmitter'
 
 export const Validatable = EventEmitter(class extends DOMMessaging {
+  dispatchEvent: any // Defined by EventEmitter
+  createEvent: any // Defined by EventEmitter
   $options: VPOptions
   $element: HTMLElement
   $strategies: ValidationStrategies
@@ -43,8 +46,12 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
           Message: ''
         }
       },
-      Watch: false
+      Watch: true
     }, options) as VPOptions
+    if (element && element instanceof HTMLElement) {
+      this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
+    }
+
     this.setLifecycle(this.$options.Lifecycle)
 
     this.$strategies = {
@@ -114,6 +121,11 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
           debug('[VP] Element Scrolling failed.')
         }
       }
+    }
+
+    if (this.$options.Watch === true) {
+      debug('[Validatable] Emit watch')
+      this.dispatchEvent(this.createEvent('onValidate'), this)
     }
   }
 

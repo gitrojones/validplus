@@ -7,7 +7,7 @@ import { InputFormatters } from '@/interfaces/inputFormatters'
 
 export interface VPOptions {
   // ControlFlow
-  Watch: boolean,
+  Watch: boolean, // Emit upwards if anything changes
   Lifecycle: ValidationLifecycle,
 
   // ClassNames
@@ -42,17 +42,32 @@ export interface VPFieldsetOptions extends VPOptions {
 export interface VPFieldOptions extends VPOptions {
   // ControlFlow
   ValidateOn: {
+    [index: string]: boolean,
     blur: boolean, // When we lose focus
     change: boolean, // When the element is updated
     mouseleave: boolean // When the element loses the mouse (For visual controls)
   },
-  DirtyOnBlur: boolean,
+
+  DirtyOn: {
+    [index: string]: boolean,
+    blur: boolean, // When we lose focus
+    change: boolean, // When the element is updated
+    mouseleave: boolean // When the element loses the mouse (For visual controls)
+  },
+
+  FormatOn: {
+    [index: string]: boolean,
+    blur: boolean, // When we lose focus
+    change: boolean, // When the element is updated
+    mouseleave: boolean // When the element loses the mouse (For visual controls)
+  },
 
   // ValidationOptions
   ForceRules: boolean,
   InputFormatter: InputFormatters,
   InputRules: HTMLValidationRules,
   CustomRules: CustomValidationRule[],
+  ValidateAsyncResolved: boolean,
 
   // Messaging
   ShowFieldRuleErrors: boolean,

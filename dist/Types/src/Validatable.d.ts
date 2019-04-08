@@ -11,6 +11,8 @@ export declare const Validatable: {
     };
 } & {
     new (options: VPOptions, element: HTMLElement): {
+        dispatchEvent: any;
+        createEvent: any;
         $options: VPOptions;
         $element: HTMLElement;
         $strategies: ValidationStrategies;
