@@ -1,4 +1,4 @@
-import { isObject } from '@/util/isObject'
+import { isPlainObject } from '@/util/isObject'
 
 /**
  * Deep merge two objects, left most takes priority
@@ -10,9 +10,9 @@ export const mergeDeep = function (target: any, ...sources: any[]): object {
   if (!Array.isArray(sources) || sources.length < 1) return target
   const source = sources.shift()
 
-  if (isObject(target) && isObject(source)) {
+  if (isPlainObject(target) && isPlainObject(source)) {
     for (const key in source) {
-      if (isObject(source[key])) {
+      if (isPlainObject(source[key])) {
         if (!target[key]) Object.assign(target, { [key]: {} })
         mergeDeep(target[key], source[key])
       } else {

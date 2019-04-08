@@ -1,4 +1,1 @@
-/**
- * Simple object check.
- */
-export declare function isObject(item: any): boolean;
+export declare function isPlainObject(obj: any): boolean;
