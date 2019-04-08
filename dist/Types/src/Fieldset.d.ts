@@ -16,5 +16,5 @@ export declare class VPFieldset extends Validatable {
     watchField(field: VPField): void;
     addField(field: VPField): void;
     createField(el: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: ValidationLifecycle): VPField;
-    findFields(): void;
+    findFields(fieldOptions?: (VPFieldOptions | VPFieldOptions[])): void;
 }

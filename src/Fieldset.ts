@@ -183,16 +183,16 @@ export class VPFieldset extends Validatable {
     return field
   }
 
-  findFields () {
+  findFields (fieldOptions: (VPFieldOptions | VPFieldOptions[]) = {} as VPFieldOptions) {
     let fields = Array.from(
       this.$element.getElementsByClassName(this.$options.FieldClass)
     )
 
     // TODO: Attribute parsing to fill in the gaps
-    this.$fields = fields.map((field: Element) => {
+    this.$fields = fields.map((field: Element, index: number) => {
+      const options: VPFieldOptions = Array.isArray(fieldOptions) ? fieldOptions[index] : fieldOptions
       const _field = new VPField(
-        field as HTMLElement,
-        {} as VPFieldOptions,
+        field as HTMLElement, options,
         [] as CustomValidationRule[],
         { Valid: {}, Invalid: {} } as ValidationLifecycle)
       this.watchField(_field)
