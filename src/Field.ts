@@ -89,16 +89,11 @@ export class VPField extends Validatable {
 
       let formatterEvent = this.$formatterEvent.pre === true || this.$formatterEvent.post === true
       // We alias this for our purposes
-      if (format && !formatterEvent) {
-        this.formatInputPre()
-      }
-
+      if (format && !formatterEvent) this.formatInputPre()
       if (this.$canValidate === true && this.$dirty === true && validate) {
         this.isValid(true)
-        if (format && !formatterEvent) {
-          this.formatInputPost()
-        }
       }
+      if (format && !formatterEvent) this.formatInputPost()
 
       this.$formatterEvent.pre = false
       this.$formatterEvent.post = false
