@@ -28,9 +28,12 @@ export default {
   mixins: [VPVue.Fieldset],
   data() {
     return {
+      pre: 0,
+      post: 0,
       test: 'foo bar',
       complexRules: [
         (atttributes, element, input) => {
+          return true
           return new Promise((resolve, reject) => {
             window.setTimeout(() => {
               resolve('Invalid promise error')
@@ -39,10 +42,15 @@ export default {
         }
       ],
       fieldOptions: {
-        Watch: true,
-        DirtyOnBlur: false,
-        ValidateOn: {
-          change: true
+        InputFormatter: {
+          pre: (input, dispatchEvent) => {
+            console.log('called pre', this.pre++)
+            dispatchEvent('input')
+          },
+          post: (input, dispatchEvent) => {
+            console.log('called post', this.post++)
+            dispatchEvent('input')
+          }
         }
       }
     };

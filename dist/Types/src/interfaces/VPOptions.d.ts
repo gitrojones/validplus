@@ -32,18 +32,21 @@ export interface VPFieldOptions extends VPOptions {
     ValidateOn: {
         [index: string]: boolean;
         blur: boolean;
+        input: boolean;
         change: boolean;
         mouseleave: boolean;
     };
     DirtyOn: {
         [index: string]: boolean;
         blur: boolean;
+        input: boolean;
         change: boolean;
         mouseleave: boolean;
     };
     FormatOn: {
         [index: string]: boolean;
         blur: boolean;
+        input: boolean;
         change: boolean;
         mouseleave: boolean;
     };

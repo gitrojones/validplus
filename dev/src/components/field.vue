@@ -21,9 +21,6 @@ export default {
     VPOptions: {
       default() {
         return {
-          ValidateOn: {
-            blur: true
-          }
         }
       }
     }

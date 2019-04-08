@@ -47,18 +47,21 @@ export class VPField extends Validatable {
       ValidateLazyFieldRules: true,
       ValidateAsyncResolved: true,
       DirtyOn: {
-        blur: toBoolean(element.getAttribute('vp-dirtyBlur'), true),
-        change: toBoolean(element.getAttribute('vp-dirtyChange'), true),
+        blur: toBoolean(element.getAttribute('vp-dirtyBlur'), false),
+        input: toBoolean(element.getAttribute('vp-dirtyInput'), true),
+        change: toBoolean(element.getAttribute('vp-dirtyChange'), false),
         mouseleave: toBoolean(element.getAttribute('vp-dirtyMouseLeave'), false)
       },
       FormatOn: {
-        blur: toBoolean(element.getAttribute('vp-formatBlur'), true),
-        change: toBoolean(element.getAttribute('vp-formatChange'), true),
+        blur: toBoolean(element.getAttribute('vp-formatBlur'), false),
+        input: toBoolean(element.getAttribute('vp-formatInput'), true),
+        change: toBoolean(element.getAttribute('vp-formatChange'), false),
         mouseleave: toBoolean(element.getAttribute('vp-formatMouseleave'), false)
       },
       ValidateOn: {
-        blur: toBoolean(element.getAttribute('vp-blur'), true),
-        change: toBoolean(element.getAttribute('vp-change'), true),
+        blur: toBoolean(element.getAttribute('vp-blur'), false),
+        input: toBoolean(element.getAttribute('vp-input'), true),
+        change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
     }, options)
@@ -71,7 +74,6 @@ export class VPField extends Validatable {
   set $input (input: ValidInput) {
     const handleEventDefault = (e: Event) => {
       let eventType: string = e.type
-      if (eventType === 'input') eventType = 'change'
 
       const format: boolean = this.$options.FormatOn[eventType] || false
       const validate: boolean = this.$options.ValidateOn[eventType] || false
@@ -81,24 +83,29 @@ export class VPField extends Validatable {
         this.$dirty = true
       }
 
+      let formatterEvent = this.$formatterEvent.pre === true || this.$formatterEvent.post === true
       // We alias this for our purposes
-      if (format && this.$formatterEvent.pre === false && this.$formatterEvent.post === false) {
+      if (format && !formatterEvent) {
         this.formatInputPre()
-      } else this.$formatterEvent.pre = false
+      }
 
       if (this.$canValidate === true && this.$dirty === true && validate) {
         this.isValid(true)
-        if (format && this.$formatterEvent.post === false) this.formatInputPost()
-        else this.$formatterEvent.post = false
+        if (format && !formatterEvent) {
+          this.formatInputPost()
+        }
       }
+
+      this.$formatterEvent.pre = false
+      this.$formatterEvent.post = false
     }
 
     if (input && isValidInput(input)) {
       this.$Input = input
 
-      input.addEventListener('blur', handleEventDefault)
       input.addEventListener('input', handleEventDefault)
       input.addEventListener('change', handleEventDefault)
+      input.addEventListener('blur', handleEventDefault)
       input.addEventListener('mouseleave', handleEventDefault)
     } else {
       console.warn('[VPField] Input is missing')
@@ -149,7 +156,28 @@ export class VPField extends Validatable {
     if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
 
     // TODO: Add logic for specifying prefered input type
-    this.$input = (input.item(0) || select.item(0) || textarea.item(0)) as ValidInput
+    let _input: ValidInput = (input.item(0) || select.item(0) || textarea.item(0)) as ValidInput
+    if (_input instanceof HTMLInputElement) {
+      // Flipflop for change on radio/checkbox, since input unreliable
+      if (['radio', 'checkbox'].includes(_input.getAttribute('type') || '')) {
+        if (this.$options.ValidateOn.input === true && this.$options.ValidateOn.change === false) {
+          this.$options.ValidateOn.change = true
+          this.$options.ValidateOn.input = false
+        }
+
+        if (this.$options.DirtyOn.input === true && this.$options.DirtyOn.change === false) {
+          this.$options.DirtyOn.change = true
+          this.$options.DirtyOn.input = false
+        }
+
+        if (this.$options.FormatOn.input === true && this.$options.FormatOn.change === false) {
+          this.$options.FormatOn.change = true
+          this.$options.FormatOn.input = false
+        }
+      }
+    }
+
+    this.$input = _input
   }
 
   isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {

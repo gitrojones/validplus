@@ -1238,12 +1238,12 @@ describe('ValidPlus', function() {
         {
           ValidateOn: {
             blur: true,
-            change: false,
+            input: false,
             mouseleave: false
           },
           DirtyOn: {
             blur: true,
-            change: false,
+            input: false,
             mouseleave: false
           },
           Watch: false
@@ -1310,13 +1310,14 @@ describe('ValidPlus', function() {
       blurEvent.initEvent('blur', false, false);
 
       testField.setAttribute('vp-blur', true);
+      testField.setAttribute('vp-dirtyBlur', true);
       testField.setAttribute('vp-watch', false);
 
       testInput.setAttribute('required', true);
 
       let field = new ValidPlus.Field(testField, {}, [], {
-        isInvalid: {
-          message: 'Foo',
+        Invalid: {
+          Message: 'Foo',
         },
       });
 

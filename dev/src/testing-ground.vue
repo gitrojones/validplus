@@ -43,10 +43,9 @@ export default {
         }
       },
       validationOptions: {
-        Watch: false
+        // Options
       },
       validationOptions2: {
-        Watch: false,
         CustomRules: [
           () => new Promise((resolve, reject) => {
             window.setTimeout(() => {
