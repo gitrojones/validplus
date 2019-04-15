@@ -4,7 +4,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 module.exports = {
   entry: {
     ValidPlus: path.resolve(__dirname, './validplus'),
-    VPVue: path.resolve(__dirname, './src/vue'),
+    VPVue: path.resolve(__dirname, './src/vue/index'),
     'SSR/VPVue': path.resolve(__dirname, './src/vue/index.ssr'),
   },
 
@@ -24,7 +24,7 @@ module.exports = {
       '@': path.resolve(__dirname, './src'),
       '@lib': path.resolve(__dirname, './lib'),
     },
-    extensions: ['.js', '.ts'],
+    extensions: ['.js', '.ts', '.vue'],
   },
 
   optimization: {
@@ -41,6 +41,10 @@ module.exports = {
         test: /\.js$/,
         use: ['source-map-loader'],
         enforce: 'pre',
+      },
+      {
+        test: /\.vue$/,
+        use: 'vue-loader'
       },
       {
         test: /\.(js|ts)x?$/,
@@ -61,6 +65,7 @@ module.exports = {
               ],
               plugins: [
                 '@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-decorators',
                 '@babel/plugin-proposal-class-properties',
                 '@babel/plugin-proposal-object-rest-spread'
               ],

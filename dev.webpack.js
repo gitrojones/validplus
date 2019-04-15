@@ -18,6 +18,7 @@ const devBundle = merge(require('./build.webpack.js'), {
   resolve: {
     extensions: ['.js', '.ts', '.json', '.vue'],
     alias: {
+      '@': path.resolve(__dirname, 'src'),
       '#': path.resolve(__dirname, 'dev/src'),
       VPVue: path.resolve(__dirname, 'src/vue/index'),
       'SSR/VPVue': path.resolve(__dirname, 'src/vue/index.ssr'),
@@ -31,6 +32,33 @@ const devBundle = merge(require('./build.webpack.js'), {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+      },
+      {
+        test: /\.(js|ts)x?$/,
+        exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: '>0.25%, not dead',
+                    useBuiltIns: 'usage',
+                  },
+                  '@babel/preset-typescript',
+                ],
+              ],
+              plugins: [
+                '@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-decorators',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-object-rest-spread'
+              ],
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -61,7 +89,7 @@ const devBundle = merge(require('./build.webpack.js'), {
           name: '[name].[ext]',
           outputPath: 'fonts/',
         },
-      },
+      }
     ],
   },
   plugins: [

@@ -20,9 +20,9 @@ export declare class VPValidator extends Validatable {
      * @param element - Validator Anchor Element (Typically a form)
      */
     constructor(options: VPValidatorOptions, element: HTMLElement);
-    isValid(): boolean | Promise<{}>;
+    isValid(): (boolean | Promise<boolean>);
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
     removeFieldset(fieldset: VPFieldset): void;
-    createFieldset(fs: HTMLElement, strategy: ValidationStrategy, options: VPFieldsetOptions, fields: VPField[], onValidate: ValidationLifecycle): VPFieldset;
+    createFieldset(fs: HTMLElement, strategy: (ValidationStrategy | string), options: VPFieldsetOptions, fields: VPField[], onValidate: ValidationLifecycle): VPFieldset;
 }
