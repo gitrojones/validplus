@@ -1,19 +1,19 @@
 import { Validatable } from './mixins/Validatable'
-import { VPValidator } from '@/vue/components/Validator.vue'
 import { Fieldset } from './mixins/Fieldset'
-import { VPFieldset } from './components/Fieldset.vue'
 import { Field } from './mixins/Field'
-import { VPField } from './components/Field.vue'
+// import { VPValidator } from '@/vue/components/Validator.vue'
+// import { VPFieldset } from './components/Fieldset.vue'
+// import { VPField } from './components/Field.vue'
 
 const VP = {
   mixins: {
     Validatable,
     Fieldset,
     Field
-  },
-  VPValidator,
-  VPFieldset,
-  VPField
+  }
+  // VPValidator,
+  // VPFieldset,
+  // VPField
 }
 
 const VP_SSR = {
@@ -21,10 +21,10 @@ const VP_SSR = {
     Validatable: {},
     Fieldset: {},
     Field: {}
-  },
-  VPValidator,
-  VPFieldset,
-  VPField
+  }
+  // VPValidator,
+  // VPFieldset,
+  // VPField
 }
 
 export const VPVue = (env: string) => {

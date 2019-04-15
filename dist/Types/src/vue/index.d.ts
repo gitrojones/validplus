@@ -7,8 +7,5 @@ export declare const VPVue: {
         Fieldset: typeof Fieldset;
         Field: typeof Field;
     };
-    VPValidator: any;
-    VPFieldset: any;
-    VPField: any;
 };
 export default VPVue;

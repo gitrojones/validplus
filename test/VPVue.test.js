@@ -10,20 +10,20 @@ describe('VPVue', function() {
     done();
   });
 
-  it('Should export "Field"', function() {
-    expect(VPVue).to.have.property('Field');
+  it('Should export "Field" mixin', function() {
+    expect(VPVue.mixins).to.have.property('Field');
   });
-  it('Should export "Fieldset"', function() {
-    expect(VPVue).to.have.property('Fieldset');
+  it('Should export "Fieldset" mixin', function() {
+    expect(VPVue.mixins).to.have.property('Fieldset');
   });
-  it('Should export "Validatable"', function() {
-    expect(VPVue).to.have.property('Validatable');
+  it('Should export "Validatable" mixin', function() {
+    expect(VPVue.mixins).to.have.property('Validatable');
   });
 
   describe('Field', function() {
-    it('Should import Validatable', function() {
-      expect(VPVue.Field).to.have.property('mixins');
-      expect(VPVue.Field.mixins[0]).to.equal(VPVue.Validatable);
+    it('Should import Validatable mixin', function() {
+      expect(VPVue.mixins.Field).to.have.property('mixins');
+      expect(VPVue.mixins.Field.mixins[0]).to.equal(VPVue.Validatable);
     });
   });
 

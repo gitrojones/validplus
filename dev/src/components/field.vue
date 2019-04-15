@@ -25,11 +25,11 @@ export default {
       }
     }
   },
-  mixins: [VPVue.Field],
+  mixins: [VPVue.mixins.Field],
   data() {
     return {};
   },
-  beforeCreate() {
+  created() {
     this.VPOptions$ = {
       Lifecycle: {
         Invalid: {

@@ -1,34 +1,52 @@
 const path = require('path');
 const webpack = require('webpack');
-const merge = require('webpack-merge');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('vue-html-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const devBundle = merge(require('./build.webpack.js'), {
+const devBundle = {
   entry: {
     testapp: './dev/entry.js',
+    ValidPlus: path.resolve(__dirname, './validplus'),
+    VPVue: path.resolve(__dirname, './src/vue/index'),
+    'SSR/VPVue': path.resolve(__dirname, './src/vue/index.ssr'),
   },
+
   output: {
-    path: path.resolve(__dirname, 'dev/dist'),
+    path: path.resolve(__dirname, './dist'),
     filename: '[name].js',
+    library: '[name]',
     libraryTarget: 'var',
   },
+
   resolve: {
     extensions: ['.js', '.ts', '.json', '.vue'],
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './lib'),
       '#': path.resolve(__dirname, 'dev/src'),
-      VPVue: path.resolve(__dirname, 'src/vue/index'),
+      VPVue: path.resolve(__dirname, 'src/vue'),
       'SSR/VPVue': path.resolve(__dirname, 'src/vue/index.ssr'),
-      validplus: path.resolve(__dirname, './validplus'),
+      validplus: path.resolve(__dirname, 'dist/validplus')
     },
   },
+
+  externals: {
+    validplus: 'validplus',
+  },
+
   devtool: 'eval-source-map',
+
   mode: isProd ? 'production' : 'development',
+
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
+      },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -46,16 +64,19 @@ const devBundle = merge(require('./build.webpack.js'), {
                   {
                     targets: '>0.25%, not dead',
                     useBuiltIns: 'usage',
+                    loose: true
                   },
                   '@babel/preset-typescript',
                 ],
               ],
               plugins: [
                 '@babel/plugin-transform-typescript',
-                '@babel/plugin-proposal-decorators',
-                '@babel/plugin-proposal-class-properties',
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-proposal-class-properties', { loose: true }],
                 '@babel/plugin-proposal-object-rest-spread'
               ],
+              comments: true,
+              sourceType: 'unambiguous'
             },
           },
         ],
@@ -100,7 +121,7 @@ const devBundle = merge(require('./build.webpack.js'), {
       chunks: ['testapp'],
     }),
   ],
-});
+}
 
 devBundle.externals = {};
 module.exports = devBundle;

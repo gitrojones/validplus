@@ -1,5 +1,4 @@
-import { Mixin, Mixins } from 'vue-mixin-decorator'
-import { Prop, Watch, Emit } from 'vue-property-decorator'
+import { Component, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 
 import { VPFieldOptions } from '@/interfaces/VPOptions'
 import { VPField } from '@/Field'
@@ -7,7 +6,7 @@ import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRu
 import { Validatable } from './Validatable'
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 
-@Mixin
+@Component
 export class Field extends Mixins<Validatable>(Validatable) {
   @Prop(Object) readonly VPOptions!: VPFieldOptions
   @Prop(Array) readonly VPRules!: CustomValidationRule[]
@@ -17,7 +16,7 @@ export class Field extends Mixins<Validatable>(Validatable) {
   @Watch('VPField.$valid')
   onValidChange (isValid: boolean) {
     if (isValid) {
-      this.$emit('isvalid', this)
+      this.$emit('isValid', this)
     } else {
       this.$emit('isInvalid', this)
     }
@@ -38,6 +37,7 @@ export class Field extends Mixins<Validatable>(Validatable) {
   }
 
   VPField: (VPField | null) = null
+  VPFields: VPField[] = this.VPFields || []
   VPOptions$: VPFieldOptions = this.VPOptions || {}
   VPRules$: CustomValidationRule[] = this.VPRules || []
   VPValid$: ValidationLifecycle = this.VPValid || {}

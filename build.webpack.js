@@ -1,5 +1,6 @@
 const path = require('path')
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
   entry: {
@@ -17,6 +18,7 @@ module.exports = {
 
   externals: {
     validplus: 'validplus',
+    vue: 'vue'
   },
 
   resolve: {
@@ -28,7 +30,7 @@ module.exports = {
   },
 
   optimization: {
-    minimizer: [new UglifyJSPlugin({})],
+    minimizer: [new UglifyJSPlugin({ })]
   },
 
   mode: 'production',
@@ -59,20 +61,26 @@ module.exports = {
                   {
                     targets: '>0.25%, not dead',
                     useBuiltIns: 'usage',
+                    loose: true
                   },
                   '@babel/preset-typescript',
                 ],
               ],
               plugins: [
                 '@babel/plugin-transform-typescript',
-                '@babel/plugin-proposal-decorators',
-                '@babel/plugin-proposal-class-properties',
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-proposal-class-properties', { loose: true }],
                 '@babel/plugin-proposal-object-rest-spread'
               ],
+              comments: process.env.NODE_ENV !== 'production',
+              sourceType: 'unambiguous'
             },
           },
         ],
       },
     ],
   },
+  plugins: [
+    new VueLoaderPlugin(),
+  ]
 };

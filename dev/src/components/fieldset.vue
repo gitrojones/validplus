@@ -25,7 +25,7 @@ export default {
       }
     }
   },
-  mixins: [VPVue.Fieldset],
+  mixins: [VPVue.mixins.Fieldset],
   data() {
     return {
       pre: 0,

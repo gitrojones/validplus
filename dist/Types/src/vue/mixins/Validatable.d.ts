@@ -9,11 +9,10 @@ import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
 export declare class Validatable extends Vue {
     readonly VPOptions: (VPValidatorOptions | VPFieldsetOptions | VPFieldOptions);
     readonly validator: VPValidator;
-    readonly VPValidator: VPValidator;
-    VPNewValidator: (this: any) => any;
+    readonly Validator: VPValidator;
+    Validator: (VPValidator | null);
     VPProvideValidator: boolean;
     VPFieldsets: VPFieldset[];
-    VPFields: VPField[];
     VPField: (VPField | null);
     VPFieldset: (VPFieldset | null);
     VP: any;
