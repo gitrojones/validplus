@@ -1,65 +1,313 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html class="default no-js">
 <head>
-    <meta charset="utf-8">
-    <title>JSDoc: Home</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>validplus</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
 </head>
-
 <body>
-
-<div id="main">
-
-    <h1 class="page-title">Home</h1>
-
-    
-
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">validplus</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> validplus</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<h1 id="validplus">ValidPlus</h1>
+				<p>Simple validation library designed to be platform agnostic. Features three levels of granularity allowing for Form-wide validation, Fieldset-wide validation and Field validation. Each level allows for onValid/onInvalid lifecycle hooks. Fields include basic support for DOM properties allowing you to couple validation as it makes sense.</p>
+				<p>Fields are designed to validate on the same HTML validation properties which allows for fallback support in the case that javascript isn&#39;t available or is blocked.</p>
+				<h2 id="prs-and-support">PRs and Support</h2>
+				<p>Pull requests are welcome. New functionality should be covered by tests if possible. Bug fixes are welcome but it is recommended you include a reproducible example test for the bug to speed up PRs. IE, if validation fails in a specific case, include an example test which is expected to fail on the current master and pass with the PR.</p>
+				<h2 id="test-coverage">Test Coverage</h2>
+				<p>Test coverage is focused on STRICT mode. LAX coverage is inferred from STRICT but not complete. Feel free to add new tests with your pull requests. <strong>All tests must pass in order for a PR to be merged</strong></p>
+				<h2 id="usage">Usage</h2>
+				<p>This library functions in STRICT and LAX mode. Each section outlines the differences you can expect. For the most part, you can drop this library in and starting using it right away.</p>
+				<p><code>import ValidPlus from &#39;validplus&#39;</code></p>
+				<h3 id="validator">Validator</h3>
+				<p>The main validation object. Marshals validation to descendants</p>
+				<h4 id="strict">STRICT</h4>
+				<ul>
+					<li>Children are automatically detected based on the options passed to the constructor. The preferred way to interface with STRICT mode is through the custom DOM attributes for each ValidPlus element.</li>
+					<li>Only Decendants of the provided form can be validated against. Default behavior is to ignore non-descendants and spit out an error.<h4 id="lax">LAX</h4>
+					</li>
+					<li>It is your responsibility to add each fieldset to the validator. This allows for greater flexibility at the cost of boilerplate.</li>
+					<li>Any added fieldset is considered in the validation loop. It is your responsibility to ensure the correct state of the fieldset collection when you validate.<h5 id="api">API</h5>
+						<h6 id="constructor">Constructor</h6>
+						<ul>
+							<li>Params:
+								1) Options :: Object
+								Allows for customization of validation logic
+								DEFAULT: {
+								onValidation: {
+								isValid: null,
+								isInvalid: null
+								},
+								fieldsetClass: &#39;VPfieldset&#39;,
+								fieldClass: &#39;VPfield&#39;,
+								validInputs: [
+								&#39;input&#39;,
+								&#39;messagebox&#39;,
+								&#39;select&#39;
+								]
+								}
+								2) Form(?) :: HTMLFormElement || String (DOM ID)
+								Instantiates the Validator, placing the validator into STRICT or LAX mode based on the presence of a Form reference<h6 id="methods">Methods</h6>
+								####### isValid()
+								Runs validation on decendants, with results bubbling upwards. If a valdiation message or cb is provided, they are called in tandem.
+							####### addFieldset()</li>
+						</ul>
+					</li>
+				</ul>
+				<p>Validator can be instantiated with and without a root form element. If a Form element is provided the validator is considered to be in &#39;strict&#39; mode, limiting validation to direct decendants of the Validator form element. It is recommended you utilize strict mode when it makes sense to do so, as the amount of boilerplate is reduced (By default, ValidPlus will attempt to populate your field structure).</p>
+				<p>The main validator depends on being passed a form to track on instantiation. This is the root of the validation strategy where all validation flows through. Strict matching ensures fields are only considered if they&#39;re decendants of the root form. This is the recommonded way to consume the validator. Non-strict mode allows for global validation ()</p>
+				<p>Fieldsets are defined as groups of fields. Typically following a structure like</p>
+				<pre><code><span class="hljs-selector-class">.fieldset</span> &gt; <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> &lt;...&gt;</code></pre><p>where field is the logical container for your input/select field.</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Internals</span>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_field_.html">"<wbr>Field"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_fieldset_.html">"<wbr>Fieldset"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_validatable_.html">"<wbr>Validatable"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_validator_.html">"<wbr>Validator"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_enums_positions_.html">"enums/<wbr>Positions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_vpoptions_.html">"interfaces/VPOptions"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_events_basiceventtarget_.html">"interfaces/events/<wbr>Basic<wbr>Event<wbr>Target"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_events_eventcallback_.html">"interfaces/events/<wbr>Event<wbr>Callback"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_events_eventlistener_.html">"interfaces/events/<wbr>Event<wbr>Listener"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_validation_customvalidationrule_.html">"interfaces/validation/<wbr>Custom<wbr>Validation<wbr>Rule"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_validation_htmlvalidationrules_.html">"interfaces/validation/HTMLValidation<wbr>Rules"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_validation_validationattributes_.html">"interfaces/validation/<wbr>Validation<wbr>Attributes"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_validation_validationlifecycle_.html">"interfaces/validation/<wbr>Validation<wbr>Lifecycle"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_interfaces_validation_validationstrategy_.html">"interfaces/validation/<wbr>Validation<wbr>Strategy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_lib_dommessaging_.html">"lib/DOMMessaging"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_mixins_eventemitter_.html">"mixins/<wbr>Event<wbr>Emitter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_constructor_.html">"types/<wbr>Constructor"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_inputformatter_.html">"types/<wbr>Input<wbr>Formatter"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_validinput_.html">"types/<wbr>Valid<wbr>Input"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_events_eventbuilderhelper_.html">"types/events/<wbr>Event<wbr>Builder<wbr>Helper"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_applymixins_.html">"util/apply<wbr>Mixins"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_casts_toboolean_.html">"util/casts/to<wbr>Boolean"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_casts_tonumber_.html">"util/casts/to<wbr>Number"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_casts_toregexp_.html">"util/casts/to<wbr>Regexp"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_createevent_.html">"util/create<wbr>Event"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_debug_.html">"util/debug"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_filternullobject_.html">"util/filter<wbr>Null<wbr>Object"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_generateelement_.html">"util/generate<wbr>Element"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_hasasync_.html">"util/has<wbr>Async"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_isasync_.html">"util/is<wbr>Async"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_iselemvisible_.html">"util/is<wbr>Elem<wbr>Visible"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_isobject_.html">"util/is<wbr>Object"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_isset_.html">"util/is<wbr>Set"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_isvalidinput_.html">"util/is<wbr>Valid<wbr>Input"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_util_mergedeep_.html">"util/merge<wbr>Deep"</a>
+					</li>
+					<li class="label tsd-is-external">
+						<span>Externals</span>
+					</li>
+					<li class=" tsd-kind-external-module tsd-is-external">
+						<a href="modules/_interfaces_inputformatters_.html">"interfaces/input<wbr>Formatters"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
 </div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-testing-ground.html">testing-ground</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Nov 09 2018 12:34:47 GMT-0800 (PST)
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
 </footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
 </body>
 </html>

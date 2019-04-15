@@ -1,11 +1,11 @@
-import Validatable from './Validatable';
-import Fieldset from './Fieldset';
-import Field from './Field';
+import { Validatable } from './Validatable'
+import { Fieldset } from './Fieldset'
+import { Field } from './Field'
 
-const VPVue = {
+export const VPVue = {
   Validatable,
   Fieldset,
-  Field,
-};
+  Field
+}
 
-export default VPVue;
+export default VPVue

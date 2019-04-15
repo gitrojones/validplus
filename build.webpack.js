@@ -24,22 +24,26 @@ module.exports = {
       '@': path.resolve(__dirname, './src'),
       '@lib': path.resolve(__dirname, './lib'),
     },
+    extensions: ['.js', '.ts'],
   },
 
   optimization: {
     minimizer: [new UglifyJSPlugin({})],
   },
 
-  mode: process.env.NODE_ENV || 'production',
+  mode: 'production',
 
-  devtool: process.env.NODE_ENV === 'development'
-    ? 'inline-cheap-module-source-map'
-    : 'none',
+  devtool: 'source-map',
 
   module: {
     rules: [
       {
         test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
+      },
+      {
+        test: /\.(js|ts)x?$/,
         exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
         use: [
           {
@@ -52,7 +56,13 @@ module.exports = {
                     targets: '>0.25%, not dead',
                     useBuiltIns: 'usage',
                   },
+                  '@babel/preset-typescript',
                 ],
+              ],
+              plugins: [
+                '@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-class-properties',
+                '@babel/plugin-proposal-object-rest-spread'
               ],
             },
           },

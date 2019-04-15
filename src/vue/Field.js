@@ -1,12 +1,12 @@
-import Validatable from './Validatable'
+import { Validatable } from './Validatable'
 
-export default {
+export const Field = {
   props: {
     VPOptions: {
       type: Object
     },
     VPRules: {
-      type: Object
+      type: Array
     },
     VPValid: {
       type: Object
@@ -14,7 +14,7 @@ export default {
   },
   mixins: [ Validatable ],
   watch: {
-    'VPField._isValid': function (isValid) {
+    'VPField.$valid': function (isValid) {
       if (isValid) {
         this.$emit('isValid', this)
       } else {
@@ -36,13 +36,25 @@ export default {
   },
   data () {
     return {
-      VPField: null,
+      VPField: {},
       VPOptions$: this.VPOptions || {},
-      VPRules$: this.VPRules || {},
+      VPRules$: this.VPRules || [],
       VPValid$: this.VPValid || {}
     }
   },
   methods: {
+    VPChangeAnchor (el) {
+      this.VPField.generateMessageNode(el)
+    },
+
+    VPAddRule (rule) {
+      if (typeof rule === 'function') {
+        this.VPField.$options.CustomRules.push(rule)
+      } else {
+        console.error('[VPField] Rule must be a function that resolves to a promise')
+      }
+    },
+
     VPGatherFields () {
       Object.keys(this.$slots).forEach((slot) => {
         const data = this.$slots[slot]
@@ -66,3 +78,5 @@ export default {
     }
   }
 }
+
+export default Field

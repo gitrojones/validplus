@@ -5,7 +5,15 @@
     <vp-fieldset>
       <span>Hello World</span>
 
-      <vp-field id="external" :VPOptions="{ watch: false }">
+      <vp-field id="external" :VPOptions="validationOptions" :VPValid="valid" value="foo">
+        external
+      </vp-field>
+    </vp-fieldset>
+
+    <vp-fieldset style="marginTop: 2em;">
+      <span>Should not Validate</span>
+
+      <vp-field id="external" :VPOptions="validationOptions2" :VPValid="valid" value="foo">
         external
       </vp-field>
     </vp-fieldset>
@@ -23,6 +31,30 @@ import field from '#/components/field'
 export default {
   prop: {
     test: Boolean
+  },
+  data() {
+    return {
+      valid: {
+        Invalid: {
+          Message: 'Invalid!'
+        },
+        Valid: {
+          Message: 'VALID'
+        }
+      },
+      validationOptions: {
+        // Options
+      },
+      validationOptions2: {
+        CustomRules: [
+          () => new Promise((resolve, reject) => {
+            window.setTimeout(() => {
+              return resolve(true)
+            }, 1000)
+          })
+        ]
+      }
+    }
   },
   components: {
     VpFieldset: fieldset,

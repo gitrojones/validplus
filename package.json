@@ -3,21 +3,28 @@
   "version": "1.4.1",
   "description": "HTML Inspired Validator, requires light rigging and has graceful fallback",
   "main": "dist/ValidPlus.js",
+  "types": "dist/Types/ValidPlus.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "dev": "NODE_ENV=development APP=true node --inspect build.js",
-    "build": "NODE_ENV=production node build.js",
+    "build": "npm run build:prod",
+    "build:prod": "NODE_ENV=production node build.js",
     "build:dev": "NODE_ENV=development node build.js",
-    "test": "NODE_ENV=production mocha-webpack -w --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
-    "test:dev": "NODE_ENV=development npm run test",
-    "test-ci": "PROD=true mocha-webpack --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js src/**/*.js dev/src/**/*.js",
+    "build:types": "NODE_ENV=production tsc --emitDeclarationOnly",
+    "docs": "typedoc --out docs ./src",
+    "test": "npm run test:prod",
+    "test:prod": "NODE_ENV=production npm run _test",
+    "test:dev": "NODE_ENV=development npm run _test",
+    "_test": "TEST=true mocha-webpack -w --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
+    "test-ci": "PROD=true mocha-webpack --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
     "cover": "NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test-ci"
   },
   "nyc": {
     "include": [
-      "src/**/*.js"
+      "src/**/*.js",
+      "src/**/*.ts"
     ],
     "instrument": false,
     "sourceMap": false
@@ -40,7 +47,11 @@
   "devDependencies": {
     "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.5",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-typescript": "^7.1.0",
     "@babel/preset-env": "^7.1.5",
+    "@babel/preset-typescript": "^7.1.0",
     "@vue/test-utils": "^1.0.0-beta.25",
     "autoprefixer": "^9.3.1",
     "babel-loader": "^8.0.4",
@@ -61,6 +72,12 @@
     "nyc": "^13.1.0",
     "postcss-loader": "^3.0.0",
     "sinon": "^6.3.5",
+    "source-map-loader": "^0.2.4",
+    "tslint": "^5.11.0",
+    "tslint-config-standard": "^8.0.1",
+    "typedoc": "^0.13.0",
+    "typedoc-webpack-plugin": "^1.1.4",
+    "typescript": "^3.2.1",
     "vue": "^2.5.17",
     "vue-html-webpack-plugin": "^3.2.2",
     "vue-loader": "^15.4.2",
@@ -71,7 +88,9 @@
     "webpack-hot-middleware": "^2.24.3",
     "webpack-merge": "^4.1.4",
     "webpack-node-externals": "^1.7.2",
+    "chai-as-promised": "^7.1.1",
     "lodash": "^4.17.11"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }
