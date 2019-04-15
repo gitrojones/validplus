@@ -48,7 +48,7 @@ export class VPValidator extends Validatable {
     this.$fieldsets = []
   }
 
-  isValid () {
+  isValid (): (boolean | Promise<boolean>) {
     this.clearMessages()
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
@@ -190,7 +190,7 @@ export class VPValidator extends Validatable {
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
   createFieldset (fs: HTMLElement,
-    strategy: ValidationStrategy,
+    strategy: (ValidationStrategy | string),
     options: VPFieldsetOptions,
     fields: VPField[] = [],
     onValidate: ValidationLifecycle = {

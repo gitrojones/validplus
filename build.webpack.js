@@ -4,11 +4,11 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
 
 module.exports = {
-	entry: {
-		ValidPlus: path.resolve(__dirname, './validplus'),
-		VPVue: path.resolve(__dirname, './src/vue'),
-		'SSR/VPVue': path.resolve(__dirname, './src/vue/index.ssr')
-	},
+  entry: {
+    ValidPlus: path.resolve(__dirname, './validplus'),
+    VPVue: path.resolve(__dirname, './src/vue/index'),
+    'SSR/VPVue': path.resolve(__dirname, './src/vue/index.ssr'),
+  },
 
 	output: {
 		path: path.resolve(__dirname, './dist'),
@@ -21,13 +21,13 @@ module.exports = {
 		validplus: 'validplus'
 	},
 
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src'),
-			'@lib': path.resolve(__dirname, './lib')
-		},
-		extensions: [ '.js', '.ts' ]
-	},
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './lib'),
+    },
+    extensions: ['.js', '.ts', '.vue'],
+  },
 
 	optimization: {
 		minimizer: [
@@ -55,6 +55,10 @@ module.exports = {
 				use: [ 'source-map-loader' ],
 				enforce: 'pre'
 			},
+      {
+        test: /\.vue$/,
+        use: 'vue-loader'
+      },
 			{
 				test: /\.(js|ts)x?$/,
 				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
@@ -73,8 +77,10 @@ module.exports = {
 								]
 							],
 							plugins: [
+                '@babel/plugin-transform-typescript',
 								'@babel/plugin-transform-runtime',
 								'@babel/plugin-transform-typescript',
+                '@babel/plugin-proposal-decorators',
 								'@babel/plugin-proposal-class-properties',
 								'@babel/plugin-proposal-object-rest-spread'
 							]

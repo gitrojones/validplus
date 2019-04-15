@@ -34,7 +34,7 @@ export class VPFieldset extends Validatable {
 
   constructor (
     element: HTMLElement,
-    strategy: string | ValidationStrategy,
+    strategy: (string | ValidationStrategy),
     options: VPFieldsetOptions,
     onValidate: (ValidationLifecycle | undefined)
   ) {

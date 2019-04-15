@@ -2,6 +2,8 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
@@ -27,7 +29,7 @@
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
     ]
   },
-  "include": ["validplus.ts"],
+  "include": ["validplus.ts", "src/vue/index.ts", "src/vue/index.ssr.ts"],
   "exclude": ["node_modules", "dist", "coverage", "dev"],
   "tasks": [
     {
