@@ -41,87 +41,92 @@ module.exports = {
 
 	mode: isProd ? 'production' : 'development',
 
-	module: {
-		rules: [
-			...(isCoverage
-				? [
-						{
-							test: /\.(js|ts)x?$/,
-							include: (file) => /src/.test(file),
-							exclude: (file) => /src\/vue/.test(file) || /dev/.test(file),
-							loader: 'istanbul-instrumenter-loader',
-							enforce: 'post',
-							query: {
-								esModules: true
-							}
-						}
-					]
-				: []),
-			{
-				test: /\.js$/,
-				use: [ 'source-map-loader' ],
-				enforce: 'pre'
-			},
-			{
-				test: /\.(js|ts)x?$/,
-				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
-				use: [
-					{
-						loader: 'babel-loader',
-						options: {
-							presets: [
-								[
-									'@babel/preset-env',
-									{
-										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage'
-									},
-									'@babel/preset-typescript'
-								]
-							],
-							plugins: [
-								'@babel/plugin-transform-runtime',
-								'@babel/plugin-transform-typescript',
-								'@babel/plugin-proposal-class-properties',
-								'@babel/plugin-proposal-object-rest-spread'
-							]
-						}
-					}
-				]
-			},
-			{
-				test: /\.vue$/,
-				loader: 'vue-loader',
-				options: {
-					optimizeSSR: false
-				}
-			},
-			{
-				test: /\.css$/,
-				use: [ 'vue-style-loader', 'css-loader', 'postcss-loader' ]
-			},
-			{
-				test: /\.less$/,
-				loader: [ 'vue-style-loader', 'css-loader', 'postcss-loader', 'less-loader' ]
-			},
-			{
-				test: /\.(png|jpe?g|gif)$/,
-				loader: 'url-loader',
-				options: {
-					limit: 10000,
-					name: 'img/[name].[ext]'
-				}
-			},
-			{
-				test: /\.(woff2?|eot|ttf|otf)$/,
-				loader: 'file-loader',
-				options: {
-					limit: 10000,
-					name: '[name].[ext]',
-					outputPath: 'fonts/'
-				}
-			}
-		]
-	},
+  module: {
+    rules: [
+      ...(isCoverage
+        ? [
+            {
+              test: /\.(js|ts)x?$/,
+              include: file => /src/.test(file),
+              exclude: file => /src\/vue/.test(file) || /dev/.test(file),
+              loader: 'istanbul-instrumenter-loader',
+              enforce: 'post',
+              query: {
+                esModules: true,
+              },
+            },
+          ]
+        : []),
+      {
+        test: /\.js$/,
+        use: ['source-map-loader'],
+        enforce: 'pre',
+      },
+      {
+        test: /\.(js|ts)x?$/,
+        exclude: file => /node_modules/.test(file) && !/\.vue\.js/.test(file),
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: '>0.25%, not dead',
+                    useBuiltIns: 'usage',
+                  },
+                  '@babel/preset-typescript',
+                ],
+              ],
+              plugins: [
+                '@babel/plugin-transform-typescript',
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-proposal-class-properties', { loose: true }],
+                '@babel/plugin-proposal-object-rest-spread'
+              ]
+            },
+          },
+        ],
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
+        options: {
+          optimizeSSR: false,
+        },
+      },
+      {
+        test: /\.css$/,
+        use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
+      },
+      {
+        test: /\.less$/,
+        loader: [
+          'vue-style-loader',
+          'css-loader',
+          'postcss-loader',
+          'less-loader',
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'img/[name].[ext]',
+        },
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)$/,
+        loader: 'file-loader',
+        options: {
+          limit: 10000,
+          name: '[name].[ext]',
+          outputPath: 'fonts/',
+        },
+      },
+    ],
+  },
 	plugins: [ new VueLoaderPlugin() ]
 };

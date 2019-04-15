@@ -2,6 +2,7 @@ const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
 const BrotliPlugin = require('brotli-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   entry: {
@@ -17,9 +18,10 @@ module.exports = {
 		libraryTarget: 'commonjs2'
 	},
 
-	externals: {
-		validplus: 'validplus'
-	},
+  externals: {
+    validplus: 'validplus',
+    vue: 'vue'
+  },
 
   resolve: {
     alias: {
@@ -71,7 +73,8 @@ module.exports = {
 									'@babel/preset-env',
 									{
 										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage'
+										useBuiltIns: 'usage',
+                    loose: true
 									},
 									'@babel/preset-typescript'
 								]
@@ -79,11 +82,12 @@ module.exports = {
 							plugins: [
                 '@babel/plugin-transform-typescript',
 								'@babel/plugin-transform-runtime',
-								'@babel/plugin-transform-typescript',
-                '@babel/plugin-proposal-decorators',
-								'@babel/plugin-proposal-class-properties',
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-proposal-class-properties', { loose: true }],
 								'@babel/plugin-proposal-object-rest-spread'
-							]
+							],
+              comments: process.env.NODE_ENV !== 'production',
+              sourceType: 'unambiguous'
 						}
 					}
 				]
@@ -91,6 +95,7 @@ module.exports = {
 		]
 	},
 	plugins: [
+    new VueLoaderPlugin(),
 		new CompressionPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',

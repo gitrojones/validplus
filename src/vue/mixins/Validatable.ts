@@ -1,5 +1,4 @@
-import { Mixin } from 'vue-mixin-decorator'
-import { Vue, Prop, Provide, Inject } from 'vue-property-decorator'
+import { Component, Vue, Prop, Provide, Inject } from 'vue-property-decorator'
 
 import { VPValidatorOptions, VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
 import { VPValidator } from '@/Validator'
@@ -9,40 +8,30 @@ import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 
-@Mixin
+@Component
 export class Validatable extends Vue {
   @Prop(Object) readonly VPOptions!: (VPValidatorOptions | VPFieldsetOptions | VPFieldOptions)
   @Prop({
     default (this: any) {
-      if (this.VPNewValidator) {
-        this.VPProvideValidator = true
-      }
-
-      return this.VPValidator
+      return this.Validator
     }
   }) readonly validator!: VPValidator
 
-  @Inject({ default (this: any) {
-    this.VPNewValidator = true
+  @Inject({ default () {
+    const self: any = this
+
+    self.VPNewValidator = true
     console.log('[VPVue] Validator not provided, injecting new validator.')
     const VP = require('validplus').ValidPlus
     return new VP.Validator({
       DeferredMessageAnchor: true
     })
-  }}) readonly VPValidator!: VPValidator
-  @Provide('VPValidator') VPNewValidator = function (this: any) {
-    let providing: any = {}
-    if (this.VPProvideValidator) {
-      providing['VPValidator'] = this.validator
-    }
-
-    return providing
-  }
+  }}) readonly Validator!: VPValidator
+  @Provide() Validator: (VPValidator | null) = this.Validator
 
   VPProvideValidator: boolean = false
   // Tracking for destroy
   VPFieldsets: VPFieldset[] = []
-  VPFields: VPField[] = []
   // Can be either a field or a fieldset
   VPField: (VPField | null) = null
   VPFieldset: (VPFieldset | null) = null
@@ -56,10 +45,9 @@ export class Validatable extends Vue {
   mounted () {
     // Fulfill anchor requirements deferred
     // when elements are available
-    if (this.VPNewValidator) {
-      this.validator.$element = this.$el
-      this.validator.generateMessageNode(this.$el)
-    }
+    console.log('Mount', this.$el)
+    this.validator.$element = this.$el
+    this.validator.generateMessageNode(this.$el)
   }
   beforeDestroy () {
     this.VPFieldsets.forEach((fs: VPFieldset) => {
@@ -74,7 +62,6 @@ export class Validatable extends Vue {
     rules: CustomValidationRule[],
     onValidation: ValidationLifecycle) {
     const field = new this.VP.Field(el, options, rules, onValidation)
-    this.VPFields.push(field)
 
     return field
   }

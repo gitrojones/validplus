@@ -1,5 +1,4 @@
-import { Mixin, Mixins } from 'vue-mixin-decorator'
-import { Prop, Watch, Emit } from 'vue-property-decorator'
+import { Component, Prop, Watch, Emit, Mixins } from 'vue-property-decorator'
 
 import { Validatable } from './Validatable'
 import { VPFieldsetOptions } from '@/interfaces/VPOptions'
@@ -8,7 +7,7 @@ import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 import { VPField } from '@/Field'
 import { VPFieldset } from '@/Fieldset'
 
-@Mixin
+@Component
 export class Fieldset extends Mixins<Validatable>(Validatable) {
   @Prop(Object) readonly VPOptions!: VPFieldsetOptions
   @Prop(Object) readonly VPValid!: ValidationLifecycle
