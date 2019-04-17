@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
-    "noUnusedLocals": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "declarationDir": "dist/Types",

@@ -1,33 +1,47 @@
 <template>
 <div class="testing-ground">
-  <div class="testing-ground__wrapper">
-    <!-- Import components here to test -->
-    <vp-fieldset>
-      <span>Hello World</span>
+  <VPValidator class="testing-one" data-validator>
+    <div class="testing-ground__wrapper">
+      <!-- Import components here to test -->
+      <VPFieldset>
+        <span>Hello World</span>
 
-      <vp-field id="external" :VPOptions="validationOptions" :VPValid="valid" value="foo">
-        external
-      </vp-field>
-    </vp-fieldset>
+        <VPField id="external" 
+          :VPOptions="validationOptions"
+          :VPValid="valid"
+          value="foo">
+          <label>Test Input</label>
+          <input type="text" value="foo" />
+        </VPField>
+      </VPFieldset>
 
-    <vp-fieldset style="marginTop: 2em;">
-      <span>Should not Validate</span>
+      <VPFieldset>
+        <span>Should not Validate</span>
 
-      <vp-field id="external" :VPOptions="validationOptions2" :VPValid="valid" value="foo">
-        external
-      </vp-field>
-    </vp-fieldset>
-  </div>
+        <VPField id="external2"
+          :VPOptions="validationOptions2"
+          :VPValid="valid"
+          value="bar">
+          <label>Test Input</label>
+          <input type="text" value="bar" />
+        </VPField>
+      </VPFieldset>
+    </div>
+  </VPValidator>
+
+  <VPFieldset class="testing-two" data-fieldset>
+    <VPField id="external2"
+      :VPOptions="validationOptions2"
+      :VPValid="valid"
+      value="bar">
+      <label>Test Input</label>
+      <input type="text" value="bar" />
+    </VPField>
+  </VPFieldset>
 </div>
 </template>
 
 <script>
-import fieldset from '#/components/fieldset'
-import field from '#/components/field'
-
-/**
- * @vue-prop {Boolean} test - test value
- */
 export default {
   prop: {
     test: Boolean
@@ -55,10 +69,6 @@ export default {
         ]
       }
     }
-  },
-  components: {
-    VpFieldset: fieldset,
-    VpField: field
   }
 }
 </script>
@@ -73,7 +83,6 @@ body {
   min-height: 100vh;
   margin: 0;
 }
-
 
 .testing-ground {
   display: flex;

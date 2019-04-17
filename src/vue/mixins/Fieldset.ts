@@ -27,7 +27,7 @@ export class Fieldset extends Mixins<Validatable>(Validatable) {
 
   mounted () {
     this.VPFieldset = this.VPCreateFieldset(
-      this.$el,
+      this.$el as HTMLElement,
       this.VPStrategy$,
       this.VPOptions$,
       this.VPFields$,
@@ -51,13 +51,15 @@ export class Fieldset extends Mixins<Validatable>(Validatable) {
     Object.keys(this.$slots).forEach((slot) => {
       const data = this.$slots[slot]
 
-      data.forEach((field: any) => {
-        if (field._isVue) {
-          field.$once('VPAddField', (VPField: VPField) => {
-            (this.VPFieldset as VPFieldset).addField(VPField)
-          })
-        }
-      })
+      if (data) {
+        data.forEach((field: any) => {
+          if (field._isVue) {
+            field.$once('VPAddField', (VPField: VPField) => {
+              (this.VPFieldset as VPFieldset).addField(VPField)
+            })
+          }
+        })
+      }
     })
 
     this.$children.forEach((field: any) => {

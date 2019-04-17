@@ -1,20 +1,31 @@
-const { mount, shallowMount } = require('@vue/test-utils');
+const { mount, shallowMount, createLocalVue } = require('@vue/test-utils');
 const VPVue = require('VPVue').VPVue;
+const VP = require('validplus').default;
 
-const TestingGround = require('#/testing-ground').default;
-const Fieldset = require('#/components/fieldset').default;
-const Field = require('#/components/field').default;
+const EmptyComponent = require('./components/empty').default;
+const Validator = VPVue.Validator;
+const Fieldset = VPVue.Fieldset;
+const Field = VPVue.Field;
 
 describe('VPVue', function() {
   beforeEach(done => {
     done();
   });
 
+  it('Should export Field wrapper component', function() {
+    expect(VPVue).to.have.property('Field');
+  });
   it('Should export "Field" mixin', function() {
     expect(VPVue.mixins).to.have.property('Field');
   });
+  it('Should export Fieldset wrapper component', function() {
+    expect(VPVue).to.have.property('Fieldset');
+  });
   it('Should export "Fieldset" mixin', function() {
     expect(VPVue.mixins).to.have.property('Fieldset');
+  });
+  it('Should export Validator wrapper component', function() {
+    expect(VPVue).to.have.property('Validator');
   });
   it('Should export "Validatable" mixin', function() {
     expect(VPVue.mixins).to.have.property('Validatable');
@@ -22,8 +33,16 @@ describe('VPVue', function() {
 
   describe('Field', function() {
     it('Should import Validatable mixin', function() {
-      expect(VPVue.mixins.Field).to.have.property('mixins');
-      expect(VPVue.mixins.Field.mixins[0]).to.equal(VPVue.Validatable);
+      const localVue = createLocalVue()
+      let FieldMixin = shallowMount(EmptyComponent, {
+        localVue,
+        mixins: [
+          VPVue.mixins.Field 
+        ]
+      });
+      
+      expect(FieldMixin.vm.validator instanceof VP.Validator).to.be.true;
+      expect(FieldMixin.vm.VPField instanceof VP.Field).to.be.true;
     });
   });
 

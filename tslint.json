@@ -4,6 +4,7 @@
     "jsx-no-multiline-js": false,
     "quotemark": [true, "single", "jsx-single"],
     "jsdoc-format": false,
+    "no-unused-variable": [true, { "ignore-pattern": "^(vue|vueConstructor)"}],
     "ter-indent": [true, 2]
   }
 }
