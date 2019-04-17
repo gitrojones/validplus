@@ -5,19 +5,38 @@
     <vp-fieldset @isValid="remove">
       <span>Hello World</span>
 
-      <vp-field id="external" :VPOptions="validationOptions" :VPValid="valid" value="foo">
-        external
-      </vp-field>
-    </vp-fieldset>
+        <VPField id="external" 
+          :VPOptions="validationOptions"
+          :VPValid="valid"
+          value="foo">
+          <label>Test Input</label>
+          <input type="text" value="foo" />
+        </VPField>
+      </VPFieldset>
 
-    <vp-fieldset style="marginTop: 2em;">
-      <span>Should not Validate</span>
+      <VPFieldset>
+        <span>Should not Validate</span>
 
-      <vp-field id="external" :VPOptions="validationOptions2" :VPValid="valid" value="foo">
-        external
-      </vp-field>
-    </vp-fieldset>
-  </div>
+        <VPField id="external2"
+          :VPOptions="validationOptions2"
+          :VPValid="valid"
+          value="bar">
+          <label>Test Input</label>
+          <input type="text" value="bar" />
+        </VPField>
+      </VPFieldset>
+    </div>
+  </VPValidator>
+
+  <VPFieldset class="testing-two" data-fieldset>
+    <VPField id="external2"
+      :VPOptions="validationOptions2"
+      :VPValid="valid"
+      value="bar">
+      <label>Test Input</label>
+      <input type="text" value="bar" />
+    </VPField>
+  </VPFieldset>
 </div>
 </template>
 
@@ -81,7 +100,6 @@ body {
   min-height: 100vh;
   margin: 0;
 }
-
 
 .testing-ground {
   display: flex;

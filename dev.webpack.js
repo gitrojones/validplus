@@ -33,7 +33,7 @@ const devBundle = {
   },
 
   externals: {
-    validplus: 'validplus',
+    validplus: 'validplus'
   },
 
   devtool: 'eval-source-map',

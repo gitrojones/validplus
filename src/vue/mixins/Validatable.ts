@@ -1,35 +1,40 @@
 import { Component, Vue, Prop, Provide, Inject } from 'vue-property-decorator'
 
 import { VPValidatorOptions, VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
-import { VPValidator } from '@/Validator'
+import { VPValidator as _VPValidator } from '@/Validator'
 import { VPFieldset } from '@/Fieldset'
 import { VPField } from '@/Field'
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 
-@Component
+const VPValidator = Symbol('Validator')
+@Component({
+  provide () {
+    const self: any = this
+    const validator = self.validator
+    return {
+      [VPValidator]: validator
+    }
+  }
+})
 export class Validatable extends Vue {
   @Prop(Object) readonly VPOptions!: (VPValidatorOptions | VPFieldsetOptions | VPFieldOptions)
   @Prop({
-    default (this: any) {
-      return this.Validator
+    default () {
+      const self: any = this
+      return self.Validator
     }
-  }) readonly validator!: VPValidator
+  }) readonly validator!: _VPValidator
 
-  @Inject({ default () {
-    const self: any = this
-
-    self.VPNewValidator = true
+  @Inject({ from: VPValidator, default () {
     console.log('[VPVue] Validator not provided, injecting new validator.')
     const VP = require('validplus').ValidPlus
     return new VP.Validator({
       DeferredMessageAnchor: true
     })
-  }}) readonly Validator!: VPValidator
-  @Provide() Validator: (VPValidator | null) = this.Validator
+  }}) readonly Validator!: _VPValidator
 
-  VPProvideValidator: boolean = false
   // Tracking for destroy
   VPFieldsets: VPFieldset[] = []
   // Can be either a field or a fieldset
@@ -45,9 +50,9 @@ export class Validatable extends Vue {
   mounted () {
     // Fulfill anchor requirements deferred
     // when elements are available
-    console.log('Mount', this.$el)
-    this.validator.$element = this.$el
-    this.validator.generateMessageNode(this.$el)
+    let el = this.$el as HTMLElement
+    this.validator.$element = el
+    this.validator.generateMessageNode(el)
   }
   beforeDestroy () {
     this.VPFieldsets.forEach((fs: VPFieldset) => {

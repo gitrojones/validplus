@@ -5,10 +5,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Validatable from '@/vue/mixins/Validatable.js'
+import Vue, { VueConstructor } from 'vue'
+import { Component, Mixins } from 'vue-property-decorator'
+import Validatable from '@/vue/mixins/Validatable'
 
-export default Vue.extend({
-  mixins: [ Validatable ]
-})
+@Component
+export class VPValidator extends Mixins(Validatable) { }
+export default VPValidator
 </script>

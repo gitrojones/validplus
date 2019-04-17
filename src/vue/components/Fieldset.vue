@@ -5,10 +5,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { VueConstructor } from 'vue'
+import { Component, Mixins } from 'vue-property-decorator'
 import Fieldset from '@/vue/mixins/Fieldset'
 
-export default Vue.extend({
-  mixins: [ Fieldset ]
-})
+@Component
+export class VPFieldset extends Mixins(Fieldset) { }
+export default VPFieldset
 </script>

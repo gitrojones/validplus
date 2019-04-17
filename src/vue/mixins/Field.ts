@@ -25,7 +25,7 @@ export class Field extends Mixins<Validatable>(Validatable) {
   @Emit('VPAddField')
   mounted () {
     this.VPField = this.VPCreateField(
-      this.$el,
+      this.$el as HTMLElement,
       this.VPOptions$,
       this.VPRules$,
       this.VPValid$
@@ -60,13 +60,15 @@ export class Field extends Mixins<Validatable>(Validatable) {
     Object.keys(this.$slots).forEach((slot) => {
       const data = this.$slots[slot]
 
-      data.forEach((field: any) => {
-        if (field._isVue) {
-          field.$once('AddField', function (field: any) {
-            self.VPFields.push(field)
-          })
-        }
-      })
+      if (data) {
+        data.forEach((field: any) => {
+          if (field._isVue) {
+            field.$once('AddField', function (field: any) {
+              self.VPFields.push(field)
+            })
+          }
+        })
+      }
     })
 
     this.$children.forEach((field: any) => {

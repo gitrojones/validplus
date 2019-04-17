@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "NODE_ENV=development APP=true node --inspect build.js",
+    "dev": "npm run vuetype && NODE_ENV=development APP=true node --inspect build.js",
     "build": "npm run build:prod",
     "build:prod": "NODE_ENV=production node build.js",
     "build:dev": "NODE_ENV=development node build.js",
@@ -17,8 +17,9 @@
     "test": "npm run test:prod",
     "test:prod": "NODE_ENV=production npm run _test",
     "test:dev": "NODE_ENV=development npm run _test",
-    "_test": "TEST=true mocha-webpack -w --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
+    "_test": "npm run vuetype && TEST=true mocha-webpack -w --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
     "test-ci": "PROD=true mocha-webpack --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
+    "vuetype": "$(npm bin)/vuetype src/vue/components --watch &",
     "cover": "NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test-ci"
   },
   "nyc": {
@@ -86,12 +87,12 @@
     "typedoc-webpack-plugin": "^1.1.4",
     "typescript": "^3.2.1",
     "typescript-transform-paths": "^1.1.0",
-    "vue": "^2.5.17",
+    "vue": "^2.6.10",
+    "vue-class-component": "^7.0.2",
     "vue-html-webpack-plugin": "^3.2.2",
     "vue-loader": "^15.4.2",
-    "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0",
-    "vue-template-compiler": "^2.5.17",
+    "vue-template-compiler": "^2.6.10",
     "vuetype": "^0.3.2",
     "webpack": "^4.25.1",
     "webpack-cli": "^2.1.5",
