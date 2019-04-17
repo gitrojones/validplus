@@ -28,7 +28,7 @@ const devBundle = {
       '#': path.resolve(__dirname, 'dev/src'),
       VPVue: path.resolve(__dirname, 'src/vue'),
       'SSR/VPVue': path.resolve(__dirname, 'src/vue/index.ssr'),
-      validplus: path.resolve(__dirname, 'dist/validplus')
+      validplus: path.resolve(__dirname, 'dist/ValidPlus')
     },
   },
 
