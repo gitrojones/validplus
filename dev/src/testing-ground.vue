@@ -11,7 +11,7 @@
           :VPValid="valid"
           value="foo">
           <label>Test Input</label>
-          <input type="text" value="foo" />
+          <input type="text" value="foo" required/>
         </VPField>
       </VPFieldset>
 
