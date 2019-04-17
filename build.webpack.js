@@ -30,7 +30,16 @@ module.exports = {
   },
 
   optimization: {
-    minimizer: [new UglifyJSPlugin({ })]
+    minimizer: [new UglifyJSPlugin({
+      uglifyOptions: {
+        output: {
+          beautify: false
+        },
+        ie8: true
+      },
+      sourceMap: true,
+      extractComments: /@(?:license)/g
+    })]
   },
 
   mode: 'production',
@@ -72,7 +81,6 @@ module.exports = {
                 ['@babel/plugin-proposal-class-properties', { loose: true }],
                 '@babel/plugin-proposal-object-rest-spread'
               ],
-              comments: process.env.NODE_ENV !== 'production',
               sourceType: 'unambiguous'
             },
           },

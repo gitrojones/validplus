@@ -1,3 +1,8 @@
+/**
+ * ValidPlus 2019-Present
+ * @author: Ryann Jones<GitRojones>
+ * @license: GPL 3.0
+ */
 import '@lib/polyfills';
 import { VPValidator as Validator } from '@/Validator';
 import { VPFieldset as Fieldset } from '@/Fieldset';
