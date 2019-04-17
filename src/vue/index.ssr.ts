@@ -1,3 +1,9 @@
+/**
+ * VPVue SSR 2019-Present
+ * @author: Ryann Jones<GitRojones>
+ * @license: GPL 3.0
+ */
+
 import _Vue from 'vue'
 import { Validatable } from './mixins/Validatable'
 import { Fieldset } from './mixins/Fieldset'

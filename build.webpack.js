@@ -40,8 +40,14 @@ module.exports = {
 					},
 					mangle: {
 						reserved: [ 'debug' ]
-					}
-				}
+					},
+          output: {
+            beautify: false
+          },
+          ie8: true
+				},
+        sourceMap: true,
+        extractComments: /@(?:license)/g
 			})
 		]
 	},
@@ -84,7 +90,6 @@ module.exports = {
 								'@babel/plugin-transform-runtime',
                 ['@babel/plugin-proposal-decorators', { legacy: true }],
                 ['@babel/plugin-proposal-class-properties', { loose: true }],
-								'@babel/plugin-proposal-object-rest-spread'
 							],
               comments: process.env.NODE_ENV !== 'production',
               sourceType: 'unambiguous'

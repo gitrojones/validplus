@@ -1,3 +1,8 @@
+/**
+ * VPVue SSR 2019-Present
+ * @author: Ryann Jones<GitRojones>
+ * @license: GPL 3.0
+ */
 import _Vue from 'vue';
 import { VPValidator } from '@/vue/components/Validator.vue';
 import { VPFieldset } from './components/Fieldset.vue';
