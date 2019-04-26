@@ -328,6 +328,10 @@ describe('ValidPlus', function() {
       it('Should append Message if Valid/Invalid')
       it('Should append Call CB if Valid/Invalid')
       it('Should pass instance to CB')
+
+      it('Should Accept Lifecycle in options w/o LifeCycle prop')
+      it('Should Accept Lifecycle in LifeCycle prop, w/o options')
+      it('Should prioritize Lifecycle in options over LifeCycle prop')
     })
 
     describe('Validator Error Handling', function() {
@@ -583,6 +587,66 @@ describe('ValidPlus', function() {
         'Hello, World'
       );
     });
+
+    describe('Fieldset Lifecycle', function () {
+      it('Should append Message if Valid/Invalid')
+      it('Should append Call CB if Valid/Invalid')
+      it('Should pass instance to CB')
+
+      it('Should Accept Lifecycle in options w/o LifeCycle prop', function () {
+        let field = new ValidPlus.Fieldset(testFieldset, 'all', {
+          Lifecycle: {
+            Invalid: {
+              Message: 'Foo'
+            },
+            Valid: {
+              Message: 'Bar'
+            }
+          }
+        }, {});
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
+      })
+
+      it('Should Accept Lifecycle in LifeCycle prop, w/o options', function () {
+        let field = new ValidPlus.Fieldset(testFieldset, 'all', {}, {
+          Invalid: {
+            Message: 'Foo'
+          },
+          Valid: {
+            Message: 'Bar'
+          }
+        });
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
+      })
+
+      // TODO: Lifecycle prop to be deprecated
+      it('Should prioritize Lifecycle prop over options', function () {
+        let field = new ValidPlus.Fieldset(testFieldset, 'all', {
+          Lifecycle: {
+            Invalid: {
+              Message: 'Baz'
+            },
+            Valid: {
+              Message: 'Bing'
+            }
+          }
+        }, {
+          Invalid: {
+            Message: 'Foo'
+          },
+          Valid: {
+            Message: 'Bar'
+          }
+        });
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
+      })
+    })
   });
 
   describe('ValidPlus.Field', function() {
@@ -816,6 +880,7 @@ describe('ValidPlus', function() {
         expect(field.isValid()).to.eventually.be.true.notify(() => {
           const valid = field.$valid === false;
           const children = field.$MessageNode.children.length === 1;
+
           let innerHTML
           if (children) {
             innerHTML = field.$MessageNode.children[0].innerHTML === errorMessage;
@@ -831,6 +896,66 @@ describe('ValidPlus', function() {
 
           }
         });
+      })
+    })
+
+    describe('Field Lifecycle', function () {
+      it('Should append Message if Valid/Invalid')
+      it('Should append Call CB if Valid/Invalid')
+      it('Should pass instance to CB')
+
+      it('Should Accept Lifecycle in options w/o LifeCycle prop', function () {
+        let field = new ValidPlus.Field(testField, {
+          Lifecycle: {
+            Invalid: {
+              Message: 'Foo'
+            },
+            Valid: {
+              Message: 'Bar'
+            }
+          }
+        }, [], {});
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
+      })
+
+      it('Should Accept Lifecycle in LifeCycle prop, w/o options', function () {
+        let field = new ValidPlus.Field(testField, {}, [], {
+          Invalid: {
+            Message: 'Foo'
+          },
+          Valid: {
+            Message: 'Bar'
+          }
+        });
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
+      })
+
+      // TODO: Lifecycle prop to be deprecated
+      it('Should prioritize Lifecycle prop over options', function () {
+        let field = new ValidPlus.Field(testField, {
+          Lifecycle: {
+            Invalid: {
+              Message: 'Baz'
+            },
+            Valid: {
+              Message: 'Bing'
+            }
+          }
+        }, [], {
+          Invalid: {
+            Message: 'Foo'
+          },
+          Valid: {
+            Message: 'Bar'
+          }
+        });
+
+        expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo');
+        expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar');
       })
     })
 
