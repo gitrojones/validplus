@@ -89,9 +89,10 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
           .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
       }
 
-      if (typeof this.$options.Lifecycle.Valid.Message === 'string') {
+      let ValidMessage: (string | undefined) = this.$options.Lifecycle.Valid.Message
+      if (typeof ValidMessage === 'string' && ValidMessage.length > 0) {
         this.addMessage(
-          this.$options.Lifecycle.Valid.Message,
+          this.$options.Lifecycle.Valid.Message as string,
           this.$options.ValidClassName
         )
       }
@@ -104,9 +105,10 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
           .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
       }
 
-      if (typeof this.$options.Lifecycle.Invalid.Message === 'string') {
+      let InvalidMessage: (string | undefined) = this.$options.Lifecycle.Invalid.Message
+      if (typeof InvalidMessage === 'string' && InvalidMessage.length > 0) {
         this.addMessage(
-          this.$options.Lifecycle.Invalid.Message,
+          this.$options.Lifecycle.Invalid.Message as string,
           this.$options.ErrorClassName
         )
       }
@@ -134,9 +136,17 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         ('Valid' in lifecycle || 'Invalid' in lifecycle)
     }
 
+    let valid = this.$options.Lifecycle.Valid || {}
+    let invalid = this.$options.Lifecycle.Invalid || {}
     this.$options.Lifecycle = {
-      Valid: { },
-      Invalid: { }
+      Valid: {
+        Message: valid.Message,
+        CB: valid.CB
+      },
+      Invalid: {
+        Message: invalid.Message,
+        CB: invalid.CB
+      }
     }
 
     if (isValidationLifecycle(lifecycle)) {
