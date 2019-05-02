@@ -28,7 +28,20 @@ module.exports = {
   },
 
   optimization: {
-    minimizer: [new UglifyJSPlugin({})],
+    minimizer: [new UglifyJSPlugin({
+      uglifyOptions: {
+        compress: {
+          pure_funcs: [
+            'debug'
+          ]
+        },
+        mangle: {
+          reserved: [
+            'debug'
+          ]
+        }
+      }
+    })],
   },
 
   mode: 'production',

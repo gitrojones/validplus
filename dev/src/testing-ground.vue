@@ -49,13 +49,14 @@ export default {
         CustomRules: [
           () => new Promise((resolve, reject) => {
             window.setTimeout(() => {
-              return resolve(true)
+              return resolve(false)
             }, 1000)
           })
         ]
       }
     }
   },
+  methods: { },
   components: {
     VpFieldset: fieldset,
     VpField: field

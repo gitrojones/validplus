@@ -3,7 +3,7 @@
   "version": "2.0.1",
   "description": "HTML Inspired Validator, requires light rigging and has graceful fallback",
   "main": "dist/ValidPlus.js",
-  "types": "dist/Types/ValidPlus.d.ts",
+  "types": "dist/Types/validplus.d.ts",
   "directories": {
     "test": "test"
   },

@@ -20,14 +20,19 @@ describe('ValidPlus', function() {
       let testValidator
       let testFieldset
       let testField
+      let testInput
 
       beforeEach(done => {
         testValidator = window.document.createElement('form');
         testFieldset = window.document.createElement('div');
         testField = window.document.createElement('div');
+        testInput = window.document.createElement('input');
+        testField.appendChild(testInput);
 
         validatable = [
-          new ValidPlus.Validator({}, testValidator),
+          new ValidPlus.Validator({
+            ValidateVisible: false
+          }, testValidator),
           new ValidPlus.Fieldset(testFieldset, 'all', {}),
           new ValidPlus.Field(testField, {}, [], {})
         ]
@@ -57,6 +62,38 @@ describe('ValidPlus', function() {
           v.removeEventListener('click', func)
         })
         expect(validatable.every(v => v.$listeners.click.length === 0)).to.be.true
+      })
+      it ('Remove Fieldset removes EventListener on the listener property', function () {
+        const validator = validatable[0]
+        const createFieldset = () => validator.createFieldset(testFieldset, 'all', {
+          ValidateVisible: false,
+          Lifecycle: {
+            Invalid: {
+              Message: 'Invalid',
+              CB: [
+                (instance) => console.log('here invalid')
+              ]
+            },
+            Valid: {
+              Message: 'Valid',
+              CB: [
+                (instance) => console.log('here')
+              ]
+            }
+          }
+        }, [
+          new ValidPlus.Field(testField, {
+            InputRules: {
+              required: true
+            }
+          })
+        ], { })
+        let fieldset = createFieldset();
+
+        validator.removeFieldset(fieldset);
+        fieldset = createFieldset();
+        validator.isValid();
+        expect(Array.from(testFieldset.children[1].children).length).to.equal(1)
       })
       it('Implements DispatchEvent', function () {
         expect(validatable.every(v => typeof v.dispatchEvent === 'function')).to.be.true
