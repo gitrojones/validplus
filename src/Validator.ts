@@ -21,6 +21,12 @@ export class VPValidator extends Validatable {
   $options: VPValidatorOptions = this.$options
   $emitFieldsets: VPFieldset[]
   $fieldsets: VPFieldset[]
+  $fieldsetWatch = ((_e: Event, trigger: VPFieldset) => {
+    _e.stopPropagation()
+
+    this.$emitFieldsets.push(trigger)
+    this.isValid()
+  }).bind(this)
 
   private get $visibleFieldsets (): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {
@@ -160,20 +166,28 @@ export class VPValidator extends Validatable {
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    fieldset.addEventListener('onValidate', (_e: Event, trigger: VPFieldset) => {
-      _e.stopPropagation()
-
-      this.$emitFieldsets.push(trigger)
-      this.isValid()
-    })
+    fieldset.addEventListener('onValidate', this.$fieldsetWatch)
   }
 
   removeFieldset (fieldset: VPFieldset) {
+    if (!(fieldset instanceof VPFieldset)) {
+      throw new Error('[VPFieldset] Field must be an instanceof VPField')
+    }
+
     const index = this.$fieldsets.indexOf(fieldset)
     if (index !== -1) {
-      this.$fieldsets.splice(index, 1)
       // TODO: Remove MutationObserver
+      let fieldset = this.$fieldsets.splice(index, 1).pop()
+      if (fieldset) {
+        fieldset.clearMessages()
+        fieldset.removeMessageNode()
+        fieldset.removeEventListener('onValidate', this.$fieldsetWatch)
+      }
+
+      return fieldset
     }
+
+    return null
   }
 
   // TODO: Append Predefined Fields w/ CB logic
@@ -182,8 +196,10 @@ export class VPValidator extends Validatable {
   createFieldset (fs: HTMLElement,
     strategy: ValidationStrategy,
     options: VPFieldsetOptions,
-    fields: VPField[],
-    onValidate: ValidationLifecycle) {
+    fields: VPField[] = [],
+    onValidate: ValidationLifecycle = {
+      Valid: {}, Invalid: {}
+    }) {
 
     const fieldset = new VPFieldset(fs, strategy, options, onValidate)
 
@@ -191,9 +207,7 @@ export class VPValidator extends Validatable {
       fieldset.addField(field)
     })
 
-    this.$fieldsets.push(fieldset)
-    this.watchFieldset(fieldset)
-
+    this.addFieldset(fieldset)
     return fieldset
   }
 }

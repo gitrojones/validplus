@@ -14,6 +14,7 @@ export declare class VPValidator extends Validatable {
     $options: VPValidatorOptions;
     $emitFieldsets: VPFieldset[];
     $fieldsets: VPFieldset[];
+    $fieldsetWatch: (_e: Event, trigger: VPFieldset) => void;
     private readonly $visibleFieldsets;
     /**
      * @param options - Configuration for the Validator
@@ -23,6 +24,6 @@ export declare class VPValidator extends Validatable {
     isValid(): boolean | Promise<{}>;
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
-    removeFieldset(fieldset: VPFieldset): void;
-    createFieldset(fs: HTMLElement, strategy: ValidationStrategy, options: VPFieldsetOptions, fields: VPField[], onValidate: ValidationLifecycle): VPFieldset;
+    removeFieldset(fieldset: VPFieldset): VPFieldset | null | undefined;
+    createFieldset(fs: HTMLElement, strategy: ValidationStrategy, options: VPFieldsetOptions, fields?: VPField[], onValidate?: ValidationLifecycle): VPFieldset;
 }

@@ -111,6 +111,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_validator_.vpvalidator.html#_emitfieldsets" class="tsd-kind-icon">$emit<wbr>Fieldsets</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_validator_.vpvalidator.html#_fieldsetwatch" class="tsd-kind-icon">$fieldset<wbr>Watch</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_validator_.vpvalidator.html#_fieldsets" class="tsd-kind-icon">$fieldsets</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="_validator_.vpvalidator.html#_options" class="tsd-kind-icon">$options</a></li>
 							</ul>
@@ -146,7 +147,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:29</li>
+									<li>Defined in Validator.ts:35</li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -188,6 +189,16 @@
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="_fieldsetwatch" class="tsd-anchor"></a>
+					<h3>$fieldset<wbr>Watch</h3>
+					<div class="tsd-signature tsd-kind-icon">$fieldset<wbr>Watch<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol"> =&nbsp;((_e: Event, trigger: VPFieldset) &#x3D;&gt; {_e.stopPropagation()this.$emitFieldsets.push(trigger)this.isValid()}).bind(this)</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in Validator.ts:24</li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="_fieldsets" class="tsd-anchor"></a>
 					<h3>$fieldsets</h3>
 					<div class="tsd-signature tsd-kind-icon">$fieldsets<span class="tsd-signature-symbol">:</span> <a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a><span class="tsd-signature-symbol">[]</span></div>
@@ -220,7 +231,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:25</li>
+									<li>Defined in Validator.ts:31</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a><span class="tsd-signature-symbol">[]</span></h4>
@@ -240,7 +251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:148</li>
+									<li>Defined in Validator.ts:154</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -257,13 +268,13 @@
 					<a name="createfieldset" class="tsd-anchor"></a>
 					<h3>create<wbr>Fieldset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Fieldset<span class="tsd-signature-symbol">(</span>fs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, strategy<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_validationstrategy_.validationstrategy.html" class="tsd-signature-type">ValidationStrategy</a>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldsetoptions.html" class="tsd-signature-type">VPFieldsetOptions</a>, fields<span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span>, onValidate<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Fieldset<span class="tsd-signature-symbol">(</span>fs<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, strategy<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_validationstrategy_.validationstrategy.html" class="tsd-signature-type">ValidationStrategy</a>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldsetoptions.html" class="tsd-signature-type">VPFieldsetOptions</a>, fields<span class="tsd-signature-symbol">?: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span>, onValidate<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:182</li>
+									<li>Defined in Validator.ts:196</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -278,10 +289,10 @@
 									<h5>options: <a href="../interfaces/_interfaces_vpoptions_.vpfieldsetoptions.html" class="tsd-signature-type">VPFieldsetOptions</a></h5>
 								</li>
 								<li>
-									<h5>fields: <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> fields: <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
 								</li>
 								<li>
-									<h5>onValidate: <a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> onValidate: <a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol"> =&nbsp;{Valid: {}, Invalid: {}}</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a></h4>
@@ -298,7 +309,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:48</li>
+									<li>Defined in Validator.ts:54</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">false</span>
@@ -314,13 +325,13 @@
 					<a name="removefieldset" class="tsd-anchor"></a>
 					<h3>remove<wbr>Fieldset</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">remove<wbr>Fieldset<span class="tsd-signature-symbol">(</span>fieldset<span class="tsd-signature-symbol">: </span><a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">remove<wbr>Fieldset<span class="tsd-signature-symbol">(</span>fieldset<span class="tsd-signature-symbol">: </span><a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:171</li>
+									<li>Defined in Validator.ts:172</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -329,7 +340,12 @@
 									<h5>fieldset: <a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<span class="tsd-signature-type">null</span>
+								<span class="tsd-signature-symbol"> | </span>
+								<a href="_fieldset_.vpfieldset.html" class="tsd-signature-type">VPFieldset</a>
+							</h4>
 						</li>
 					</ul>
 				</section>
@@ -343,7 +359,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in Validator.ts:158</li>
+									<li>Defined in Validator.ts:164</li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -381,6 +397,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_validator_.vpvalidator.html#_emitfieldsets" class="tsd-kind-icon">$emit<wbr>Fieldsets</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="_validator_.vpvalidator.html#_fieldsetwatch" class="tsd-kind-icon">$fieldset<wbr>Watch</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="_validator_.vpvalidator.html#_fieldsets" class="tsd-kind-icon">$fieldsets</a>

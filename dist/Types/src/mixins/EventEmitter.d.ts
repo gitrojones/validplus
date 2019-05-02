@@ -5,7 +5,7 @@ export declare function EventEmitter<TBase extends Constructor>(Base: TBase): {
     new (...args: any[]): {
         $listeners: EventListener;
         addEventListener(type: string, callback: EventCallback): void;
-        removeEventListener(type: string, callback: () => void): void;
+        removeEventListener(type: string, callback: EventCallback): void;
         /**
          * Include support for passing data along event
          * @param event - the Event object to dispatch

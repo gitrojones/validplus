@@ -5,7 +5,7 @@ export declare const Validatable: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
         addEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
-        removeEventListener(type: string, callback: () => void): void;
+        removeEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
         dispatchEvent(event: Event, data: any): boolean | void;
         createEvent(eventName: string): Event;
     };
@@ -27,6 +27,7 @@ export declare const Validatable: {
         $MessageNodePOS: import("./enums/Positions").VerticalPosition;
         DOMCreateElement(innerHTML: string, className: string): HTMLElement;
         generateMessageNode(anchor?: HTMLElement | null, pos?: import("./enums/Positions").VerticalPosition): void;
+        removeMessageNode(): void;
         addMessage(message: string, status: string): void;
         addMessages(messages: string[], status: string): void;
         removeMessage(message: string): void;

@@ -9,10 +9,11 @@ export declare class VPFieldset extends Validatable {
     $strategy: ValidationStrategy;
     $fields: VPField[];
     $emitFields: VPField[];
+    $fieldWatch: (_e: Event, trigger: VPField) => void;
     readonly $visibleFields: VPField[];
     constructor(element: HTMLElement, strategy: string | ValidationStrategy, options: VPFieldsetOptions, onValidate: ValidationLifecycle);
     isValid(validateDirty?: boolean): (boolean | Promise<boolean>);
-    removeField(field: VPField): void;
+    removeField(field: VPField): VPField | null | undefined;
     watchField(field: VPField): void;
     addField(field: VPField): void;
     createField(el: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: ValidationLifecycle): VPField;

@@ -55,7 +55,16 @@ export class DOMMessaging {
     } else if (pos === VerticalPosition.bottom) {
       anchor.appendChild(this.$MessageNode)
     } else {
-      console.log('NoPos', pos, this.$MessageNodePOS)
+      debug('NoPos', pos, this.$MessageNodePOS)
+    }
+  }
+
+  removeMessageNode () {
+    if (this.$MessageNode instanceof HTMLElement) {
+      debug('Removing MessageNode', this.$MessageNode)
+      this.$MessageNode.remove()
+    } else {
+      throw new Error('MessageNode does not exist')
     }
   }
 

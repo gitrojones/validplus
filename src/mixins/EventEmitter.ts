@@ -16,7 +16,8 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
       }
       this.$listeners[type].push(callback)
     }
-    removeEventListener (type: string, callback: () => void): void {
+
+    removeEventListener (type: string, callback: EventCallback): void {
       if (!(type in this.$listeners)) return
 
       let stack = this.$listeners[type]

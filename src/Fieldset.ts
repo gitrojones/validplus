@@ -16,6 +16,12 @@ export class VPFieldset extends Validatable {
   $strategy: ValidationStrategy
   $fields: VPField[]
   $emitFields: VPField[]
+  $fieldWatch = ((_e: Event, trigger: VPField) => {
+    _e.stopPropagation()
+    this.$emitFields.push(trigger)
+
+    this.isValid(false)
+  }).bind(this)
 
   get $visibleFields (): VPField[] {
     return this.$fields.filter((field: VPField) => {
@@ -141,8 +147,17 @@ export class VPFieldset extends Validatable {
 
     const index = this.$fields.indexOf(field)
     if (index !== -1) {
-      this.$fields = this.$fields.splice(index, 1)
+      let field = this.$fields.splice(index, 1).pop()
+      if (field) {
+        field.clearMessages()
+        field.removeMessageNode()
+        field.removeEventListener('onValidate', this.$fieldWatch)
+      }
+
+      return field
     }
+
+    return null
   }
 
   watchField (field: VPField) {
@@ -152,12 +167,7 @@ export class VPFieldset extends Validatable {
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
-    field.addEventListener('onValidate', (_e: Event, trigger: VPField) => {
-      _e.stopPropagation()
-      this.$emitFields.push(trigger)
-
-      this.isValid(false)
-    })
+    field.addEventListener('onValidate', this.$fieldWatch)
   }
 
   addField (field: VPField) {
