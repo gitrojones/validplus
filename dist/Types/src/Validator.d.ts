@@ -1,9 +1,9 @@
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
-import { VPValidatorOptions, VPFieldsetOptions } from '@/interfaces/VPOptions';
-import { Validatable } from '@/Validatable';
-import { VPFieldset } from '@/Fieldset';
-import { VPField } from '@/Field';
+import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
+import { ValidationStrategy } from "./interfaces/validation/ValidationStrategy";
+import { VPValidatorOptions, VPFieldsetOptions } from "./interfaces/VPOptions";
+import { Validatable } from "./Validatable";
+import { VPFieldset } from "./Fieldset";
+import { VPField } from "./Field";
 /**
  * ValidPlus Validator instance, the container
  * responsible for firing off the validation cycle

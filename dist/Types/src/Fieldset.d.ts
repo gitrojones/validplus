@@ -1,9 +1,9 @@
-import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions';
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule';
-import { VPField } from '@/Field';
-import { Validatable } from '@/Validatable';
+import { VPFieldsetOptions, VPFieldOptions } from "./interfaces/VPOptions";
+import { ValidationStrategy } from "./interfaces/validation/ValidationStrategy";
+import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
+import { CustomValidationRule } from "./interfaces/validation/CustomValidationRule";
+import { VPField } from "./Field";
+import { Validatable } from "./Validatable";
 export declare class VPFieldset extends Validatable {
     $options: VPFieldsetOptions;
     $strategy: ValidationStrategy;

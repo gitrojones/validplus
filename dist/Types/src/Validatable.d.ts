@@ -1,6 +1,6 @@
-import { VPOptions } from '@/interfaces/VPOptions';
-import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy';
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
+import { VPOptions } from "./interfaces/VPOptions";
+import { ValidationStrategies } from "./interfaces/validation/ValidationStrategy";
+import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
 export declare const Validatable: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
