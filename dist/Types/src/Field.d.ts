@@ -8,7 +8,6 @@ export declare class VPField extends Validatable {
     $options: VPFieldOptions;
     $dirty: boolean;
     $canValidate: boolean;
-    $Input: (ValidInput | null);
     $formatterEvent: {
         pre: boolean;
         post: boolean;

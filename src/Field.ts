@@ -22,7 +22,6 @@ export class VPField extends Validatable {
   $options: VPFieldOptions = this.$options
   $dirty: boolean = false
   $canValidate: boolean = true
-  $Input: (ValidInput | null) = null
   $formatterEvent: { pre: boolean, post: boolean } = {
     pre: false,
     post: false

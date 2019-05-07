@@ -10,12 +10,14 @@ import { ValidationLifecycle, ValidationCB } from '@/interfaces/validation/Valid
 import { DOMMessaging } from '@/lib/DOMMessaging'
 
 import { EventEmitter } from '@/mixins/EventEmitter'
+import { ValidInput } from '@/types/ValidInput'
 
 export const Validatable = EventEmitter(class extends DOMMessaging {
   dispatchEvent: any // Defined by EventEmitter
   createEvent: any // Defined by EventEmitter
   $options: VPOptions
   $element: HTMLElement
+  $Input: (ValidInput | null)
   $strategies: ValidationStrategies
   $valid: boolean | null
 
@@ -24,6 +26,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     this.$element = element
     this.$valid = null
+    this.$Input = null
 
     // Set some logical defaults
     this.$options = mergeDeep({
@@ -84,6 +87,11 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       this.$element.classList.add(this.$options.ValidClassName)
       this.$element.classList.remove(this.$options.ErrorClassName)
 
+      if (this.$Input) {
+        this.$Input.classList.add(this.$options.ValidClassName)
+        this.$Input.classList.remove(this.$options.ErrorClassName)
+      }
+
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB
           .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
@@ -99,6 +107,11 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     } else {
       this.$element.classList.remove(this.$options.ValidClassName)
       this.$element.classList.add(this.$options.ErrorClassName)
+
+      if (this.$Input) {
+        this.$Input.classList.remove(this.$options.ValidClassName)
+        this.$Input.classList.add(this.$options.ErrorClassName)
+      }
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
         this.$options.Lifecycle.Invalid.CB

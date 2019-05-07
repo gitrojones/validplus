@@ -15,6 +15,7 @@ export declare const Validatable: {
         createEvent: any;
         $options: VPOptions;
         $element: HTMLElement;
+        $Input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
         $strategies: ValidationStrategies;
         $valid: boolean | null;
         $isValid: boolean | null;
