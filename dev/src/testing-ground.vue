@@ -2,7 +2,7 @@
 <div class="testing-ground">
   <div class="testing-ground__wrapper">
     <!-- Import components here to test -->
-    <vp-fieldset>
+    <vp-fieldset @isValid="remove">
       <span>Hello World</span>
 
       <vp-field id="external" :VPOptions="validationOptions" :VPValid="valid" value="foo">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import VPVue from 'VPVue'
 import fieldset from '#/components/fieldset'
 import field from '#/components/field'
 
@@ -32,6 +33,7 @@ export default {
   prop: {
     test: Boolean
   },
+  mixins: [ VPVue.Validatable ],
   data() {
     return {
       valid: {
@@ -56,7 +58,12 @@ export default {
       }
     }
   },
-  methods: { },
+  methods: {
+    remove(e) {
+      console.log('remove', e, e.VPFieldset)
+      this.validator.removeFieldset(e.VPFieldset)
+    }
+  },
   components: {
     VpFieldset: fieldset,
     VpField: field

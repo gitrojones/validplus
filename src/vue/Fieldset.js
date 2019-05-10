@@ -28,7 +28,7 @@ export const Fieldset = {
     this.VPGatherFields()
   },
   watch: {
-    'VPFieldset._isValid': function (isValid) {
+    'VPFieldset.$valid': function (isValid) {
       if (isValid) {
         this.$emit('isValid', this)
       } else {
@@ -51,6 +51,9 @@ export const Fieldset = {
     }
   },
   methods: {
+    VPRemove () {
+      this.$emit('VPRemoveFieldset', this.VPFieldset);
+    },
     VPChangeAnchor (el) {
       this.VPFieldset.generateMessageNode(el)
     },

@@ -43,6 +43,10 @@ export const Field = {
     }
   },
   methods: {
+    VPRemove () {
+      this.$emit('VPRemoveField', this.VPField);
+    },
+
     VPChangeAnchor (el) {
       this.VPField.generateMessageNode(el)
     },
