@@ -70,49 +70,40 @@
 				<h2 id="prs-and-support">PRs and Support</h2>
 				<p>Pull requests are welcome. New functionality should be covered by tests if possible. Bug fixes are welcome but it is recommended you include a reproducible example test for the bug to speed up PRs. IE, if validation fails in a specific case, include an example test which is expected to fail on the current master and pass with the PR.</p>
 				<h2 id="test-coverage">Test Coverage</h2>
-				<p>Test coverage is focused on STRICT mode. LAX coverage is inferred from STRICT but not complete. Feel free to add new tests with your pull requests. <strong>All tests must pass in order for a PR to be merged</strong></p>
+				<p>Test coverage is focused on feature coverage. In order for a feature to be merged, it must have test coverage.
+				<strong>All tests must pass in order for a PR to be merged</strong></p>
 				<h2 id="usage">Usage</h2>
-				<p>This library functions in STRICT and LAX mode. Each section outlines the differences you can expect. For the most part, you can drop this library in and starting using it right away.</p>
 				<p><code>import ValidPlus from &#39;validplus&#39;</code></p>
 				<h3 id="validator">Validator</h3>
 				<p>The main validation object. Marshals validation to descendants</p>
-				<h4 id="strict">STRICT</h4>
+				<h5 id="api">API</h5>
+				<p>See <code>Docs</code></p>
+				<h3 id="package-size">Package Size</h3>
+				<p>The library comes in at:</p>
+				<h4 id="validplus">ValidPlus</h4>
+				<p>Core validation library</p>
+				<pre><code>|<span class="hljs-string">----------------------</span>|
+|<span class="hljs-string"> Raw  </span>|<span class="hljs-string"> GZip </span>|<span class="hljs-string"> Brotli </span>|
+|<span class="hljs-string">------</span>|<span class="hljs-string">------</span>|<span class="hljs-string">--------</span>|
+|<span class="hljs-string"> 55kb </span>|<span class="hljs-string"> 17kb </span>|<span class="hljs-string"> 15kb   </span>|
+|<span class="hljs-string">------</span>|<span class="hljs-string">------</span>|<span class="hljs-string">--------</span>|</code></pre><h4 id="vpvue-alpha-">VPVue (Alpha)</h4>
+				<p>VueJS Validation bindings</p>
+				<pre><code>|<span class="hljs-string">-----------------------</span>|
+|<span class="hljs-string"> Raw  </span>|<span class="hljs-string"> GZip  </span>|<span class="hljs-string"> Brotli </span>|
+|<span class="hljs-string">------</span>|<span class="hljs-string">-------</span>|<span class="hljs-string">--------</span>|
+|<span class="hljs-string"> 14kb </span>|<span class="hljs-string"> 4.6kb </span>|<span class="hljs-string"> 4.2kb  </span>|
+|<span class="hljs-string">------</span>|<span class="hljs-string">-------</span>|<span class="hljs-string">--------</span>|</code></pre><h3 id="browser-support">Browser Support</h3>
+				<p>Browser support extends to IE 9 tested. Might work on earlier versions, but has not been tested.
+				Polyfills are included for:</p>
 				<ul>
-					<li>Children are automatically detected based on the options passed to the constructor. The preferred way to interface with STRICT mode is through the custom DOM attributes for each ValidPlus element.</li>
-					<li>Only Decendants of the provided form can be validated against. Default behavior is to ignore non-descendants and spit out an error.<h4 id="lax">LAX</h4>
-					</li>
-					<li>It is your responsibility to add each fieldset to the validator. This allows for greater flexibility at the cost of boilerplate.</li>
-					<li>Any added fieldset is considered in the validation loop. It is your responsibility to ensure the correct state of the fieldset collection when you validate.<h5 id="api">API</h5>
-						<h6 id="constructor">Constructor</h6>
-						<ul>
-							<li>Params:
-								1) Options :: Object
-								Allows for customization of validation logic
-								DEFAULT: {
-								onValidation: {
-								isValid: null,
-								isInvalid: null
-								},
-								fieldsetClass: &#39;VPfieldset&#39;,
-								fieldClass: &#39;VPfield&#39;,
-								validInputs: [
-								&#39;input&#39;,
-								&#39;messagebox&#39;,
-								&#39;select&#39;
-								]
-								}
-								2) Form(?) :: HTMLFormElement || String (DOM ID)
-								Instantiates the Validator, placing the validator into STRICT or LAX mode based on the presence of a Form reference<h6 id="methods">Methods</h6>
-								####### isValid()
-								Runs validation on decendants, with results bubbling upwards. If a valdiation message or cb is provided, they are called in tandem.
-							####### addFieldset()</li>
-						</ul>
-					</li>
+					<li>Array.From</li>
+					<li>ChildNodeRemove</li>
+					<li>ClassList (IE 6-9)</li>
+					<li>Array.includes &amp;&amp; String.includes</li>
+					<li>NodeList.forEach</li>
+					<li>Element.prepend</li>
 				</ul>
-				<p>Validator can be instantiated with and without a root form element. If a Form element is provided the validator is considered to be in &#39;strict&#39; mode, limiting validation to direct decendants of the Validator form element. It is recommended you utilize strict mode when it makes sense to do so, as the amount of boilerplate is reduced (By default, ValidPlus will attempt to populate your field structure).</p>
-				<p>The main validator depends on being passed a form to track on instantiation. This is the root of the validation strategy where all validation flows through. Strict matching ensures fields are only considered if they&#39;re decendants of the root form. This is the recommonded way to consume the validator. Non-strict mode allows for global validation ()</p>
-				<p>Fieldsets are defined as groups of fields. Typically following a structure like</p>
-				<pre><code><span class="hljs-selector-class">.fieldset</span> &gt; <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> + <span class="hljs-selector-class">.field</span> &lt;...&gt;</code></pre><p>where field is the logical container for your input/select field.</p>
+				<p>Further, this project depends on @babel/runtime as an external dependency as it is using plugin-transform-runtime.</p>
 			</div>
 		</div>
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">

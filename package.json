@@ -49,14 +49,17 @@
     "@babel/core": "^7.1.5",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/plugin-transform-typescript": "^7.1.0",
     "@babel/preset-env": "^7.1.5",
     "@babel/preset-typescript": "^7.1.0",
     "@vue/test-utils": "^1.0.0-beta.25",
     "autoprefixer": "^9.3.1",
     "babel-loader": "^8.0.4",
+    "brotli-webpack-plugin": "^1.1.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "compression-webpack-plugin": "^2.0.0",
     "documentation-loader": "^0.1.1-beta",
     "express": "^4.16.4",
     "file-loader": "^1.1.11",
@@ -94,6 +97,7 @@
     "webpack-node-externals": "^1.7.2"
   },
   "dependencies": {
+    "@babel/runtime": "^7.4.5",
     "remove": "^0.1.5"
   }
 }
