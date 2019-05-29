@@ -588,6 +588,61 @@ describe('ValidPlus', function() {
       expect(fieldset.isValid()).to.be.true;
     });
 
+    it('Fieldset should validate radio', function() {
+      let testField = window.document.createElement('div');
+      let testFieldTwo = window.document.createElement('div');
+      testFieldTwo.className = 'field';
+      testField.className = 'field';
+      testFieldset.append(testField);
+      testFieldset.append(testFieldTwo);
+
+      let testInputTwo = window.document.createElement('input');
+      let testInput = window.document.createElement('input');
+      testInputTwo.className = 'input';
+      testInputTwo.value = 'Hello, World';
+      testInputTwo.checked = true;
+      testInputTwo.setAttribute('type', 'radio');
+      testInputTwo.setAttribute('required', true);
+      testFieldTwo.append(testInputTwo);
+
+      testInput.setAttribute('type', 'radio');
+      testInput.setAttribute('required', true);
+      testInput.value = 'foo';
+      testInput.checked = false;
+      testField.append(testInput);
+
+      let validator = new ValidPlus.Fieldset(testFieldset, 'one', {
+        FieldClass: 'field',
+        ValidateVisible: false
+      });
+      validator.findFields();
+
+      expect(validator.isValid()).to.be.true;
+      expect(validator.$fields[0].$valid).to.be.false;
+      expect(validator.$fields[1].$valid).to.be.true;
+
+      testInputTwo.checked = false;
+      testInput.checked = true;
+
+      expect(validator.isValid()).to.be.true;
+      expect(validator.$fields[0].$valid).to.be.true;
+      expect(validator.$fields[1].$valid).to.be.false;
+
+      testInputTwo.checked = false;
+      testInput.checked = false;
+
+      expect(validator.isValid()).to.be.false;
+      expect(validator.$fields[0].$valid).to.be.false;
+      expect(validator.$fields[1].$valid).to.be.false;
+
+      testInputTwo.checked = true;
+      testInput.checked = true;
+
+      expect(validator.isValid()).to.be.false;
+      expect(validator.$fields[0].$valid).to.be.true;
+      expect(validator.$fields[1].$valid).to.be.true;
+    });
+
     it('Fieldset should append onValid Message and message should be correct', function() {
       let testField = window.document.createElement('div');
       testField.className = 'VPField';
@@ -1020,11 +1075,13 @@ describe('ValidPlus', function() {
         let testInputTwo = window.document.createElement('input');
         testInputTwo.className = 'input';
         testInputTwo.value = 'Hello, World';
+        testInputTwo.checked = true;
         testInputTwo.setAttribute('type', 'radio');
         testFieldTwo.append(testInputTwo);
 
         testInput.setAttribute('type', 'radio');
         testInput.setAttribute('required', true);
+        testInput.value = 'foo';
         testInput.checked = false;
         let field = new ValidPlus.Field(testField, {}, [], {
           Invalid: {
@@ -1286,13 +1343,11 @@ describe('ValidPlus', function() {
 
     it('Should format pre/post and include an eventDispatch method', function() {
       let uppercasePre = (input, dispatchEvent) => {
-        console.log('called pre')
         input.value = input.value.toUpperCase();
         input.value = input.value += '-world';
         dispatchEvent('input');
       };
       let lowercasePost = (input, dispatchEvent) => {
-        console.log('called post')
         input.value = input.value.toLowerCase();
         dispatchEvent('input');
       };
