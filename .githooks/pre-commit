@@ -5,6 +5,7 @@
 npm run build
 npm run build:types
 npm run docs
+touch docs/.nojekyll
 git add .
 
 echo "Built production package and appended new docs Automagically!"

@@ -42,6 +42,9 @@ VueJS Validation bindings
 |------|-------|--------|
 ```
 
+## Notes
+Required on inputs functions as usual *except* we support `required="false"` in cases where an attribute is using data-binding. If the attribute resolves to null, required is ignored.
+
 ### Browser Support
 Browser support extends to IE 9 tested. Might work on earlier versions, but has not been tested.
 Polyfills are included for:

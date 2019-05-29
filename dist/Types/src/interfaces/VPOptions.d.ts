@@ -3,7 +3,7 @@ import { HTMLValidationRules } from "./validation/HTMLValidationRules";
 import { CustomValidationRule } from "./validation/CustomValidationRule";
 import { ValidationLifecycle } from "./validation/ValidationLifecycle";
 import { ValidationStrategy } from "./validation/ValidationStrategy";
-import { InputFormatters } from "./inputFormatters";
+import { InputFormatters } from "./InputFormatters";
 export interface VPOptions {
     [property: string]: any;
     Watch: boolean;
