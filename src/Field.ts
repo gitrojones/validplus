@@ -121,7 +121,7 @@ export class VPField extends Validatable {
       max: toNumber(this.$input.getAttribute('max')),
       maxlength: toNumber(this.$input.getAttribute('maxlength')),
       pattern: toRegexp(this.$input.getAttribute('pattern')),
-      required: toBoolean(this.$input.getAttribute('required'), null)
+      required: this.$input.required || toBoolean(this.$input.getAttribute('required'), null)
     })
 
     const rules = this.$options.ForceRules
