@@ -55,7 +55,7 @@ export class VPValidator extends Validatable {
     this.clearMessages()
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
-    let isValid: (boolean | Promise<boolean[]>) = true
+    let isValid: (boolean | Promise<boolean>) = true
     let resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
       .reduce((resolved: any[], fieldset, index) => {
         if (isValid === false && this.$options.ValidateLazy) return resolved
@@ -86,18 +86,17 @@ export class VPValidator extends Validatable {
           }
         }
 
-        if (this.$options.ValidateLazy && valid === false) {
-          isValid = valid
-        }
-
+        isValid = valid
         resolved.push(valid)
         return resolved
       }, [])
 
     if (hasAsync(resolvedIsValid)) {
       let promises: Promise<boolean>[]
-      let asyncIsValid: Promise<boolean>[] = resolvedIsValid
-        .filter(isAsync) as Promise<boolean>[]
+      let asyncIsValid: Promise<boolean>[] = resolvedIsValid.map((result) => {
+        if (isAsync(result)) return result as Promise<boolean>
+        else return Promise.resolve(result)
+      })
 
       if (this.$options.ValidateLazy) {
         // Return early if we're already invalid and lazy
