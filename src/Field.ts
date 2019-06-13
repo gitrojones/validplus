@@ -19,6 +19,7 @@ import { ValidInput } from '@/types/ValidInput'
 import { Validatable } from '@/Validatable'
 
 export class VPField extends Validatable {
+  $Input: (ValidInput | null) = null
   $options: VPFieldOptions = this.$options
   $dirty: boolean = false
   $canValidate: boolean = true
@@ -44,6 +45,10 @@ export class VPField extends Validatable {
       InputRules: {},
       CustomRules: customRules,
       InputFormatter: {},
+      PrimaryInput: null,
+      PrimaryInputIndex: 0,
+      PrimaryInputType: null,
+      InputTypes: ['input', 'select', 'textarea'],
       ShowFieldRuleErrors: false,
       ShowCustomRuleErrors: true,
       ValidateLazyCustomRules: true,
@@ -70,7 +75,7 @@ export class VPField extends Validatable {
     }, options)
 
     this.setLifecycle(onValidate)
-    this.setInput()
+    this.setInput(this.$options.PrimaryInput)
   }
 
   get $input () { return this.$Input as ValidInput }
@@ -142,19 +147,9 @@ export class VPField extends Validatable {
     }
   }
 
-  setInput () {
-    debug('[VPField] Querying inputs')
-
-    let input = this.$element.getElementsByTagName('input')
-    let select = this.$element.getElementsByTagName('select')
-    let textarea = this.$element.getElementsByTagName('textarea')
-
-    if (input.length > 0) debug('[VPField] Found input', input)
-    if (select.length > 0) debug('[VPField] Found select', select)
-    if (textarea.length > 0) debug('[VPField] Found textarea', textarea)
-
-    // TODO: Add logic for specifying preferred input type
-    let flipflop = () => {
+  setInput (input: ValidInput | null) {
+    interface FilteredControllerTypes { [type: string]: ValidInput[] }
+    const flipflop = () => {
       ['ValidateOn', 'DirtyOn', 'FormatOn'].forEach((property) => {
         const options = this.$options[property]
         if (options.input === true && options.change === false) {
@@ -163,8 +158,38 @@ export class VPField extends Validatable {
         }
       })
     }
+    const parseInput = (items: ValidInput[], item: ValidInput, index: number) => {
+        // Primary Input, force accept
+      if (items.length === 0 || item.getAttribute('vp-primary')) return [item]
+      if (index === this.$options.PrimaryInputIndex) return [item]
+      return items
+    }
 
-    let _input: ValidInput = (input.item(0) || select.item(0) || textarea.item(0)) as ValidInput
+    let _input: (ValidInput | null) = input
+    if (_input === null) {
+      debug('[VPField] Querying controllers')
+      let controllers: FilteredControllerTypes = this.$options.InputTypes
+        .reduce((items: FilteredControllerTypes, type: string) => {
+          items[type] = (Array.from(this.$element.getElementsByTagName(type)) as ValidInput[]).reduce(parseInput, []) as ValidInput[]
+          debug(`[VPField] Fetched ${type} controllers`, items[type])
+          return items
+        }, {} as FilteredControllerTypes)
+
+      let primaryInputType = this.$options.PrimaryInputType
+      if (primaryInputType !== null && controllers[primaryInputType].length > 0) {
+        debug(`[VPField] Picking primary ${primaryInputType} controllers`)
+        _input = controllers[primaryInputType].shift() as ValidInput
+      } else {
+        debug(`[VPField] Picking first found controller`)
+          // Get the first element in the list
+        _input = Object.keys(controllers)
+          .reduce((elements: ValidInput[], type: string) => elements.concat(controllers[type]), [])
+          .shift() || null
+      }
+    } else {
+      debug('[VPField] Using provided input')
+    }
+
     if (_input instanceof HTMLInputElement) {
       if (['radio', 'checkbox'].includes(_input.getAttribute('type') || '')) {
         flipflop()
@@ -173,7 +198,11 @@ export class VPField extends Validatable {
       flipflop()
     }
 
-    this.$input = _input
+    if (_input !== null) {
+      this.$input = _input
+    } else {
+      throw new Error('[VP] Failed to find input dynamically.')
+    }
   }
 
   isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {

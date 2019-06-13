@@ -5,6 +5,7 @@ import { ValidationAttributes } from "./interfaces/validation/ValidationAttribut
 import { ValidInput } from "./types/ValidInput";
 import { Validatable } from "./Validatable";
 export declare class VPField extends Validatable {
+    $Input: (ValidInput | null);
     $options: VPFieldOptions;
     $dirty: boolean;
     $canValidate: boolean;
@@ -15,7 +16,7 @@ export declare class VPField extends Validatable {
     constructor(element: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: ValidationLifecycle);
     $input: ValidInput;
     parseInput(): ValidationAttributes;
-    setInput(): void;
+    setInput(input: ValidInput | null): void;
     isValid(formattedExternal?: boolean): (boolean | Promise<boolean>);
     formatInputPre(): void;
     formatInputPost(): void;

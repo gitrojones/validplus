@@ -11,11 +11,11 @@ export declare const Validatable: {
     };
 } & {
     new (options: VPOptions, element: HTMLElement): {
+        [index: string]: any;
         dispatchEvent: any;
         createEvent: any;
         $options: VPOptions;
         $element: HTMLElement;
-        $Input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
         $strategies: ValidationStrategies;
         $valid: boolean | null;
         $isValid: boolean | null;

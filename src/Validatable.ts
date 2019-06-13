@@ -8,16 +8,15 @@ import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy
 import { ValidationLifecycle, ValidationCB } from '@/interfaces/validation/ValidationLifecycle'
 
 import { DOMMessaging } from '@/lib/DOMMessaging'
-
 import { EventEmitter } from '@/mixins/EventEmitter'
-import { ValidInput } from '@/types/ValidInput'
 
 export const Validatable = EventEmitter(class extends DOMMessaging {
+  [index: string]: any // Allow for child properties to be accessible
+
   dispatchEvent: any // Defined by EventEmitter
   createEvent: any // Defined by EventEmitter
   $options: VPOptions
   $element: HTMLElement
-  $Input: (ValidInput | null)
   $strategies: ValidationStrategies
   $valid: boolean | null
 
@@ -26,7 +25,6 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     this.$element = element
     this.$valid = null
-    this.$Input = null
 
     // Set some logical defaults
     this.$options = mergeDeep({
@@ -87,7 +85,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       this.$element.classList.add(this.$options.ValidClassName)
       this.$element.classList.remove(this.$options.ErrorClassName)
 
-      if (this.$Input) {
+      if (this.$Input instanceof HTMLElement) {
         this.$Input.classList.add(this.$options.ValidClassName)
         this.$Input.classList.remove(this.$options.ErrorClassName)
       }
@@ -108,7 +106,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       this.$element.classList.remove(this.$options.ValidClassName)
       this.$element.classList.add(this.$options.ErrorClassName)
 
-      if (this.$Input) {
+      if (this.$Input instanceof HTMLElement) {
         this.$Input.classList.remove(this.$options.ValidClassName)
         this.$Input.classList.add(this.$options.ErrorClassName)
       }

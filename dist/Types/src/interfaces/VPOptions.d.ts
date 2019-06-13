@@ -4,6 +4,7 @@ import { CustomValidationRule } from "./validation/CustomValidationRule";
 import { ValidationLifecycle } from "./validation/ValidationLifecycle";
 import { ValidationStrategy } from "./validation/ValidationStrategy";
 import { InputFormatters } from "./InputFormatters";
+import { ValidInput } from "../types/ValidInput";
 export interface VPOptions {
     [property: string]: any;
     Watch: boolean;
@@ -11,6 +12,10 @@ export interface VPOptions {
     ClassName: string;
     ErrorClassName: string;
     ValidClassName: string;
+    PrimaryInput: (null | ValidInput);
+    PrimaryInputIndex: number;
+    PrimaryInputType: (null | string);
+    InputTypes: ('select' | 'input' | 'textarea')[];
     MessageClassName: string;
     MessageContainerClassName: string;
     MessageAnchor: HTMLElement;

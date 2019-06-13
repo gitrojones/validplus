@@ -69,16 +69,10 @@ describe('ValidPlus', function() {
           ValidateVisible: false,
           Lifecycle: {
             Invalid: {
-              Message: 'Invalid',
-              CB: [
-                (instance) => console.log('here invalid')
-              ]
+              Message: 'Invalid'
             },
             Valid: {
-              Message: 'Valid',
-              CB: [
-                (instance) => console.log('here')
-              ]
+              Message: 'Valid'
             }
           }
         }, [
@@ -169,6 +163,8 @@ describe('ValidPlus', function() {
       testFieldset.className = 'fieldset';
 
       let testField = window.document.createElement('div');
+      let testFieldInput = window.document.createElement('input');
+      testField.appendChild(testFieldInput)
       testField.className = 'VPField';
 
       testFieldset.append(testField);
@@ -532,6 +528,8 @@ describe('ValidPlus', function() {
     });
     it('Fieldset should add children fields', function() {
       let testField = window.document.createElement('div');
+      let testFieldInput = window.document.createElement('textarea');
+      testField.appendChild(testFieldInput);
       testField.className = 'field';
       testFieldset.append(testField);
 
@@ -761,7 +759,13 @@ describe('ValidPlus', function() {
       done();
     });
 
-    describe('Fields Properties', function() {});
+    describe('Fields Properties', function() {
+        it('Should use specified ControllerInput')
+        it('Should prioritize primary controller type')
+        it('Should fallback to a defined controlled type if missing primary controller type')
+        it('Should allow controller types that extend HTMLInput, HTMLSelect, HTMLTextarea')
+        it('Should prioritize `vp-primary` controllers')
+    });
 
     describe('Field Error Handling', function() {
       it('Should append the errorClass on invalid fields/inputs', function() {
