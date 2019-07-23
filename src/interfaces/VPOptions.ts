@@ -4,7 +4,10 @@ import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRu
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 import { InputFormatters } from '@/interfaces/InputFormatters'
+import { ChangeActions } from '@/interfaces/events/ChangeActions'
 import { ValidInput } from '@/types/ValidInput'
+
+import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions';
 
 export interface VPOptions {
   [property: string]: any,
@@ -14,7 +17,6 @@ export interface VPOptions {
   Lifecycle: ValidationLifecycle,
 
   // ClassNames
-  ClassName: string,
   ErrorClassName: string,
   ValidClassName: string
 
@@ -27,51 +29,30 @@ export interface VPOptions {
   // Messaging
   MessageClassName: string,
   MessageContainerClassName: string,
-  MessageAnchor: HTMLElement,
+  MessageAnchor: (HTMLElement | null),
   MessagePOS: VerticalPosition,
   ScrollTo: boolean,
-  ScrollAnchor: HTMLElement
+  ScrollAnchor: (HTMLElement | null)
 }
 
-export interface VPValidatorOptions extends VPOptions {
+export interface VPValidatorOptions extends ValidatableOptions, VPOptions {
   // ControlFlow
   ValidateLazy: boolean,
   ValidateVisible: boolean,
-  ValidationInputs: string[] // Names of elements to consider Inputs (for supporting custom Elements)
 }
-export interface VPFieldsetOptions extends VPOptions {
+export interface VPFieldsetOptions extends ValidatableOptions, VPOptions {
   // ControlFlow
   ValidateVisible: boolean,
 
   // ValidationOptions
   FieldClass: string,
-  ValidationStrategy: ValidationStrategy
+  ValidationStrategy: (ValidationStrategy | null)
 }
-export interface VPFieldOptions extends VPOptions {
+export interface VPFieldOptions extends ValidatableOptions, VPOptions {
   // ControlFlow
-  ValidateOn: {
-    [index: string]: boolean,
-    blur: boolean, // When we lose focus
-    input: boolean, // Element changed
-    change: boolean, // When the element is updated
-    mouseleave: boolean // When the element loses the mouse (For visual controls)
-  },
-
-  DirtyOn: {
-    [index: string]: boolean,
-    blur: boolean, // When we lose focus
-    input: boolean, // Element changed
-    change: boolean, // When the element is updated
-    mouseleave: boolean // When the element loses the mouse (For visual controls)
-  },
-
-  FormatOn: {
-    [index: string]: boolean,
-    blur: boolean, // When we lose focus
-    input: boolean, // Element changed
-    change: boolean, // When the element is updated
-    mouseleave: boolean // When the element loses the mouse (For visual controls)
-  },
+  ValidateOn: ChangeActions,
+  DirtyOn: ChangeActions,
+  FormatOn: ChangeActions,
 
   // ValidationOptions
   ForceRules: boolean,

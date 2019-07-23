@@ -1,4 +1,3 @@
-import { mergeDeep } from '@/util/mergeDeep'
 import { debug } from '@/util/debug'
 import { isSet } from '@/util/isSet'
 import { toBoolean } from '@/util/casts/toBoolean'
@@ -10,8 +9,11 @@ import { ValidationLifecycle, ValidationCB } from '@/interfaces/validation/Valid
 import { DOMMessaging } from '@/lib/DOMMessaging'
 import { EventEmitter } from '@/mixins/EventEmitter'
 
+import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions'
+
 export const Validatable = EventEmitter(class extends DOMMessaging {
   [index: string]: any // Allow for child properties to be accessible
+  static Options = ValidatableOptions;
 
   dispatchEvent: any // Defined by EventEmitter
   createEvent: any // Defined by EventEmitter
@@ -27,27 +29,12 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     this.$valid = null
 
     // Set some logical defaults
-    this.$options = mergeDeep({
-      ErrorClassName: '-isError',
-      ValidClassName: '-isValid',
-      MessageClassName: 'VPMessage',
-      MessageContainerClassName: 'VPMessages',
-      MessageAnchor: element,
-      MessagePOS: 'BOTTOM', // VerticalPosition.bottom
-      ScrollTo: true,
-      ScrollAnchor: element,
-      Lifecycle: {
-        Valid: {
-          CB: [],
-          Message: ''
-        },
-        Invalid: {
-          CB: [],
-          Message: ''
-        }
-      },
-      Watch: true
-    }, options) as VPOptions
+    if (!(options instanceof ValidatableOptions)) {
+      this.$options = new Validatable.Options(options, element);
+    } else {
+      this.$options = options;
+    }
+
     if (element && element instanceof HTMLElement) {
       this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
     }
@@ -201,3 +188,5 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     return false
   }
 })
+
+Validatable.prototype.Options = ValidatableOptions;

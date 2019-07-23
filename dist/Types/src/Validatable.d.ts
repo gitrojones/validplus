@@ -1,6 +1,7 @@
 import { VPOptions } from "./interfaces/VPOptions";
 import { ValidationStrategies } from "./interfaces/validation/ValidationStrategy";
 import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
+import { ValidatableOptions } from "./models/VPOptions/ValidatableOptions";
 export declare const Validatable: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
@@ -34,4 +35,5 @@ export declare const Validatable: {
         removeMessage(message: string): void;
         clearMessages(): void;
     };
+    Options: typeof ValidatableOptions;
 };

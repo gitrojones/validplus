@@ -1,7 +1,6 @@
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
-import { mergeDeep } from '@/util/mergeDeep'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
@@ -11,7 +10,11 @@ import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRu
 import { VPField } from '@/Field'
 import { Validatable } from '@/Validatable'
 
+import { FieldsetOptions } from '@/models/VPOptions/FieldsetOptions'
+
 export class VPFieldset extends Validatable {
+  static Options = FieldsetOptions;
+
   $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
@@ -33,9 +36,9 @@ export class VPFieldset extends Validatable {
     element: HTMLElement,
     strategy: string | ValidationStrategy,
     options: VPFieldsetOptions,
-    onValidate: ValidationLifecycle
+    onValidate: (ValidationLifecycle | undefined)
   ) {
-    super(options, element)
+    super(new VPFieldset.Options(options, element), element)
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPFieldset] Expected element')
@@ -49,15 +52,12 @@ export class VPFieldset extends Validatable {
       throw new Error('[VPFieldset] Expected ValidationStrategy to be a function.')
     }
 
-    mergeDeep(this.$options, {
-      ValidationStrategy: validationStrategy,
-      ValidateVisible: true,
-      FieldClass: 'VPField',
-      Watch: false
-    }, options)
+    this.$options.ValidationStrategy = this.$strategy = validationStrategy;
 
-    this.setLifecycle(onValidate)
-    this.$strategy = this.$options.ValidationStrategy
+    if (onValidate) {
+      this.setLifecycle(onValidate)
+    }
+
     this.$fields = []
     this.$emitFields = []
   }
@@ -190,7 +190,7 @@ export class VPFieldset extends Validatable {
       throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
     }
 
-    const field = new VPField(el, options, customRules, onValidate)
+    const field = new VPField(el, options, customRules || [], onValidate)
     this.$fields.push(field)
     this.watchField(field)
 

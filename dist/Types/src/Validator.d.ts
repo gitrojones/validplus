@@ -4,6 +4,7 @@ import { VPValidatorOptions, VPFieldsetOptions } from "./interfaces/VPOptions";
 import { Validatable } from "./Validatable";
 import { VPFieldset } from "./Fieldset";
 import { VPField } from "./Field";
+import { ValidatorOptions } from "./models/VPOptions/ValidatorOptions";
 /**
  * ValidPlus Validator instance, the container
  * responsible for firing off the validation cycle
@@ -11,6 +12,7 @@ import { VPField } from "./Field";
  * @name VPValidator
  */
 export declare class VPValidator extends Validatable {
+    static Options: typeof ValidatorOptions;
     $options: VPValidatorOptions;
     $emitFieldsets: VPFieldset[];
     $fieldsets: VPFieldset[];

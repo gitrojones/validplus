@@ -17,10 +17,12 @@ import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules
 
 import { ValidInput } from '@/types/ValidInput'
 import { Validatable } from '@/Validatable'
+import { FieldOptions } from '@/models/VPOptions/FieldOptions'
 
 export class VPField extends Validatable {
+  static Options = FieldOptions;
+
   $Input: (ValidInput | null) = null
-  $options: VPFieldOptions = this.$options
   $dirty: boolean = false
   $canValidate: boolean = true
   $formatterEvent: { pre: boolean, post: boolean } = {
@@ -32,28 +34,10 @@ export class VPField extends Validatable {
     element: HTMLElement,
     options: VPFieldOptions,
     customRules: CustomValidationRule[],
-    onValidate: ValidationLifecycle
+    onValidate: (ValidationLifecycle | undefined)
   ) {
-    super(options, element)
-
-    if (!(element instanceof HTMLElement)) {
-      throw new Error('[VPField] Expected element')
-    }
-
-    mergeDeep(this.$options, {
-      ForceRules: false,
-      InputRules: {},
-      CustomRules: customRules,
-      InputFormatter: {},
-      PrimaryInput: null,
-      PrimaryInputIndex: 0,
-      PrimaryInputType: null,
-      InputTypes: ['input', 'select', 'textarea'],
-      ShowFieldRuleErrors: false,
-      ShowCustomRuleErrors: true,
-      ValidateLazyCustomRules: true,
-      ValidateLazyFieldRules: true,
-      ValidateAsyncResolved: true,
+    super(new VPField.Options(mergeDeep({
+      CustomRules: customRules || [],
       DirtyOn: {
         blur: toBoolean(element.getAttribute('vp-dirtyBlur'), false),
         input: toBoolean(element.getAttribute('vp-dirtyInput'), true),
@@ -72,9 +56,16 @@ export class VPField extends Validatable {
         change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
-    }, options)
+    }, options) as VPFieldOptions, element), element);
 
-    this.setLifecycle(onValidate)
+    if (!(element instanceof HTMLElement)) {
+      throw new Error('[VPField] Expected element')
+    }
+
+    if (onValidate) {
+      this.setLifecycle(onValidate)
+    }
+
     this.setInput(this.$options.PrimaryInput)
   }
 
@@ -170,7 +161,7 @@ export class VPField extends Validatable {
       debug('[VPField] Querying controllers')
       let controllers: FilteredControllerTypes = this.$options.InputTypes
         .reduce((items: FilteredControllerTypes, type: string) => {
-          items[type] = (Array.from(this.$element.getElementsByTagName(type)) as ValidInput[]).reduce(parseInput, []) as ValidInput[]
+          items[type] = ((Array.from(this.$element.getElementsByTagName(type)) || []) as ValidInput[]).reduce(parseInput, []) as ValidInput[]
           debug(`[VPField] Fetched ${type} controllers`, items[type])
           return items
         }, {} as FilteredControllerTypes)
@@ -351,7 +342,7 @@ export class VPField extends Validatable {
         }, [])
     } else {
       debug('ValidateFullCustomRules')
-      customErrors = customRules.map((func) => {
+      customErrors = customRules.map((func: CustomValidationRule) => {
         return func(attributes, this.$element, this.$input as HTMLInputElement)
       })
     }

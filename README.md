@@ -20,6 +20,9 @@ The main validation object. Marshals validation to descendants
 
 ##### API
 See `Docs`
+Option classes are provided for each Layer.
+`IE. (Valiator.Options, Fieldset.Options, Field.Options)`
+These clases are optional, but provide support for typehinting outside of instantiation.
 
 ### Package Size
 The library comes in at:
@@ -29,7 +32,7 @@ Core validation library
 |----------------------|
 | Raw  | GZip | Brotli |
 |------|------|--------|
-| 55kb | 17kb | 15kb   |
+| 58kb | 18kb | 16kb   |
 |------|------|--------|
 ```
 #### VPVue (Alpha)
@@ -38,7 +41,7 @@ VueJS Validation bindings
 |-----------------------|
 | Raw  | GZip  | Brotli |
 |------|-------|--------|
-| 14kb | 4.6kb | 4.2kb  |
+| 14kb | 4.7kb | 4.2kb  |
 |------|-------|--------|
 ```
 

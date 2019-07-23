@@ -4,12 +4,13 @@ import { CustomValidationRule } from "./validation/CustomValidationRule";
 import { ValidationLifecycle } from "./validation/ValidationLifecycle";
 import { ValidationStrategy } from "./validation/ValidationStrategy";
 import { InputFormatters } from "./InputFormatters";
+import { ChangeActions } from "./events/ChangeActions";
 import { ValidInput } from "../types/ValidInput";
+import { ValidatableOptions } from "../models/VPOptions/ValidatableOptions";
 export interface VPOptions {
     [property: string]: any;
     Watch: boolean;
     Lifecycle: ValidationLifecycle;
-    ClassName: string;
     ErrorClassName: string;
     ValidClassName: string;
     PrimaryInput: (null | ValidInput);
@@ -18,43 +19,24 @@ export interface VPOptions {
     InputTypes: ('select' | 'input' | 'textarea')[];
     MessageClassName: string;
     MessageContainerClassName: string;
-    MessageAnchor: HTMLElement;
+    MessageAnchor: (HTMLElement | null);
     MessagePOS: VerticalPosition;
     ScrollTo: boolean;
-    ScrollAnchor: HTMLElement;
+    ScrollAnchor: (HTMLElement | null);
 }
-export interface VPValidatorOptions extends VPOptions {
+export interface VPValidatorOptions extends ValidatableOptions, VPOptions {
     ValidateLazy: boolean;
     ValidateVisible: boolean;
-    ValidationInputs: string[];
 }
-export interface VPFieldsetOptions extends VPOptions {
+export interface VPFieldsetOptions extends ValidatableOptions, VPOptions {
     ValidateVisible: boolean;
     FieldClass: string;
-    ValidationStrategy: ValidationStrategy;
+    ValidationStrategy: (ValidationStrategy | null);
 }
-export interface VPFieldOptions extends VPOptions {
-    ValidateOn: {
-        [index: string]: boolean;
-        blur: boolean;
-        input: boolean;
-        change: boolean;
-        mouseleave: boolean;
-    };
-    DirtyOn: {
-        [index: string]: boolean;
-        blur: boolean;
-        input: boolean;
-        change: boolean;
-        mouseleave: boolean;
-    };
-    FormatOn: {
-        [index: string]: boolean;
-        blur: boolean;
-        input: boolean;
-        change: boolean;
-        mouseleave: boolean;
-    };
+export interface VPFieldOptions extends ValidatableOptions, VPOptions {
+    ValidateOn: ChangeActions;
+    DirtyOn: ChangeActions;
+    FormatOn: ChangeActions;
     ForceRules: boolean;
     InputFormatter: InputFormatters;
     InputRules: HTMLValidationRules;

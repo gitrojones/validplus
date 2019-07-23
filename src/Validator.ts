@@ -1,5 +1,4 @@
 import { debug } from '@/util/debug'
-import { mergeDeep } from '@/util/mergeDeep'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
 
@@ -11,6 +10,8 @@ import { Validatable } from '@/Validatable'
 import { VPFieldset } from '@/Fieldset'
 import { VPField } from '@/Field'
 
+import { ValidatorOptions } from '@/models/VPOptions/ValidatorOptions'
+
 /**
  * ValidPlus Validator instance, the container
  * responsible for firing off the validation cycle
@@ -18,6 +19,8 @@ import { VPField } from '@/Field'
  * @name VPValidator
  */
 export class VPValidator extends Validatable {
+  static Options = ValidatorOptions;
+
   $options: VPValidatorOptions = this.$options
   $emitFieldsets: VPFieldset[]
   $fieldsets: VPFieldset[]
@@ -39,16 +42,10 @@ export class VPValidator extends Validatable {
    * @param element - Validator Anchor Element (Typically a form)
    */
   constructor (options: VPValidatorOptions, element: HTMLElement) {
-    super(options, element)
+    super(new VPValidator.Options(options, element), element)
 
     this.$emitFieldsets = []
     this.$fieldsets = []
-    mergeDeep(this.$options, {
-      ValidateLazy: true,
-      ValidateVisible: true,
-      ValidationInputs: ['input', 'select', 'textarea']
-    }, options)
-    this.setLifecycle(this.$options.Lifecycle)
   }
 
   isValid () {
@@ -199,7 +196,6 @@ export class VPValidator extends Validatable {
     onValidate: ValidationLifecycle = {
       Valid: {}, Invalid: {}
     }) {
-
     const fieldset = new VPFieldset(fs, strategy, options, onValidate)
 
     fields.forEach(field => {

@@ -4,14 +4,16 @@ import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle
 import { CustomValidationRule } from "./interfaces/validation/CustomValidationRule";
 import { VPField } from "./Field";
 import { Validatable } from "./Validatable";
+import { FieldsetOptions } from "./models/VPOptions/FieldsetOptions";
 export declare class VPFieldset extends Validatable {
+    static Options: typeof FieldsetOptions;
     $options: VPFieldsetOptions;
     $strategy: ValidationStrategy;
     $fields: VPField[];
     $emitFields: VPField[];
     $fieldWatch: (_e: Event, trigger: VPField) => void;
     readonly $visibleFields: VPField[];
-    constructor(element: HTMLElement, strategy: string | ValidationStrategy, options: VPFieldsetOptions, onValidate: ValidationLifecycle);
+    constructor(element: HTMLElement, strategy: string | ValidationStrategy, options: VPFieldsetOptions, onValidate: (ValidationLifecycle | undefined));
     isValid(validateDirty?: boolean): (boolean | Promise<boolean>);
     removeField(field: VPField): VPField | null | undefined;
     watchField(field: VPField): void;
