@@ -19,7 +19,7 @@ Test coverage is focused on feature coverage. In order for a feature to be merge
 The main validation object. Marshals validation to descendants
 
 ##### API
-See `Docs`
+See [Docs](https://gitrojones.github.io/validplus/)
 Option classes are provided for each Layer.
 `IE. (Valiator.Options, Fieldset.Options, Field.Options)`
 These clases are optional, but provide support for typehinting outside of instantiation.
