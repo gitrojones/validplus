@@ -13,11 +13,7 @@ export declare class VPFieldset extends Validatable {
     $emitFields: VPField[];
     $fieldWatch: (_e: Event, trigger: VPField) => void;
     readonly $visibleFields: VPField[];
-<<<<<<< HEAD
-    constructor(element: HTMLElement, strategy: string | ValidationStrategy, options: VPFieldsetOptions, onValidate: (ValidationLifecycle | undefined));
-=======
-    constructor(element: HTMLElement, strategy: (string | ValidationStrategy), options: VPFieldsetOptions, onValidate: ValidationLifecycle);
->>>>>>> Typescript vue support
+    constructor(element: HTMLElement, strategy: (string | ValidationStrategy), options: VPFieldsetOptions, onValidate: (ValidationLifecycle | undefined));
     isValid(validateDirty?: boolean): (boolean | Promise<boolean>);
     removeField(field: VPField): VPField | null | undefined;
     watchField(field: VPField): void;

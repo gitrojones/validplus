@@ -26,11 +26,6 @@ export declare class VPValidator extends Validatable {
     isValid(): (boolean | Promise<boolean>);
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
-<<<<<<< HEAD
     removeFieldset(fieldset: VPFieldset): VPFieldset | null | undefined;
-    createFieldset(fs: HTMLElement, strategy: ValidationStrategy, options: VPFieldsetOptions, fields?: VPField[], onValidate?: ValidationLifecycle): VPFieldset;
-=======
-    removeFieldset(fieldset: VPFieldset): void;
-    createFieldset(fs: HTMLElement, strategy: (ValidationStrategy | string), options: VPFieldsetOptions, fields: VPField[], onValidate: ValidationLifecycle): VPFieldset;
->>>>>>> Typescript vue support
+    createFieldset(fs: HTMLElement, strategy: (ValidationStrategy | string), options: VPFieldsetOptions, fields?: VPField[], onValidate?: ValidationLifecycle): VPFieldset;
 }

@@ -1,8 +1,8 @@
-import { VPFieldOptions } from '@/interfaces/VPOptions';
-import { VPField } from '@/Field';
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule';
+import { VPFieldOptions } from "../../interfaces/VPOptions";
+import { VPField } from "../../Field";
+import { CustomValidationRule } from "../../interfaces/validation/CustomValidationRule";
 import { Validatable } from './Validatable';
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
+import { ValidationLifecycle } from "../../interfaces/validation/ValidationLifecycle";
 declare const Field_base: import("vue-class-component/lib/declarations").VueClass<Validatable>;
 export declare class Field extends Field_base {
     readonly VPOptions: VPFieldOptions;

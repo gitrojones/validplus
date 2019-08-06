@@ -1,11 +1,11 @@
 import { Vue } from 'vue-property-decorator';
-import { VPValidatorOptions, VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions';
-import { VPValidator as _VPValidator } from '@/Validator';
-import { VPFieldset } from '@/Fieldset';
-import { VPField } from '@/Field';
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle';
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule';
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy';
+import { VPValidatorOptions, VPFieldsetOptions, VPFieldOptions } from "../../interfaces/VPOptions";
+import { VPValidator as _VPValidator } from "../../Validator";
+import { VPFieldset } from "../../Fieldset";
+import { VPField } from "../../Field";
+import { ValidationLifecycle } from "../../interfaces/validation/ValidationLifecycle";
+import { CustomValidationRule } from "../../interfaces/validation/CustomValidationRule";
+import { ValidationStrategy } from "../../interfaces/validation/ValidationStrategy";
 export declare class Validatable extends Vue {
     readonly VPOptions: (VPValidatorOptions | VPFieldsetOptions | VPFieldOptions);
     readonly validator: _VPValidator;

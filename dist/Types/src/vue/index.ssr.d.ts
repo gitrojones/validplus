@@ -4,7 +4,7 @@
  * @license: GPL 3.0
  */
 import _Vue from 'vue';
-import { VPValidator } from '@/vue/components/Validator.vue';
+import { VPValidator } from "./components/Validator.vue";
 import { VPFieldset } from './components/Fieldset.vue';
 import { VPField } from './components/Field.vue';
 declare function VPVuePlugin<VPVueOptions>(Vue: typeof _Vue, _options: VPVueOptions): void;
