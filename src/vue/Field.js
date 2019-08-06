@@ -1,4 +1,4 @@
-import { Validatable } from './Validatable'
+import { Validatable } from './Validatable';
 
 export const Field = {
   props: {
@@ -16,9 +16,9 @@ export const Field = {
   watch: {
     'VPField.$valid': function (isValid) {
       if (isValid) {
-        this.$emit('isValid', this)
+        this.$emit('isValid', this);
       } else {
-        this.$emit('isInvalid', this)
+        this.$emit('isInvalid', this);
       }
     }
   },
@@ -28,11 +28,11 @@ export const Field = {
       this.VPOptions$,
       this.VPRules$,
       this.VPValid$
-    )
+    );
 
     this.$nextTick(() => {
-      this.$emit('VPAddField', this.VPField)
-    })
+      this.$emit('VPAddField', this.VPField);
+    });
   },
   data () {
     return {
@@ -40,7 +40,7 @@ export const Field = {
       VPOptions$: this.VPOptions || {},
       VPRules$: this.VPRules || [],
       VPValid$: this.VPValid || {}
-    }
+    };
   },
   methods: {
     VPRemove () {
@@ -48,39 +48,39 @@ export const Field = {
     },
 
     VPChangeAnchor (el) {
-      this.VPField.generateMessageNode(el)
+      this.VPField.generateMessageNode(el);
     },
 
     VPAddRule (rule) {
       if (typeof rule === 'function') {
-        this.VPField.$options.CustomRules.push(rule)
+        this.VPField.$options.CustomRules.push(rule);
       } else {
-        console.error('[VPField] Rule must be a function that resolves to a promise')
+        console.error('[VPField] Rule must be a function that resolves to a promise');
       }
     },
 
     VPGatherFields () {
       Object.keys(this.$slots).forEach((slot) => {
-        const data = this.$slots[slot]
+        const data = this.$slots[slot];
 
         data.forEach((field) => {
           if (field._isVue) {
             field.$once('AddField', function (field) {
-              this.VPFields.push(field)
-            })
+              this.VPFields.push(field);
+            });
           }
-        })
-      })
+        });
+      });
 
       this.$children.forEach((field) => {
         if (field._isVue) {
           field.$once('AddField', function (field) {
-            this.VPFields.push(field)
-          })
+            this.VPFields.push(field);
+          });
         }
-      })
+      });
     }
   }
-}
+};
 
-export default Field
+export default Field;

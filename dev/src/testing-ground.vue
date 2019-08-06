@@ -2,7 +2,7 @@
 <div class="testing-ground">
   <div class="testing-ground__wrapper">
     <!-- Import components here to test -->
-    <vp-fieldset @isValid="remove">
+    <VPFieldset @isValid="remove">
       <span>Hello World</span>
 
         <VPField id="external" 
@@ -84,8 +84,8 @@ export default {
     }
   },
   components: {
-    VpFieldset: fieldset,
-    VpField: field
+    VPFieldset: fieldset,
+    VPField: field
   }
 }
 </script>
