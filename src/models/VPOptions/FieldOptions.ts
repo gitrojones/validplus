@@ -16,6 +16,7 @@ export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
   ValidateLazyCustomRules: boolean = true;
   ValidateLazyFieldRules: boolean = true;
   ValidateAsyncResolved: boolean = true;
+  ScrollTo: boolean = false; // ScrollTo isn't intended to be field-level
   DirtyOn: ChangeActions = {} as ChangeActions;
   FormatOn: ChangeActions = {} as ChangeActions;
   ValidateOn: ChangeActions = {} as ChangeActions;

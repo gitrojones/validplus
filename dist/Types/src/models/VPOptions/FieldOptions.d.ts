@@ -14,6 +14,7 @@ export declare class FieldOptions extends ValidatableOptions implements VPFieldO
     ValidateLazyCustomRules: boolean;
     ValidateLazyFieldRules: boolean;
     ValidateAsyncResolved: boolean;
+    ScrollTo: boolean;
     DirtyOn: ChangeActions;
     FormatOn: ChangeActions;
     ValidateOn: ChangeActions;
