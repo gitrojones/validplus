@@ -1,6 +1,6 @@
 {
   "name": "validplus",
-  "version": "2.1.3",
+  "version": "2.1.4",
   "description": "HTML Inspired Validator, requires light rigging and has graceful fallback",
   "main": "dist/ValidPlus.js",
   "types": "dist/Types/validplus.d.ts",
