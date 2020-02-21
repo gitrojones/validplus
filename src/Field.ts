@@ -53,6 +53,7 @@ export class VPField extends Validatable {
       ShowCustomRuleErrors: true,
       ValidateLazyCustomRules: true,
       ValidateLazyFieldRules: true,
+      ScrollTo: false,
       ValidateAsyncResolved: true,
       DirtyOn: {
         blur: toBoolean(element.getAttribute('vp-dirtyBlur'), false),
