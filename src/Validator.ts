@@ -42,7 +42,7 @@ export class VPValidator extends Validatable {
    * @param options - Configuration for the Validator
    * @param element - Validator Anchor Element (Typically a form)
    */
-  constructor (options: VPValidatorOptions, element: HTMLElement) {
+  constructor (options: (VPValidatorOptions | object), element: HTMLElement) {
     super(new VPValidator.Options(options, element), element)
 
     this.$emitFieldsets = []
@@ -181,8 +181,8 @@ export class VPValidator extends Validatable {
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
   createFieldset (fs: HTMLElement,
-    strategy: ValidationStrategy,
-    options: VPFieldsetOptions,
+    strategy: (ValidationStrategy | string),
+    options: (VPFieldsetOptions | object),
     fields: VPField[] = [],
     onValidate: ValidationLifecycle = {
       Valid: {}, Invalid: {}

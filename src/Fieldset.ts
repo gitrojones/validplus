@@ -35,9 +35,9 @@ export class VPFieldset extends Validatable {
 
   constructor (
     element: HTMLElement,
-    strategy: string | ValidationStrategy,
-    options: VPFieldsetOptions,
-    onValidate: (ValidationLifecycle | undefined)
+    strategy: (string | ValidationStrategy),
+    options: (VPFieldsetOptions | object),
+    onValidate: (ValidationLifecycle | undefined) = undefined
   ) {
     super(new VPFieldset.Options(options, element), element)
 
@@ -171,9 +171,9 @@ export class VPFieldset extends Validatable {
 
   createField (
     el: HTMLElement,
-    options: VPFieldOptions,
+    options: (VPFieldOptions | object),
     customRules: CustomValidationRule[],
-    onValidate: ValidationLifecycle
+    onValidate: (ValidationLifecycle | undefined) = undefined
   ) {
     if (!(el instanceof Element)) {
       throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')

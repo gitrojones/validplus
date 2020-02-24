@@ -32,9 +32,9 @@ export class VPField extends Validatable {
 
   constructor (
     element: HTMLElement,
-    options: VPFieldOptions,
+    options: (VPFieldOptions | object),
     customRules: CustomValidationRule[],
-    onValidate: (ValidationLifecycle | undefined)
+    onValidate: (ValidationLifecycle | undefined) = undefined
   ) {
     super(new VPField.Options(mergeDeep({
       CustomRules: customRules || [],
@@ -461,3 +461,5 @@ export class VPField extends Validatable {
     }
   }
 }
+
+export default VPField

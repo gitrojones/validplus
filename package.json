@@ -17,8 +17,8 @@
     "test": "npm run test:prod",
     "test:prod": "NODE_ENV=production npm run _test",
     "test:dev": "NODE_ENV=development npm run _test",
-    "_test": "TEST=true mocha-webpack -w --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
-    "test-ci": "PROD=true mocha-webpack --webpack-config test.webpack.js --require test/setup.js test/**/*.test.js",
+    "_test": "TEST=true mocha-webpack -w --webpack-config test.webpack.js --require test/setup.ts test/**/*.spec.ts",
+    "test-ci": "PROD=true mocha-webpack --webpack-config test.webpack.js --require test/setup.ts test/**/*.spec.ts",
     "cover": "NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test-ci"
   },
   "nyc": {
@@ -53,6 +53,8 @@
     "@babel/plugin-transform-typescript": "^7.1.0",
     "@babel/preset-env": "^7.1.5",
     "@babel/preset-typescript": "^7.1.0",
+    "@types/expect": "^24.3.0",
+    "@types/mocha": "^7.0.1",
     "@vue/test-utils": "^1.0.0-beta.25",
     "autoprefixer": "^9.3.1",
     "babel-loader": "^8.0.4",

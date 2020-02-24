@@ -1,4 +1,4 @@
-import { VPFieldOptions } from '@/interfaces/VPOptions'
+import { VPFieldOptions, VPOptions } from '@/interfaces/VPOptions'
 import { InputFormatters } from '@/interfaces/InputFormatters'
 import { ChangeActions } from '@/interfaces/events/ChangeActions'
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
@@ -16,13 +16,13 @@ export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
   ValidateLazyCustomRules: boolean = true
   ValidateLazyFieldRules: boolean = true
   ValidateAsyncResolved: boolean = true
-  ScrollTo: boolean = false // ScrollTo isn't intended to be field-level
+  ScrollTo: boolean = false
   DirtyOn: ChangeActions = {} as ChangeActions
   FormatOn: ChangeActions = {} as ChangeActions
   ValidateOn: ChangeActions = {} as ChangeActions
 
-  constructor (options: VPFieldOptions, element: (HTMLElement | null) = null) {
-    super(options, element)
+  constructor (options: (VPFieldOptions | object), element: (HTMLElement | null) = null) {
+    super(options as VPOptions, element)
     Object.assign(this, options)
   }
 }
