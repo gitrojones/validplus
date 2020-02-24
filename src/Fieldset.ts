@@ -13,18 +13,19 @@ import { Validatable } from '@/Validatable'
 import { FieldsetOptions } from '@/models/VPOptions/FieldsetOptions'
 
 export class VPFieldset extends Validatable {
-  static Options = FieldsetOptions;
+  static Options = FieldsetOptions
 
+  // noinspection ES6ClassMemberInitializationOrder
   $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
   $emitFields: VPField[]
-  $fieldWatch = ((_e: Event, trigger: VPField) => {
+  $fieldWatch = (_e: Event, trigger: VPField) => {
     _e.stopPropagation()
     this.$emitFields.push(trigger)
 
     this.isValid(false)
-  }).bind(this)
+  }
 
   get $visibleFields (): VPField[] {
     return this.$fields.filter((field: VPField) => {
@@ -52,7 +53,7 @@ export class VPFieldset extends Validatable {
       throw new Error('[VPFieldset] Expected ValidationStrategy to be a function.')
     }
 
-    this.$options.ValidationStrategy = this.$strategy = validationStrategy;
+    this.$options.ValidationStrategy = this.$strategy = validationStrategy
 
     if (onValidate) {
       this.setLifecycle(onValidate)
@@ -70,7 +71,7 @@ export class VPFieldset extends Validatable {
         let validate = true
 
         // Don't validate dirty fields
-        if (!validateDirty && field.$dirty === false) {
+        if (!validateDirty && !field.$dirty) {
           debug('[VPFieldset] Skip dirty field', index)
           validate = false
         }
@@ -88,25 +89,10 @@ export class VPFieldset extends Validatable {
           debug('[VPFieldset] Cached Valid', index)
           valid = field.$valid
         } else {
-          let originalWatchValue = field.$options.Watch
           // Concat to the emitFields watch to prevent
           // further loops of validation as they trigger
           this.$emitFields.push(field)
-          field.$options.Watch = false
-          valid = field.isValid()
-          if (isAsync(valid)) {
-            valid = new Promise((resolve, reject) => {
-              return (valid as Promise<boolean>).then((isValid) => {
-                field.$options.Watch = originalWatchValue
-                resolve(isValid)
-              }).catch((err) => {
-                field.$options.Watch = originalWatchValue
-                reject(err)
-              })
-            })
-          } else {
-            field.$options.Watch = originalWatchValue
-          }
+          valid = this.assertValidNoWatch(field)
         }
 
         return valid
@@ -141,6 +127,7 @@ export class VPFieldset extends Validatable {
   }
 
   removeField (field: VPField) {
+    // noinspection SuspiciousTypeOfGuard
     if (!(field instanceof VPField)) {
       throw new Error('[VPFieldset] Field must be an instanceof VPField')
     }
@@ -161,6 +148,7 @@ export class VPFieldset extends Validatable {
   }
 
   watchField (field: VPField) {
+    // noinspection SuspiciousTypeOfGuard
     if (!(field instanceof VPField)) {
       throw new Error('Field must be an instance of VPField')
     }
@@ -171,6 +159,7 @@ export class VPFieldset extends Validatable {
   }
 
   addField (field: VPField) {
+    // noinspection SuspiciousTypeOfGuard
     if (!(field instanceof VPField)) {
       throw new Error('[VPFieldset] Field must be an instanceof VPField')
     }

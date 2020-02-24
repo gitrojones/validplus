@@ -19,17 +19,18 @@ import { ValidatorOptions } from '@/models/VPOptions/ValidatorOptions'
  * @name VPValidator
  */
 export class VPValidator extends Validatable {
-  static Options = ValidatorOptions;
+  static Options = ValidatorOptions
 
+  // noinspection ES6ClassMemberInitializationOrder
   $options: VPValidatorOptions = this.$options
   $emitFieldsets: VPFieldset[]
   $fieldsets: VPFieldset[]
-  $fieldsetWatch = ((_e: Event, trigger: VPFieldset) => {
+  $fieldsetWatch = (_e: Event, trigger: VPFieldset) => {
     _e.stopPropagation()
 
     this.$emitFieldsets.push(trigger)
     this.isValid()
-  }).bind(this)
+  }
 
   private get $visibleFieldsets (): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {
@@ -62,25 +63,10 @@ export class VPValidator extends Validatable {
           debug('[VPValidator] Cached Valid', index)
           valid = fieldset.$valid
         } else {
-          let originalWatchValue = fieldset.$options.Watch
           // Concat to the emitFieldsets watch to prevent
           // further loops of validation as they trigger
           this.$emitFieldsets.push(fieldset)
-          fieldset.$options.Watch = false
-          valid = fieldset.isValid()
-          if (isAsync(valid)) {
-            valid = new Promise((resolve, reject) => {
-              return (valid as Promise<boolean>).then((isValid) => {
-                fieldset.$options.Watch = originalWatchValue
-                resolve(isValid)
-              }).catch((err) => {
-                fieldset.$options.Watch = originalWatchValue
-                reject(err)
-              })
-            })
-          } else {
-            fieldset.$options.Watch = originalWatchValue
-          }
+          valid = this.assertValidNoWatch(fieldset)
         }
 
         isValid = valid
@@ -122,7 +108,7 @@ export class VPValidator extends Validatable {
       // Return the promise for async
       return new Promise((resolve) => {
         Promise.all(promises).then((isValid: boolean[]) => {
-          this.$isValid = isValid.every((valid) => valid === true)
+          this.$isValid = isValid.every((valid) => valid)
           this.$emitFieldsets = []
           return resolve(this.$isValid)
         }).catch((err) => {
@@ -148,6 +134,7 @@ export class VPValidator extends Validatable {
   // TODO: Child state checks
   // TODO: Add MutationObserver on children
   addFieldset (fieldset: VPFieldset) {
+    // noinspection SuspiciousTypeOfGuard
     if (!(fieldset instanceof VPFieldset)) {
       throw new Error('[Validator] Fieldset must be an instanceof VPFieldset')
     }
@@ -158,7 +145,10 @@ export class VPValidator extends Validatable {
 
   // TODO: method to remove watchers
   watchFieldset (fieldset: VPFieldset) {
-    if (!(fieldset instanceof VPFieldset)) return
+    // noinspection SuspiciousTypeOfGuard
+    if (!(fieldset instanceof VPFieldset)) {
+      throw new Error('[VPFieldset] Field must be an instanceof VPField')
+    } // tslint:disable-line
 
     // TODO: Optimize by tracking state and only revalidating
     // if internal state changes. Currently wasteful
@@ -166,7 +156,8 @@ export class VPValidator extends Validatable {
   }
 
   removeFieldset (fieldset: VPFieldset) {
-    if (!(fieldset instanceof VPFieldset)) {
+    // noinspection SuspiciousTypeOfGuard
+    if (!(fieldset instanceof VPFieldset)) { // tslint:disable-line
       throw new Error('[VPFieldset] Field must be an instanceof VPField')
     }
 

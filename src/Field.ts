@@ -20,7 +20,7 @@ import { Validatable } from '@/Validatable'
 import { FieldOptions } from '@/models/VPOptions/FieldOptions'
 
 export class VPField extends Validatable {
-  static Options = FieldOptions;
+  static Options = FieldOptions
 
   $Input: (ValidInput | null) = null
   $dirty: boolean = false
@@ -56,7 +56,7 @@ export class VPField extends Validatable {
         change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
-    }, options) as VPFieldOptions, element), element);
+    }, options) as VPFieldOptions, element), element)
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPField] Expected element')
@@ -78,17 +78,17 @@ export class VPField extends Validatable {
       const validate: boolean = this.$options.ValidateOn[eventType] || false
       const dirty: boolean = this.$options.DirtyOn[eventType] || false
 
-      if (dirty === true) {
+      if (dirty) {
         this.$dirty = true
       }
 
-      let formatterEvent = this.$formatterEvent.pre === true || this.$formatterEvent.post === true
+      let formatterEvent = this.$formatterEvent.pre || this.$formatterEvent.post
       // We alias this for our purposes
-      if (format && !formatterEvent) this.formatInputPre()
-      if (this.$canValidate === true && this.$dirty === true && validate) {
+      if (format && !formatterEvent) this.formatInput(this.$options.InputFormatter.pre)
+      if (this.$canValidate && this.$dirty && validate) {
         this.isValid(true)
       }
-      if (format && !formatterEvent) this.formatInputPost()
+      if (format && !formatterEvent) this.formatInput(this.$options.InputFormatter.post)
 
       this.$formatterEvent.pre = false
       this.$formatterEvent.post = false
@@ -161,7 +161,7 @@ export class VPField extends Validatable {
       debug('[VPField] Querying controllers')
       let controllers: FilteredControllerTypes = this.$options.InputTypes
         .reduce((items: FilteredControllerTypes, type: string) => {
-          items[type] = ((Array.from(this.$element.getElementsByTagName(type)) || []) as ValidInput[]).reduce(parseInput, []) as ValidInput[]
+          items[type] = ((Array.from(this.$element.getElementsByTagName(type)) || []) as ValidInput[]).reduce(parseInput, [])
           debug(`[VPField] Fetched ${type} controllers`, items[type])
           return items
         }, {} as FilteredControllerTypes)
@@ -198,7 +198,7 @@ export class VPField extends Validatable {
 
   isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {
     this.$canValidate = false
-    if (!formattedExternal) this.formatInputPre()
+    if (!formattedExternal) this.formatInput(this.$options.InputFormatter.pre)
     // TODO: Diff messages
     this.clearMessages()
 
@@ -364,7 +364,7 @@ export class VPField extends Validatable {
       return this.$isValid
     }
 
-    if (!formattedExternal) this.formatInputPost()
+    if (!formattedExternal) this.formatInput(this.$options.InputFormatter.post)
     if (hasAsync(customErrors)) {
       debug('Returning Async')
 
@@ -446,32 +446,15 @@ export class VPField extends Validatable {
     }
   }
 
-  formatInputPre () {
-    const formatter = this.$options.InputFormatter.pre
-    if (this.$input === null) {
+  formatInput (formatter: Function) {
+    if (!this.$input) {
       throw new Error('[VPField] Cannot format Input as it is unset.')
     }
 
-    if (typeof formatter === 'function') {
+    if (typeof formatter === 'function') { // tslint:disable-line
       formatter(this.$input, (eventName: string) => {
         if (this.$input instanceof HTMLElement) {
           this.$formatterEvent.pre = true
-          this.$input.dispatchEvent(this.createEvent(eventName))
-        }
-      })
-    }
-  }
-
-  formatInputPost () {
-    const formatter = this.$options.InputFormatter.post
-    if (this.$input === null) {
-      throw new Error('[VPField] Cannot format Input as it is unset.')
-    }
-
-    if (typeof formatter === 'function') {
-      formatter(this.$input, (eventName: string) => {
-        if (this.$input instanceof HTMLElement) {
-          this.$formatterEvent.post = true
           this.$input.dispatchEvent(this.createEvent(eventName))
         }
       })

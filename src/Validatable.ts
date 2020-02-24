@@ -10,10 +10,13 @@ import { DOMMessaging } from '@/lib/DOMMessaging'
 import { EventEmitter } from '@/mixins/EventEmitter'
 
 import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions'
+import { VPField } from '@/Field'
+import { isAsync } from '@/util/isAsync'
+import { VPFieldset } from '@/Fieldset'
 
 export const Validatable = EventEmitter(class extends DOMMessaging {
   [index: string]: any // Allow for child properties to be accessible
-  static Options = ValidatableOptions;
+  static Options = ValidatableOptions
 
   dispatchEvent: any // Defined by EventEmitter
   createEvent: any // Defined by EventEmitter
@@ -30,9 +33,9 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     // Set some logical defaults
     if (!(options instanceof ValidatableOptions)) {
-      this.$options = new Validatable.Options(options, element);
+      this.$options = new Validatable.Options(options, element)
     } else {
-      this.$options = options;
+      this.$options = options
     }
 
     if (element && element instanceof HTMLElement) {
@@ -111,7 +114,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         )
       }
 
-      if (this.$options.ScrollTo === true) {
+      if (this.$options.ScrollTo) {
         // While always true, we check due to limitations with JSDOM
         // tslint:disable-next-line: strict-type-predicates
         if (this.$options.ScrollAnchor && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
@@ -122,10 +125,31 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       }
     }
 
-    if (this.$options.Watch === true) {
+    if (this.$options.Watch) {
       debug('[Validatable] Emit watch')
       this.dispatchEvent(this.createEvent('onValidate'), this)
     }
+  }
+
+  assertValidNoWatch (obj: (VPField | VPFieldset)): Promise<boolean> | boolean {
+    let originalWatchValue = obj.$options.Watch
+    obj.$options.Watch = false
+    let valid = obj.isValid()
+    if (isAsync(valid)) {
+      valid = new Promise((resolve, reject) => {
+        return (valid as Promise<boolean>).then((isValid) => {
+          obj.$options.Watch = originalWatchValue
+          resolve(isValid)
+        }).catch((err) => {
+          obj.$options.Watch = originalWatchValue
+          reject(err)
+        })
+      })
+    } else {
+      obj.$options.Watch = originalWatchValue
+    }
+
+    return valid
   }
 
   setLifecycle (lifecycle: ValidationLifecycle): void {
@@ -160,7 +184,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
             this.$options.Lifecycle.Valid.CB = []
           }
 
-          this.$options.Lifecycle.Valid.CB.push(lifecycle.Valid.CB)
+          this.$options.Lifecycle.Valid.CB.push(lifecycle.Valid.CB as ValidationCB)
         }
       }
       if (lifecycle.Invalid) {
@@ -174,7 +198,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
             this.$options.Lifecycle.Invalid.CB = []
           }
 
-          this.$options.Lifecycle.Invalid.CB.push(lifecycle.Invalid.CB)
+          this.$options.Lifecycle.Invalid.CB.push(lifecycle.Invalid.CB as ValidationCB)
         }
       }
     }
@@ -189,4 +213,4 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
   }
 })
 
-Validatable.prototype.Options = ValidatableOptions;
+Validatable.prototype.Options = ValidatableOptions
