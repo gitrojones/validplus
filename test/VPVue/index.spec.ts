@@ -1,3 +1,4 @@
+// @ts-ignore
 const { describe, it } = require('mocha')
 const { expect } = require('chai')
 const { mount, shallowMount } = require('@vue/test-utils')
@@ -31,7 +32,9 @@ describe('VPVue', function () {
     it('Should import Fieldset', function () {
       let TG = shallowMount(TestingGround)
 
+      // tslint:disable-next-line:no-unused-expression
       expect(TG.find(Fieldset).exists()).to.be.true
+      // tslint:disable-next-line:no-unused-expression
       expect(TG.find(Field).exists()).to.be.true
     })
   })
