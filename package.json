@@ -84,6 +84,7 @@
     "tslint": "^5.11.0",
     "tslint-config-standard": "^8.0.1",
     "tslint-language-service": "^0.9.9",
+    "ttypescript": "^1.5.10",
     "typedoc": "^0.13.0",
     "typedoc-webpack-plugin": "^1.1.4",
     "typescript": "^3.2.1",

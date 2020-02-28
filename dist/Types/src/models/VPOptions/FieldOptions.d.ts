@@ -18,5 +18,5 @@ export declare class FieldOptions extends ValidatableOptions implements VPFieldO
     DirtyOn: ChangeActions;
     FormatOn: ChangeActions;
     ValidateOn: ChangeActions;
-    constructor(options: VPFieldOptions, element?: (HTMLElement | null));
+    constructor(options: (VPFieldOptions | object), element?: (HTMLElement | null));
 }

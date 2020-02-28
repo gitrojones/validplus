@@ -5,10 +5,10 @@ export declare type ValidationCB = (VPInstance: (VPField | VPFieldset | VPValida
 export interface ValidationLifecycle {
     Valid: {
         Message?: string;
-        CB?: Array<ValidationCB>;
+        CB?: Array<ValidationCB> | Function;
     };
     Invalid: {
         Message?: string;
-        CB?: Array<ValidationCB>;
+        CB?: Array<ValidationCB> | Function;
     };
 }

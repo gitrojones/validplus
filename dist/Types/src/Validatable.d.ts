@@ -2,6 +2,8 @@ import { VPOptions } from "./interfaces/VPOptions";
 import { ValidationStrategies } from "./interfaces/validation/ValidationStrategy";
 import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
 import { ValidatableOptions } from "./models/VPOptions/ValidatableOptions";
+import { VPField } from "./Field";
+import { VPFieldset } from "./Fieldset";
 export declare const Validatable: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
@@ -20,6 +22,7 @@ export declare const Validatable: {
         $strategies: ValidationStrategies;
         $valid: boolean | null;
         $isValid: boolean | null;
+        assertValidNoWatch(obj: VPFieldset | VPField): boolean | Promise<boolean>;
         setLifecycle(lifecycle: ValidationLifecycle): void;
         isElementVisible(element: HTMLElement): boolean;
         $MessageContainerClassName: string;

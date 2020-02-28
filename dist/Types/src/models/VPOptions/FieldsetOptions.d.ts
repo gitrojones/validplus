@@ -5,5 +5,5 @@ export declare class FieldsetOptions extends ValidatableOptions implements VPFie
     ValidateVisible: boolean;
     FieldClass: string;
     ValidationStrategy: (ValidationStrategy | null);
-    constructor(options: VPFieldsetOptions, element?: (HTMLElement | null));
+    constructor(options: (VPFieldsetOptions | object), element?: (HTMLElement | null));
 }

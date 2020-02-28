@@ -14,11 +14,11 @@ export declare class VPField extends Validatable {
         pre: boolean;
         post: boolean;
     };
-    constructor(element: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: (ValidationLifecycle | undefined));
+    constructor(element: HTMLElement, options: (VPFieldOptions | object), customRules: CustomValidationRule[], onValidate?: (ValidationLifecycle | undefined));
     $input: ValidInput;
     parseInput(): ValidationAttributes;
     setInput(input: ValidInput | null): void;
     isValid(formattedExternal?: boolean): (boolean | Promise<boolean>);
-    formatInputPre(): void;
-    formatInputPost(): void;
+    formatInput(formatter: Function): void;
 }
+export default VPField;

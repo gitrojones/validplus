@@ -1,0 +1,1 @@
+{"version":3,"file":"toNumber.js","sourceRoot":"","sources":["../../../../src/util/casts/toNumber.ts"],"names":[],"mappings":";;AAAA,SAAgB,QAAQ,CAAE,KAAU;IAClC,IAAI,OAAO,KAAK,KAAK,QAAQ,EAAE;QAC7B,OAAO,KAAK,CAAA;KACb;IAED,IAAI,OAAO,KAAK,KAAK,QAAQ,EAAE;QAC7B,OAAO,CAAC,KAAK,CAAA;KACd;IAED,OAAO,IAAI,CAAA;AACb,CAAC;AAVD,4BAUC"}
