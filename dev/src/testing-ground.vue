@@ -70,8 +70,6 @@
 
 <script>
 import VPVue from 'VPVue'
-import fieldset from '#/components/fieldset'
-import field from '#/components/field'
 
 /**
  * @vue-prop {Boolean} test - test value
@@ -80,7 +78,7 @@ export default {
   prop: {
     test: Boolean
   },
-  mixins: [ VPVue.Validatable ],
+  mixins: [ VPVue.mixins.Validatable ],
   data() {
     return {
         model: {
@@ -129,8 +127,8 @@ export default {
     }
   },
   components: {
-    VpFieldset: fieldset,
-    VpField: field
+    VpFieldset: VPVue.Fieldset,
+    VpField: VPVue.Field
   }
 }
 </script>
