@@ -49,7 +49,7 @@ export class VPValidator extends Validatable {
     this.$fieldsets = []
   }
 
-  isValid () {
+  isValid (): (Promise<boolean> | boolean) {
     this.clearMessages()
     let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
