@@ -1,7 +1,8 @@
-const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const CompressionPlugin = require('compression-webpack-plugin');
-const BrotliPlugin = require('brotli-webpack-plugin');
+const path = require('path')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
+const BrotliPlugin = require('brotli-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
 	entry: {
@@ -18,7 +19,8 @@ module.exports = {
 	},
 
 	externals: {
-		validplus: 'validplus'
+		validplus: 'validplus',
+		vue: 'vue'
 	},
 
 	resolve: {
@@ -38,8 +40,14 @@ module.exports = {
 					},
 					mangle: {
 						reserved: [ 'debug' ]
-					}
-				}
+					},
+					output: {
+						beautify: false
+					},
+					ie8: true
+				},
+                sourceMap: true,
+				extractComments: /@(?:license)/g
 			})
 		]
 	},
@@ -55,6 +63,10 @@ module.exports = {
 				use: [ 'source-map-loader' ],
 				enforce: 'pre'
 			},
+		    {
+				test: /\.vue$/,
+				use: 'vue-loader'
+			},
 			{
 				test: /\.(js|ts)x?$/,
 				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
@@ -67,17 +79,21 @@ module.exports = {
 									'@babel/preset-env',
 									{
 										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage'
+										useBuiltIns: 'usage',
+										loose: true
 									},
 									'@babel/preset-typescript'
 								]
 							],
 							plugins: [
-								'@babel/plugin-transform-runtime',
 								'@babel/plugin-transform-typescript',
-								'@babel/plugin-proposal-class-properties',
-								'@babel/plugin-proposal-object-rest-spread'
-							]
+								'@babel/plugin-transform-runtime',
+								[ '@babel/plugin-proposal-decorators', { legacy: true } ],
+								[ '@babel/plugin-proposal-class-properties', { loose: true } ],
+								'@babel/plugin-proposal-object-rest-spread',
+							],
+							comments: process.env.NODE_ENV !== 'production',
+							sourceType: 'unambiguous'
 						}
 					}
 				]
@@ -85,6 +101,8 @@ module.exports = {
 		]
 	},
 	plugins: [
+		new VueLoaderPlugin(),
+
 		new CompressionPlugin({
 			filename: '[path].gz[query]',
 			algorithm: 'gzip',
