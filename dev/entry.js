@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import TestingGround from './src/testing-ground.vue'
+import TestingGround from './src/Page.vue'
 import 'webpack-hot-middleware/client?reload=true'
 
 const vue = new Vue({

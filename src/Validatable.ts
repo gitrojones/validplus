@@ -22,8 +22,13 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
   createEvent: any // Defined by EventEmitter
   $options: VPOptions
   $element: HTMLElement
-  $strategies: ValidationStrategies
   $valid: boolean | null
+  $strategies: ValidationStrategies = {
+    all: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => f),
+    some: (fieldstatus: boolean[]) => fieldstatus.some((f: boolean) => f),
+    none: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => !f),
+    one: (fieldstatus: boolean[]) => fieldstatus.filter((f: boolean) => f).length === 1
+  }
 
   constructor (options: VPOptions, element: HTMLElement) {
     super()
@@ -32,24 +37,12 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     this.$valid = null
 
     // Set some logical defaults
-    if (!(options instanceof ValidatableOptions)) {
-      this.$options = new Validatable.Options(options, element)
-    } else {
-      this.$options = options
-    }
-
+    this.$options = new Validatable.Options(options, element)
     if (element && element instanceof HTMLElement) {
       this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
     }
 
     this.setLifecycle(this.$options.Lifecycle)
-
-    this.$strategies = {
-      all: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => f),
-      some: (fieldstatus: boolean[]) => fieldstatus.some((f: boolean) => f),
-      none: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => !f),
-      one: (fieldstatus: boolean[]) => fieldstatus.filter((f: boolean) => f).length === 1
-    }
 
     // DOMMessaging
     this.$MessageClassName = this.$options.MessageClassName

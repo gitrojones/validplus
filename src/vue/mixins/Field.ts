@@ -48,7 +48,6 @@ export class Field extends Mixins<Validatable>(Validatable) {
     }
   }
 
-  // TODO: No clue which type to import for internal properties
   VPGatherFields () {
     const self = this
     Object.keys(this.$slots).forEach((slot) => {

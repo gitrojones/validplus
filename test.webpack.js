@@ -1,9 +1,10 @@
-const path = require('path');
-const nodeExternals = require('webpack-node-externals');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const path = require('path')
+const nodeExternals = require('webpack-node-externals')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const LodashWebpackPlugin = require('lodash-webpack-plugin')
 
-const isCoverage = process.env.NODE_ENV === 'coverage';
-const isProd = process.env.PROD === 'true' ? true : process.env.NODE_ENV === 'production';
+const isCoverage = process.env.NODE_ENV === 'coverage'
+const isProd = process.env.PROD === 'true' ? true : process.env.NODE_ENV === 'production'
 
 module.exports = {
 	entry: {
@@ -80,10 +81,12 @@ module.exports = {
 								]
 							],
 							plugins: [
-								'@babel/plugin-transform-runtime',
 								'@babel/plugin-transform-typescript',
-								'@babel/plugin-proposal-class-properties',
-								'@babel/plugin-proposal-object-rest-spread'
+								[ '@babel/plugin-proposal-decorators', { legacy: true } ],
+								[ '@babel/plugin-proposal-class-properties', { loose: true } ],
+								'@babel/plugin-transform-runtime',
+								'@babel/plugin-proposal-object-rest-spread',
+								'babel-plugin-lodash'
 							]
 						}
 					}
@@ -123,5 +126,9 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [ new VueLoaderPlugin() ]
+	plugins: [
+		new VueLoaderPlugin(),
+
+		new LodashWebpackPlugin()
+	]
 };

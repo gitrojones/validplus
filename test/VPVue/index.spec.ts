@@ -1,41 +1,36 @@
 // @ts-ignore
 const { describe, it } = require('mocha')
 const { expect } = require('chai')
-const { mount, shallowMount } = require('@vue/test-utils')
-const VPVue = require('VPVue').VPVue
+const VPVue = require('VPVue').default
 
-const TestingGround = require('#/testing-ground').default
-const Fieldset = require('#/components/fieldset').default
-const Field = require('#/components/field').default
+// const VPVueForm = require('./VPVueForm').default
+const VPVueMixins = require('./VPVueMixins').default
 
 describe('VPVue', function () {
-  it('Should export "Field"', function () {
-    expect(VPVue).to.have.property('Field')
-  })
+  describe('Properties', function () {
+    it('Should export default "Field" component', function () {
+      expect(VPVue).to.have.property('Field')
+    })
 
-  it('Should export "Fieldset"', function () {
-    expect(VPVue).to.have.property('Fieldset')
-  })
+    it('Should export default "Fieldset" component', function () {
+      expect(VPVue).to.have.property('Fieldset')
+    })
 
-  it('Should export "Validatable"', function () {
-    expect(VPVue).to.have.property('Validatable')
-  })
+    describe('Mixins', function () {
+      it('Should export "Field" mixin', function () {
+        expect(VPVue.mixins).to.have.property('Field')
+      })
 
-  describe('Field', function () {
-    it('Should import Validatable', function () {
-      expect(VPVue.Field).to.have.property('mixins')
-      expect(VPVue.Field.mixins[0]).to.equal(VPVue.Validatable)
+      it('Should export "Fieldset" mixin', function () {
+        expect(VPVue.mixins).to.have.property('Fieldset')
+      })
+
+      it('Should export "Validatable" mixin', function () {
+        expect(VPVue.mixins).to.have.property('Validatable')
+      })
     })
   })
 
-  describe('TestingGround', function () {
-    it('Should import Fieldset', function () {
-      let TG = shallowMount(TestingGround)
-
-      // tslint:disable-next-line:no-unused-expression
-      expect(TG.find(Fieldset).exists()).to.be.true
-      // tslint:disable-next-line:no-unused-expression
-      expect(TG.find(Field).exists()).to.be.true
-    })
-  })
+  // describe('VPVueForm', VPVueForm)
+  describe('VPVueMixins', VPVueMixins)
 })

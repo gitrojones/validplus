@@ -5,8 +5,10 @@ import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 
 import { ValidatableOptions } from './ValidatableOptions'
+import { cloneDeep } from 'lodash'
 
 export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
+  $options: VPOptions
   ForceRules: boolean = false
   InputRules: HTMLValidationRules = {} as HTMLValidationRules
   CustomRules: CustomValidationRule[] = []
@@ -22,7 +24,9 @@ export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
   ValidateOn: ChangeActions = {} as ChangeActions
 
   constructor (options: (VPFieldOptions | object), element: (HTMLElement | null) = null) {
-    super(options as VPOptions, element)
+    super(cloneDeep(options) as VPOptions, element)
+    this.$options = options as VPFieldOptions
+
     Object.assign(this, options)
   }
 }

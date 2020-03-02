@@ -79,9 +79,7 @@ export const VPValidatable = function () {
           }
         }))
       ]
-      const createFieldset = () => validator.createFieldset(
-        elFieldset,
-        'all',
+      const createFieldset = () => validator.createFieldset(elFieldset, 'all',
         new ValidPlus.Fieldset.Options({
           ValidateVisible: false,
           Lifecycle: {
@@ -97,11 +95,11 @@ export const VPValidatable = function () {
       let fieldsetFromValidator = createFieldset()
       validator.removeFieldset(fieldsetFromValidator)
 
-      expect(fieldsetFromValidator.$listeners.onValidate.length).to.equal(0)
+      expect(fieldsetFromValidator.$listeners.onValidate.length).to.eq(0)
 
       fieldsetFromValidator = createFieldset()
       validator.isValid()
-      expect(elFieldset.querySelectorAll('.-isValid').length).to.equal(1)
+      expect(elFieldset.querySelectorAll('.-isValid').length).to.eq(1)
     })
 
     it('Implements DispatchEvent', function () {

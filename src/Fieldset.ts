@@ -4,7 +4,6 @@ import { isAsync } from '@/util/isAsync'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 
 import { VPField } from '@/Field'
@@ -36,8 +35,7 @@ export class VPFieldset extends Validatable {
   constructor (
     element: HTMLElement,
     strategy: (string | ValidationStrategy),
-    options: (VPFieldsetOptions | object),
-    onValidate: (ValidationLifecycle | undefined) = undefined
+    options: (VPFieldsetOptions | object)
   ) {
     super(new VPFieldset.Options(options, element), element)
 
@@ -53,14 +51,14 @@ export class VPFieldset extends Validatable {
       throw new Error('[VPFieldset] Expected ValidationStrategy to be a function.')
     }
 
-    this.$options.ValidationStrategy = this.$strategy = validationStrategy
-
-    if (onValidate) {
-      this.setLifecycle(onValidate)
-    }
-
     this.$fields = []
     this.$emitFields = []
+    this.$options.ValidationStrategy = this.$strategy = validationStrategy
+  }
+
+  clone (): VPFieldset {
+    debug('[VPFieldset] Cloning element')
+    return new VPFieldset(this.$element.cloneNode(true) as HTMLElement, this.$strategy, this.$options.$options)
   }
 
   isValid (validateDirty: boolean = true): (boolean | Promise<boolean>) {
@@ -172,14 +170,13 @@ export class VPFieldset extends Validatable {
   createField (
     el: HTMLElement,
     options: (VPFieldOptions | object),
-    customRules: CustomValidationRule[],
-    onValidate: (ValidationLifecycle | undefined) = undefined
+    customRules: CustomValidationRule[]
   ) {
     if (!(el instanceof Element)) {
       throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
     }
 
-    const field = new VPField(el, options, customRules || [], onValidate)
+    const field = new VPField(el, options, customRules || [])
     this.$fields.push(field)
     this.watchField(field)
 
@@ -196,8 +193,7 @@ export class VPFieldset extends Validatable {
       const options: VPFieldOptions = Array.isArray(fieldOptions) ? fieldOptions[index] : fieldOptions
       const _field = new VPField(
         field as HTMLElement, options,
-        [] as CustomValidationRule[],
-        { Valid: {}, Invalid: {} } as ValidationLifecycle)
+        [] as CustomValidationRule[])
       this.watchField(_field)
 
       return _field

@@ -34,6 +34,11 @@ export class DOMMessaging {
         throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
       }
     } else {
+      if (this.$MessageAnchor instanceof HTMLElement) {
+        debug('Removing existing anchor')
+        this.$MessageAnchor.remove()
+      }
+
       debug('Appending anchor')
       this.$MessageAnchor = anchor
     }
@@ -50,6 +55,7 @@ export class DOMMessaging {
 
     this.$MessageNode = this.DOMCreateElement('', this.$MessageContainerClassName)
     debug('Creating message node', this.$MessageContainerClassName, this.$MessageNode)
+
     if (pos === VerticalPosition.top) {
       anchor.prepend(this.$MessageNode)
     } else if (pos === VerticalPosition.bottom) {

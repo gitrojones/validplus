@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const HtmlWebpackPlugin = require('vue-html-webpack-plugin');
+const LodashWebpackPlugin = require('lodash-webpack-plugin')
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -73,7 +74,8 @@ const devBundle = {
                 '@babel/plugin-transform-typescript',
                 ['@babel/plugin-proposal-decorators', { legacy: true }],
                 ['@babel/plugin-proposal-class-properties', { loose: true }],
-                '@babel/plugin-proposal-object-rest-spread'
+                '@babel/plugin-proposal-object-rest-spread',
+                'babel-plugin-lodash'
               ],
               comments: true,
               sourceType: 'unambiguous'
@@ -115,7 +117,11 @@ const devBundle = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
+
     new VueLoaderPlugin(),
+
+    new LodashWebpackPlugin(),
+
     new HtmlWebpackPlugin({
       vue: true,
       chunks: ['testapp'],

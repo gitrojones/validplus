@@ -1,4 +1,6 @@
-import { ValidationAttributes } from '../../src/interfaces/validation/ValidationAttributes'
+/* tslint:disable:no-unused-expression */
+import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
+import DOMMessaging from './DOMMessaging'
 
 const ValidPlus = require('validplus').default
 const sinon = require('sinon')
@@ -8,8 +10,9 @@ const { difference } = require('lodash/fp')
 
 export const VPField = function () {
   let testFieldset: HTMLElement
-  let testField: HTMLElement
-  let testInput: HTMLInputElement
+  let testField: HTMLElement = window.document.createElement('div')
+  let testInput: HTMLInputElement = window.document.createElement('input')
+  testField.append(testInput)
 
   beforeEach((done: (err?: any) => void) => {
     testFieldset = window.document.createElement('div')
@@ -25,6 +28,8 @@ export const VPField = function () {
     done()
   })
 
+  describe('Messaging', DOMMessaging(new ValidPlus.Field(testField)))
+
   describe('Fields Properties', function () {
     it('Should use specified ControllerInput')
     it('Should prioritize primary controller type')
@@ -33,232 +38,383 @@ export const VPField = function () {
     it('Should prioritize `vp-primary` controllers')
   })
 
-  describe('Field Error Handling', function () {
-    it('Should append the errorClass on invalid fields/inputs', function () {
-      testInput.value = ''
-      testInput.setAttribute('required', 'true')
-      let field = new ValidPlus.Field(testField, {}, [])
+  describe('DOM Assertions', function () {
+    describe('Field Error handling' , function () {
+      it('Should allow for custom errorClass', function () {
+        const errorClass = '-fooBar'
+        testInput.value = ''
+        testInput.setAttribute('required', 'true');
 
-      expect(field.isValid()).to.be.false
-      expect(testField.classList.contains('-isError')).to.be.true
+        (new ValidPlus.Field(testField, {
+          ErrorClassName: errorClass
+        }, [])).isValid()
+        expect(testField.classList.contains(errorClass)).to.be.true
+      })
+
+      it('Should allow for custom validClass', function () {
+        const validClass = '-helloWorld'
+        testInput.value = 'hello'
+        testInput.setAttribute('required', 'true');
+        (new ValidPlus.Field(testField, {
+          ValidClassName: validClass
+        }, [])).isValid()
+
+        expect(testField.classList.contains(validClass)).to.be.true
+      })
+
+      it('Should append the errorClass on invalid fields/inputs', function () {
+        testInput.value = ''
+        testInput.setAttribute('required', 'true');
+
+        (new ValidPlus.Field(testField, {}, [])).isValid()
+        expect(testField.classList.contains('-isError')).to.be.true
+      })
+
+      it('Should append the validClass on valid fields/inputs', function () {
+        testInput.value = 'hello'
+        testInput.setAttribute('required', 'true');
+
+        (new ValidPlus.Field(testField, {}, [], {})).isValid()
+        expect(testField.classList.contains('-isValid')).to.be.true
+      })
     })
 
-    it('Should append the validClass on valid fields/inputs', function () {
-      testInput.value = 'hello'
-      testInput.setAttribute('required', 'true')
-      let field = new ValidPlus.Field(testField, {}, [], {})
+    describe('Evaluation', function () {
+      it('Should display any message returned in a custom rule as an error', function () {
+        const ErrorMessage = 'Invalid Field';
+        (new ValidPlus.Field(testField, {}, [
+          () => ErrorMessage
+        ])).isValid()
 
-      expect(field.isValid()).to.be.true
-      expect(testField.classList.contains('-isValid')).to.be.true
-    })
+        expect((testField.querySelector('div.-isError') as Element).innerHTML).to.eq(ErrorMessage)
+      })
 
-    it('Should allow for custom errorClass', function () {
-      const errorClass = '-fooBar'
-      testInput.value = ''
-      testInput.setAttribute('required', 'true')
-      let field = new ValidPlus.Field(testField, {
-        ErrorClassName: errorClass
-      }, [])
+      it('Should not display an error message until async is resolved (if error)', function () {
+        const ErrorMessage = 'Invalid Field'
+        const delayedMessage = new Promise((resolve) => {
+          setTimeout(() => resolve(ErrorMessage), 1)
+        });
 
-      expect(field.isValid()).to.be.false
-      expect(testField.classList.contains(errorClass)).to.be.true
-    })
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedMessage
+        ])).isValid()
 
-    it('Should allow for custom validClass', function () {
-      const validClass = '-helloWorld'
-      testInput.value = 'hello'
-      testInput.setAttribute('required', 'true')
-      let field = new ValidPlus.Field(testField, {
-        ValidClassName: validClass
-      }, [])
+        expect(testField.querySelector('div.-isError')).to.be.null
+      })
 
-      expect(field.isValid()).to.be.true
-      expect(testField.classList.contains(validClass)).to.be.true
+      it('Should eventually display an error message when async is resolved (if error)', function (done: (err?: any) => void) {
+        const ErrorMessage = 'Invalid Field'
+        const delayedMessage = new Promise((resolve) => {
+          setTimeout(() => resolve(ErrorMessage), 1)
+        });
+
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedMessage
+        ])).isValid()
+
+        setTimeout(() => {
+          expect((testField.querySelector('div.-isError') as HTMLElement).innerHTML).to.eq(ErrorMessage)
+          done()
+        }, 2)
+      })
+
+      it('Should not append error classes until async is resolved (if error)', function () {
+        const ErrorMessage = 'Invalid Field'
+        const delayedMessage = new Promise((resolve) => {
+          setTimeout(() => resolve(ErrorMessage), 1)
+        });
+
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedMessage
+        ])).isValid()
+
+        expect(testField.classList.contains('-isError')).to.be.false
+      })
+
+      it('Should eventually append error classes when async is resolved (if error)', function (done: (err?: any) => void) {
+        const delayedMessage = new Promise((resolve) => {
+          setTimeout(() => resolve(false), 1)
+        });
+
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedMessage
+        ])).isValid()
+
+        setTimeout(() => {
+          expect(testField.classList.contains('-isError')).to.be.true
+          done()
+        }, 2)
+      })
+
+      it('Should not append valid classes until async is resolved (if valid)', function () {
+        const delayedCB = new Promise((resolve) => {
+          setTimeout(() => resolve(true), 1)
+        });
+
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedCB
+        ])).isValid()
+
+        expect(testField.classList.contains('-isValid')).to.be.false
+      })
+
+      it('Should eventually append valid classes when async is resolved (if valid)', function (done: (err?: any) => void) {
+        const delayedCB = new Promise((resolve) => {
+          setTimeout(() => resolve(true), 1)
+        });
+
+        (new ValidPlus.Field(testField, {}, [
+          () => delayedCB
+        ])).isValid()
+
+        setTimeout(() => {
+          expect(testField.classList.contains('-isValid')).to.be.true
+          done()
+        }, 2)
+      })
     })
   })
 
-  describe('Field Error Messaging', function () {
-    describe('CustomRules', function () {
-      describe('Attributes', function () {
-        it('Should provide attributes', function (done: (err?: any) => void) {
-          const field = new ValidPlus.Field(testField, {}, [
-            async (attributes: ValidationAttributes) => {
-              expect(difference(Object.keys(attributes), [
-                'value',
-                'checked',
-                'type',
-                'name',
-                'rules'
-              ]).length).to.equal(0)
+  describe('Library State Assertions', function () {
+    describe('Field Error handling' , function () {
+      it('Should allow for custom errorClass', function () {
+        const errorClass = '-fooBar'
+        testInput.value = ''
+        testInput.setAttribute('required', 'true')
+        let field = new ValidPlus.Field(testField, {
+          ErrorClassName: errorClass
+        }, [])
 
-              done()
-              return true
-            }])
+        expect(field.$options.ErrorClassName).to.eq(errorClass)
+      })
 
-          field.isValid()
+      it('Should allow for custom validClass', function () {
+        const validClass = '-helloWorld'
+        testInput.value = 'hello'
+        testInput.setAttribute('required', 'true')
+        let field = new ValidPlus.Field(testField, {
+          ValidClassName: validClass
+        }, [])
+
+        expect(field.$options.ValidClassName).to.eq(validClass)
+      })
+
+      it('Should append the errorClass on invalid fields/inputs', function () {
+        testInput.value = ''
+        testInput.setAttribute('required', 'true')
+        let field = new ValidPlus.Field(testField, {}, [])
+
+        expect(field.isValid()).to.be.false
+      })
+
+      it('Should append the validClass on valid fields/inputs', function () {
+        testInput.value = 'hello'
+        testInput.setAttribute('required', 'true')
+        let field = new ValidPlus.Field(testField, {}, [], {})
+
+        expect(field.isValid()).to.be.true
+      })
+    })
+
+    describe('Field Error Messaging', function () {
+      it('Should allow changing the Messaging Node className', function () {
+        const MessageClassName = 'VPFoo'
+        const field = new ValidPlus.Field(testField, {
+          MessageClassName
+        }, [ ])
+
+        expect(field.$options.MessageClassName).to.eq(MessageClassName)
+      })
+
+      it('Should allow changing the Messaging inner node className', function () {
+        const MessageContainerClassName = 'VPFooInner'
+        const field = new ValidPlus.Field(testField, {
+          MessageContainerClassName
+        }, [ ])
+
+        expect(field.$options.MessageClassName).to.eq(MessageContainerClassName)
+      })
+
+      it('Should allow changing the Messaging inner node anchor', function () {
+        const ArbitraryAnchor = document.createElement('div')
+        const field = new ValidPlus.Field(testField, {
+          MessageAnchor: ArbitraryAnchor
+        }, [ ])
+
+        expect(field.$options.MessageAnchor).to.eq(ArbitraryAnchor)
+      })
+
+      describe('Scrollable', function () {
+        it('Should not be scrollable by default', function () {
+          const field = new ValidPlus.Field(testField, {}, [ ])
+          expect(field.$options.ScrollTo).to.be.false
         })
 
-        it('Should provide the element', function (done: (err?: any) => void) {
-          const field = new ValidPlus.Field(testField, {}, [
-            async (attributes: ValidationAttributes, el: HTMLElement) => {
-              expect(el).to.equal(testField)
-              done()
-              return true
-            }])
-
-          field.isValid()
+        it('Should default the scroll anchor to the field', function () {
+          const field = new ValidPlus.Field(testField, {}, [ ])
+          expect(field.$options.ScrollAnchor).to.eq(testField)
         })
+      })
 
-        it('Should provide the input', function () {
-          let field = new ValidPlus.Field(
-                        testField,
-                        {},
-            [
-              (attributes, el, input) =>
-                                new Promise((resolve, reject) => {
-                                  expect(input).to.equal(testInput)
-                                  return resolve(true)
-                                })
-            ],
-                        {}
-                    )
+      describe('CustomRules', function () {
+        describe('Attributes', function () {
+          it('Should provide the input attributes', function (done: (err?: any) => void) {
+            const field = new ValidPlus.Field(testField, {}, [
+              async (attrs: ValidationAttributes) => {
+                expect(difference(Object.keys(attrs), [
+                  'value',
+                  'checked',
+                  'type',
+                  'name',
+                  'rules'
+                ]).length).to.eq(0)
+
+                done()
+                return true
+              }])
+
+            field.isValid()
+          })
+
+          it('Should provide the element', function (done: (err?: any) => void) {
+            const field = new ValidPlus.Field(testField, {}, [
+              async (_attributes: ValidationAttributes, el: HTMLElement) => {
+                expect(el).to.eq(testField)
+                done()
+                return true
+              }])
+
+            field.isValid()
+          })
+
+          it('Should provide the input', function () {
+            new ValidPlus.Field(testField, {}, [
+              function (_attributes: ValidationAttributes, _el: HTMLElement, input: HTMLInputElement) {
+                expect(input).to.eq(testInput)
+                return true
+              }
+            ])
+          })
         })
+      })
+    })
+
+    describe('Evaluation', function () {
+      it('Should return a boolean if sync rules only', function () {
+        let field = new ValidPlus.Field(testField, {}, [
+          () => false
+        ])
+
+        expect(typeof field.isValid()).to.eq('boolean')
+      })
+
+      it('Should return a promise if async rule provided', function () {
+        let field = new ValidPlus.Field(testField, {}, [
+          async () => false
+        ])
+
+        expect(typeof field.isValid().then).to.eq('function')
+      })
+
+      it('Should return a promise if async rule provided with sync rules', function () {
+        let field = new ValidPlus.Field(testField, {}, [
+          () => true,
+          async () => false
+        ])
+
+        expect(typeof field.isValid().then).to.eq('function')
+      })
+
+      it('Should validate false if a message is returned', function () {
+        let field = new ValidPlus.Field(testField, {}, [
+          () => 'Invalid Field'
+        ])
+
+        expect(field.isValid()).to.be.false
       })
     })
 
     describe('Lazy Evaluation (default)', function () {
-      it('Should return false, regardless of customRule, if basicAttributes are false', function () {
-        const errorMessage = 'Foo bar baz'
+      it('Should skip custom rule validation if basic validation is false', function () {
+        const shouldNotBeCalled = sinon.fake()
         testInput.value = ''
-        testInput.setAttribute('required', true)
+        testInput.setAttribute('required', 'true');
 
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
+        (new ValidPlus.Field(testField, {}, [
+          shouldNotBeCalled
+        ])).isValid()
 
-        expect(field.isValid()).to.be.false
+        expect(shouldNotBeCalled.called).to.be.false
       })
 
-      it('Should skip async if any sync is false', function () {
+      it('Should skip any additional rules if any previous validate false', function () {
         const errorMessage = 'Foo bar baz'
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) => errorMessage,
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
+        const shouldNotBeCalled = sinon.fake();
+        (new ValidPlus.Field(testField, {}, [
+          () => errorMessage,
+          shouldNotBeCalled
+        ])).isValid()
 
-        expect(field.isValid()).to.be.false
+        expect(shouldNotBeCalled.called).to.be.false
       })
 
-      it('Should evaluate async if async CustomRule and all sync are true', function (done) {
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) => true,
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
+      it('Should return a promise if valid up until an async customRule is evaluated', function () {
+        let field = (new ValidPlus.Field(testField, {}, [
+          () => true,
+          async () => false
+        ])).isValid()
 
-        expect(field.isValid()).to.eventually.be.true.notify(done)
+        expect(typeof field.then).to.eq('function')
       })
     })
 
     describe('Full Validation', function () {
-      it('Should return all sync attributes as async if customRule is async', function (done) {
-        const errorMessage = 'Foo bar baz'
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            ValidateLazyFieldRules: false,
-            ValidateLazyCustomRules: false,
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) => errorMessage,
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
+      it('Should validate all rules, regardless of validity', function () {
+        const shouldGetCalled = sinon.fake();
+        (new ValidPlus.Field(testField, {
+          ValidateLazyFieldRules: false,
+          ValidateLazyCustomRules: false,
+        }, [
+          () => false,
+          shouldGetCalled
+        ])).isValid()
 
-        expect(field.isValid()).to.eventually.be.false.notify(done)
+        expect(shouldGetCalled.called).to.be.true
       })
 
-      it('Should correctly validate sync as async true', function (done) {
-        testInput.setAttribute('required', true)
-        testInput.value = 'Foo Bar'
+      it('Should return as promise if any customRule is async', function () {
+        let field = new ValidPlus.Field(testField, {
+          ValidateLazyFieldRules: false,
+          ValidateLazyCustomRules: false,
+        }, [
+          async () => false
+        ])
 
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            ValidateLazyFieldRules: false,
-            ValidateLazyCustomRules: false,
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) => true,
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
-
-        expect(field.isValid()).to.eventually.be.true.notify(done)
+        expect(typeof field.isValid().then).to.eq('function')
       })
 
-      it('Should async regardless if sync is false', function (done) {
-        const errorMessage = 'Foo bar baz'
-        testInput.setAttribute('required', true)
-        testInput.value = 'Foo Bar'
+      it('Should properly validate sync as async', function (done: (err?: any) => void) {
+        let field = new ValidPlus.Field(testField, {
+          ValidateLazyFieldRules: false,
+          ValidateLazyCustomRules: false,
+        }, [
+          () => false,
+          async () => true
+        ])
 
-        let field = new ValidPlus.Field(
-                    testField,
-          {
-            ValidateLazyFieldRules: false,
-            ValidateLazyCustomRules: false,
-            scrollTo: false
-          },
-          [
-            (attributes, el, input) => errorMessage,
-            (attributes, el, input) =>
-                            new Promise((resolve, reject) => {
-                              return resolve(true)
-                            })
-          ],
-                    {}
-                )
+        expect(field.isValid()).to.eventually.eq(false).notify(done)
+      })
 
-        expect(field.isValid()).to.eventually.be.false.notify(done)
+      it('Should properly validate async with mixed sync', function (done: (err?: any) => void) {
+        let field = new ValidPlus.Field(testField, {
+          ValidateLazyFieldRules: false,
+          ValidateLazyCustomRules: false,
+        }, [
+          () => true,
+          async () => false
+        ])
+
+        expect(field.isValid()).to.eventually.eq(false).notify(done)
       })
     })
 
@@ -315,25 +471,20 @@ export const VPField = function () {
     it('Should append Call CB if Valid/Invalid')
     it('Should pass instance to CB')
 
-    it('Should Accept Lifecycle in options w/o LifeCycle prop', function () {
-      let field = new ValidPlus.Field(
-                testField,
-        {
-          Lifecycle: {
-            Invalid: {
-              Message: 'Foo'
-            },
-            Valid: {
-              Message: 'Bar'
-            }
+    it('Should Accept Lifecycle in options only', function () {
+      let field = new ValidPlus.Field(testField, {
+        Lifecycle: {
+          Invalid: {
+            Message: 'Foo'
+          },
+          Valid: {
+            Message: 'Bar'
           }
-        },
-                [],
-                {}
-            )
+        }
+      }, [])
 
-      expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo')
-      expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar')
+      expect(field.$options.Lifecycle.Invalid.Message).to.eq('Foo')
+      expect(field.$options.Lifecycle.Valid.Message).to.eq('Bar')
     })
 
     it('Should Accept Lifecycle in LifeCycle prop, w/o options', function () {
@@ -346,8 +497,8 @@ export const VPField = function () {
         }
       })
 
-      expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo')
-      expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar')
+      expect(field.$options.Lifecycle.Invalid.Message).to.eq('Foo')
+      expect(field.$options.Lifecycle.Valid.Message).to.eq('Bar')
     })
 
         // TODO: Lifecycle prop to be deprecated
@@ -375,12 +526,12 @@ export const VPField = function () {
         }
             )
 
-      expect(field.$options.Lifecycle.Invalid.Message).to.equal('Foo')
-      expect(field.$options.Lifecycle.Valid.Message).to.equal('Bar')
+      expect(field.$options.Lifecycle.Invalid.Message).to.eq('Foo')
+      expect(field.$options.Lifecycle.Valid.Message).to.eq('Bar')
     })
   })
 
-  describe('Fields Default Validation Types', function () {
+describe('Fields Default Validation Types', function () {
     it('Should validate required (standard)', function () {
       testInput.setAttribute('required', true)
       testInput.value = null
@@ -509,7 +660,7 @@ export const VPField = function () {
     })
   })
 
-  describe('Validate programmically', function () {
+describe('Validate programmically', function () {
     it('Should validate required', function () {
       testInput.value = null
       let field = new ValidPlus.Field(
@@ -647,7 +798,7 @@ export const VPField = function () {
     })
   })
 
-  it('Should validate rules over attribute if force is set', function () {
+it('Should validate rules over attribute if force is set', function () {
     testInput.setAttribute('maxlength', 3)
     testInput.value = 'hello'
     let field = new ValidPlus.Field(
@@ -670,7 +821,7 @@ export const VPField = function () {
     expect(field.isValid()).to.be.true
   })
 
-  it('Should format pre/post and include an eventDispatch method', function () {
+it('Should format pre/post and include an eventDispatch method', function () {
     let uppercasePre = (input, dispatchEvent) => {
       input.value = input.value.toUpperCase()
       input.value = input.value += '-world'
@@ -700,14 +851,14 @@ export const VPField = function () {
     expect(field.isValid()).to.be.true
 
     expect(spyPreFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
-    expect(typeof spyPreFired.args[0][1]).to.equal('function')
+    expect(typeof spyPreFired.args[0][1]).to.eq('function')
     expect(spyPostFired.args[0][0]).to.be.an.instanceof(window.HTMLElement)
-    expect(typeof spyPostFired.args[0][1]).to.equal('function')
+    expect(typeof spyPostFired.args[0][1]).to.eq('function')
 
-    expect(testInput.value).to.equal('hello-world')
+    expect(testInput.value).to.eq('hello-world')
   })
 
-  it('Should listen for changes on input/change by default', function () {
+it('Should listen for changes on input/change by default', function () {
     const spyIsValid = sinon.spy(ValidPlus.Field.prototype, 'isValid')
     let field = new ValidPlus.Field(testField, {}, [], {
       Invalid: {
@@ -724,7 +875,7 @@ export const VPField = function () {
     ValidPlus.Field.prototype.isValid.restore()
   })
 
-  it('Should append message for pre/post formatters', function () {
+it('Should append message for pre/post formatters', function () {
     const message = 'Hello, World'
 
     let field = new ValidPlus.Field(
@@ -747,7 +898,7 @@ export const VPField = function () {
     expect(field.$MessageAnchor.children[1].innerHTML === message)
   })
 
-  it('Should fire update events on pre/post formatters', function () {
+it('Should fire update events on pre/post formatters', function () {
     let inputEvent = window.document.createEvent('Event')
     inputEvent.initEvent('input', false, false)
 
@@ -773,11 +924,11 @@ export const VPField = function () {
     let inputSpy = sinon.spy(field.$input, 'dispatchEvent')
 
     field.isValid()
-    expect(testInput.value).to.equal('Foo Bar')
+    expect(testInput.value).to.eq('Foo Bar')
     expect(inputSpy.called).to.be.true
   })
 
-  it('Should only validate onBlur w/ DirtyOnBlur', function () {
+it('Should only validate onBlur w/ DirtyOnBlur', function () {
     let field = new ValidPlus.Field(
             testField,
       {
@@ -823,7 +974,7 @@ export const VPField = function () {
     ValidPlus.Field.prototype.isValid.restore()
   })
 
-  it('Should accept vp-params to toggle options', function () {
+it('Should accept vp-params to toggle options', function () {
     testField.setAttribute('vp-dirtyBlur', 'true')
     testField.setAttribute('vp-dirtyChange', 'false')
     testField.setAttribute('vp-dirtyMouseLeave', 'true')
@@ -850,7 +1001,7 @@ export const VPField = function () {
     expect(field.$options.Watch).to.be.false
   })
 
-  it('Should validate on blur if set, regardless of watch', function () {
+it('Should validate on blur if set, regardless of watch', function () {
     let blurEvent = window.document.createEvent('Event')
     blurEvent.initEvent('blur', false, false)
 
@@ -867,16 +1018,16 @@ export const VPField = function () {
     })
 
     testInput.value = 'Bar'
-    expect(field.$isValid).to.equal(null)
+    expect(field.$isValid).to.eq(null)
     testInput.dispatchEvent(blurEvent)
-    expect(field.$isValid).to.equal(true)
+    expect(field.$isValid).to.eq(true)
     testInput.value = ''
-    expect(field.$isValid).to.equal(true)
+    expect(field.$isValid).to.eq(true)
     testInput.dispatchEvent(blurEvent)
-    expect(field.$isValid).to.equal(false)
+    expect(field.$isValid).to.eq(false)
   })
 
-  it('Should validate input based on pattern attribute', function () {
+it('Should validate input based on pattern attribute', function () {
     testInput.setAttribute('pattern', '[0-9]{5}')
 
     let field = new ValidPlus.Field(testField, {

@@ -19,8 +19,8 @@ export declare const Validatable: {
         createEvent: any;
         $options: VPOptions;
         $element: HTMLElement;
-        $strategies: ValidationStrategies;
         $valid: boolean | null;
+        $strategies: ValidationStrategies;
         $isValid: boolean | null;
         assertValidNoWatch(obj: VPFieldset | VPField): boolean | Promise<boolean>;
         setLifecycle(lifecycle: ValidationLifecycle): void;

@@ -3,6 +3,7 @@ import { ValidationLifecycle } from "../../interfaces/validation/ValidationLifec
 import { ValidInput } from "../../types/ValidInput";
 import { VerticalPosition } from "../../enums/Positions";
 export declare class ValidatableOptions implements VPOptions {
+    $options: VPOptions;
     Watch: boolean;
     Lifecycle: ValidationLifecycle;
     ErrorClassName: string;
@@ -13,9 +14,9 @@ export declare class ValidatableOptions implements VPOptions {
     InputTypes: ('select' | 'input' | 'textarea')[];
     MessageClassName: string;
     MessageContainerClassName: string;
-    MessageAnchor: (HTMLElement | null);
     MessagePOS: VerticalPosition;
     ScrollTo: boolean;
+    MessageAnchor: (HTMLElement | null);
     ScrollAnchor: (HTMLElement | null);
     constructor(options: VPOptions, element?: (HTMLElement | null));
 }

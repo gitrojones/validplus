@@ -2,7 +2,6 @@ import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
 
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 import { VPValidatorOptions, VPFieldsetOptions } from '@/interfaces/VPOptions'
 
@@ -183,11 +182,8 @@ export class VPValidator extends Validatable {
   createFieldset (fs: HTMLElement,
     strategy: (ValidationStrategy | string),
     options: (VPFieldsetOptions | object),
-    fields: VPField[] = [],
-    onValidate: ValidationLifecycle = {
-      Valid: {}, Invalid: {}
-    }) {
-    const fieldset = new VPFieldset(fs, strategy, options, onValidate)
+    fields: VPField[] = []) {
+    const fieldset = new VPFieldset(fs, strategy, options)
 
     fields.forEach(field => {
       fieldset.addField(field)

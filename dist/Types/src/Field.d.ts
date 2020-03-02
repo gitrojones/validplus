@@ -1,11 +1,11 @@
 import { VPFieldOptions } from "./interfaces/VPOptions";
 import { CustomValidationRule } from "./interfaces/validation/CustomValidationRule";
-import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
 import { ValidationAttributes } from "./interfaces/validation/ValidationAttributes";
+import Cloneable from "./interfaces/Cloneable";
 import { ValidInput } from "./types/ValidInput";
 import { Validatable } from "./Validatable";
 import { FieldOptions } from "./models/VPOptions/FieldOptions";
-export declare class VPField extends Validatable {
+export declare class VPField extends Validatable implements Cloneable {
     static Options: typeof FieldOptions;
     $Input: (ValidInput | null);
     $dirty: boolean;
@@ -14,8 +14,9 @@ export declare class VPField extends Validatable {
         pre: boolean;
         post: boolean;
     };
-    constructor(element: HTMLElement, options: (VPFieldOptions | object), customRules: CustomValidationRule[], onValidate?: (ValidationLifecycle | undefined));
+    constructor(element: HTMLElement, options?: (VPFieldOptions | object), customRules?: CustomValidationRule[]);
     $input: ValidInput;
+    clone(): VPField;
     parseInput(): ValidationAttributes;
     setInput(input: ValidInput | null): void;
     isValid(formattedExternal?: boolean): (boolean | Promise<boolean>);

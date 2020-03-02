@@ -29,7 +29,7 @@
       { "name": "tslint-language-service" }
     ]
   },
-  "include": ["validplus.ts"],
+  "include": ["validplus.ts", "test/**/*.ts"],
   "exclude": ["node_modules", "dist", "coverage", "dev"],
   "tasks": [
     {

@@ -9,7 +9,7 @@
 
 <script>
 import VPVue from "VPVue";
-import VPField from "./field";
+import VPField from "./Field";
 
 export default {
   props: {
@@ -25,7 +25,7 @@ export default {
       }
     }
   },
-  mixins: [VPVue.Fieldset],
+  mixins: [VPVue.mixins.Fieldset],
   data() {
     return {
       pre: 0,

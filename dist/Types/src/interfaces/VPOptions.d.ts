@@ -9,6 +9,7 @@ import { ValidInput } from "../types/ValidInput";
 import { ValidatableOptions } from "../models/VPOptions/ValidatableOptions";
 export interface VPOptions {
     [property: string]: any;
+    $options: VPOptions;
     Watch: boolean;
     Lifecycle: ValidationLifecycle;
     ErrorClassName: string;

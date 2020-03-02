@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Mixins } from 'vue-property-decorator'
+import { Component } from 'vue-property-decorator'
 import { Field } from '@/vue/mixins/Field'
 
 @Component
-export class VPField extends Mixins(Field) { }
+export class VPField extends Field { }
 export default VPField
 </script>

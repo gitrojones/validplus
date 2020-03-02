@@ -1,8 +1,9 @@
+import { merge as mergeDeep } from 'lodash'
+
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
 import { isValidInput } from '@/util/isValidInput'
-import { mergeDeep } from '@/util/mergeDeep'
 import { toBoolean } from '@/util/casts/toBoolean'
 import { toNumber } from '@/util/casts/toNumber'
 import { toRegexp } from '@/util/casts/toRegexp'
@@ -11,15 +12,15 @@ import { isSet } from '@/util/isSet'
 
 import { VPFieldOptions } from '@/interfaces/VPOptions'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
+import Cloneable from '@/interfaces/Cloneable'
 
 import { ValidInput } from '@/types/ValidInput'
 import { Validatable } from '@/Validatable'
 import { FieldOptions } from '@/models/VPOptions/FieldOptions'
 
-export class VPField extends Validatable {
+export class VPField extends Validatable implements Cloneable {
   static Options = FieldOptions
 
   $Input: (ValidInput | null) = null
@@ -32,9 +33,8 @@ export class VPField extends Validatable {
 
   constructor (
     element: HTMLElement,
-    options: (VPFieldOptions | object),
-    customRules: CustomValidationRule[],
-    onValidate: (ValidationLifecycle | undefined) = undefined
+    options: (VPFieldOptions | object) = {},
+    customRules: CustomValidationRule[] = []
   ) {
     super(new VPField.Options(mergeDeep({
       CustomRules: customRules || [],
@@ -60,10 +60,6 @@ export class VPField extends Validatable {
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPField] Expected element')
-    }
-
-    if (onValidate) {
-      this.setLifecycle(onValidate)
     }
 
     this.setInput(this.$options.PrimaryInput)
@@ -104,6 +100,11 @@ export class VPField extends Validatable {
     } else {
       console.warn('[VPField] Input is missing')
     }
+  }
+
+  clone (): VPField {
+    debug('[VPField] Cloning element')
+    return new VPField(this.$element.cloneNode(true) as HTMLElement, this.$options.$options)
   }
 
   parseInput (): ValidationAttributes {

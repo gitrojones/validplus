@@ -7,11 +7,12 @@ import { InputFormatters } from '@/interfaces/InputFormatters'
 import { ChangeActions } from '@/interfaces/events/ChangeActions'
 import { ValidInput } from '@/types/ValidInput'
 
-import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions';
+import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions'
 
 export interface VPOptions {
   [property: string]: any,
 
+  $options: VPOptions
   // ControlFlow
   Watch: boolean, // Emit upwards if anything changes
   Lifecycle: ValidationLifecycle,

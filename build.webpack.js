@@ -3,6 +3,7 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const BrotliPlugin = require('brotli-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const LodashWebpackPlugin = require('lodash-webpack-plugin')
 
 module.exports = {
 	entry: {
@@ -87,10 +88,11 @@ module.exports = {
 							],
 							plugins: [
 								'@babel/plugin-transform-typescript',
-								'@babel/plugin-transform-runtime',
 								[ '@babel/plugin-proposal-decorators', { legacy: true } ],
 								[ '@babel/plugin-proposal-class-properties', { loose: true } ],
+								'@babel/plugin-transform-runtime',
 								'@babel/plugin-proposal-object-rest-spread',
+								'babel-plugin-lodash'
 							],
 							comments: process.env.NODE_ENV !== 'production',
 							sourceType: 'unambiguous'
@@ -102,6 +104,8 @@ module.exports = {
 	},
 	plugins: [
 		new VueLoaderPlugin(),
+
+		new LodashWebpackPlugin(),
 
 		new CompressionPlugin({
 			filename: '[path].gz[query]',
