@@ -4,7 +4,6 @@ import { VPValidatorOptions, VPFieldsetOptions, VPFieldOptions } from '@/interfa
 import { VPValidator as _VPValidator } from '@/Validator'
 import { VPFieldset } from '@/Fieldset'
 import { VPField } from '@/Field'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
 
@@ -64,9 +63,8 @@ export class Validatable extends Vue {
   VPCreateField (
     el: HTMLElement,
     options: VPFieldOptions,
-    rules: CustomValidationRule[],
-    onValidation: ValidationLifecycle) {
-    const field = new this.VP.Field(el, options, rules, onValidation)
+    rules: CustomValidationRule[]) {
+    const field = new this.VP.Field(el, options, rules)
 
     return field
   }
@@ -75,9 +73,8 @@ export class Validatable extends Vue {
     el: HTMLElement,
     strategy: (ValidationStrategy | string),
     options: VPFieldsetOptions,
-    fields: VPField[],
-    onValidation: ValidationLifecycle) {
-    const fieldset = this.validator.createFieldset(el, strategy, options, fields, onValidation)
+    fields: VPField[]) {
+    const fieldset = this.validator.createFieldset(el, strategy, options, fields)
     this.VPFieldsets.push(fieldset)
 
     return fieldset

@@ -84,6 +84,12 @@
 					</li>
 				</ul>
 			</section>
+			<section class="tsd-panel">
+				<h3>Implements</h3>
+				<ul class="tsd-hierarchy">
+					<li><a href="../interfaces/_interfaces_cloneable_.cloneable.html" class="tsd-signature-type">Cloneable</a></li>
+				</ul>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -112,6 +118,7 @@
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#clone" class="tsd-kind-icon">clone</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#formatinput" class="tsd-kind-icon">format<wbr>Input</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#isvalid" class="tsd-kind-icon">is<wbr>Valid</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="_field_.vpfield.html#parseinput" class="tsd-kind-icon">parse<wbr>Input</a></li>
@@ -133,13 +140,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new VPField<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, options<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a>, customRules<span class="tsd-signature-symbol">: </span><a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span>, onValidate<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
+						<li class="tsd-signature tsd-kind-icon">new VPField<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a>, customRules<span class="tsd-signature-symbol">?: </span><a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L31">Field.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L32">Field.ts:32</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -148,13 +155,10 @@
 									<h5>element: <span class="tsd-signature-type">HTMLElement</span></h5>
 								</li>
 								<li>
-									<h5>options: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
 								</li>
 								<li>
-									<h5>customRules: <a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span></h5>
-								</li>
-								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> onValidate: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_validation_validationlifecycle_.validationlifecycle.html" class="tsd-signature-type">ValidationLifecycle</a><span class="tsd-signature-symbol"> =&nbsp;undefined</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> customRules: <a href="../interfaces/_interfaces_validation_customvalidationrule_.customvalidationrule.html" class="tsd-signature-type">CustomValidationRule</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></h4>
@@ -170,7 +174,7 @@
 					<div class="tsd-signature tsd-kind-icon">$<wbr>Input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLInputElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLSelectElement</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTMLTextAreaElement</span><span class="tsd-signature-symbol"> =&nbsp;null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L25">Field.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L26">Field.ts:26</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -180,7 +184,7 @@
 					<div class="tsd-signature tsd-kind-icon">$can<wbr>Validate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L27">Field.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L28">Field.ts:28</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -190,7 +194,7 @@
 					<div class="tsd-signature tsd-kind-icon">$dirty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L26">Field.ts:26</a></li>
+							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L27">Field.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -200,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">Options<span class="tsd-signature-symbol">:</span> <a href="_models_vpoptions_fieldoptions_.fieldoptions.html" class="tsd-signature-type">FieldOptions</a><span class="tsd-signature-symbol"> =&nbsp;FieldOptions</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L23">Field.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L24">Field.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -218,7 +222,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L72">Field.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L68">Field.ts:68</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">HTMLInputElement</span>
@@ -231,7 +235,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L73">Field.ts:73</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L69">Field.ts:69</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -248,6 +252,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="clone" class="tsd-anchor"></a>
+					<h3>clone</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">clone<span class="tsd-signature-symbol">(</span>element<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">HTMLElement</span>, options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L105">Field.ts:105</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> element: <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol"> =&nbsp;this.$element.cloneNode(true) as HTMLElement</span></h5>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> options: <span class="tsd-signature-type">object</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/_interfaces_vpoptions_.vpfieldoptions.html" class="tsd-signature-type">VPFieldOptions</a><span class="tsd-signature-symbol"> =&nbsp;{}</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="_field_.vpfield.html" class="tsd-signature-type">VPField</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="formatinput" class="tsd-anchor"></a>
 					<h3>format<wbr>Input</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -257,7 +287,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L449">Field.ts:449</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L450">Field.ts:450</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -280,7 +310,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L199">Field.ts:199</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L200">Field.ts:200</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -308,7 +338,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L109">Field.ts:109</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L110">Field.ts:110</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../interfaces/_interfaces_validation_validationattributes_.validationattributes.html" class="tsd-signature-type">ValidationAttributes</a></h4>
@@ -325,7 +355,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L141">Field.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L142">Field.ts:142</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -347,7 +377,7 @@
 					<div class="tsd-signature tsd-kind-icon">$formatter<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L28">Field.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L29">Field.ts:29</a></li>
 						</ul>
 					</aside>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal">
@@ -356,7 +386,7 @@
 						<div class="tsd-signature tsd-kind-icon">post<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L30">Field.ts:30</a></li>
+								<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L31">Field.ts:31</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -366,7 +396,7 @@
 						<div class="tsd-signature tsd-kind-icon">pre<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">false</span><span class="tsd-signature-symbol"> =&nbsp;false</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/8efc9e0/src/Field.ts#L29">Field.ts:29</a></li>
+								<li>Defined in <a href="https://github.com/gitrojones/validplus/blob/76a19f9/src/Field.ts#L30">Field.ts:30</a></li>
 							</ul>
 						</aside>
 					</section>
@@ -408,6 +438,9 @@
 							</li>
 							<li class=" tsd-kind-accessor tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#_input-1" class="tsd-kind-icon">$input</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="_field_.vpfield.html#clone" class="tsd-kind-icon">clone</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="_field_.vpfield.html#formatinput" class="tsd-kind-icon">format<wbr>Input</a>

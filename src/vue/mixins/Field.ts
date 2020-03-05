@@ -23,8 +23,7 @@ export class Field extends Mixins<Validatable>(Validatable) {
     this.VPField = this.VPCreateField(
       this.$el as HTMLElement,
       this.VPOptions$,
-      this.VPRules$,
-      this.VPValid$
+      this.VPRules$
     )
 
     return this.VPField
@@ -34,7 +33,6 @@ export class Field extends Mixins<Validatable>(Validatable) {
   VPFields: VPField[] = this.VPFields || []
   VPOptions$: VPFieldOptions = this.VPOptions || {}
   VPRules$: CustomValidationRule[] = this.VPRules || []
-  VPValid$: ValidationLifecycle = this.VPValid || {}
 
   VPChangeAnchor (el: HTMLElement) {
     (this.VPField as VPField).generateMessageNode(el)

@@ -30,8 +30,7 @@ export class Fieldset extends Mixins<Validatable>(Validatable) {
       this.$el as HTMLElement,
       this.VPStrategy$,
       this.VPOptions$,
-      this.VPFields$,
-      this.VPValid$
+      this.VPFields$
     )
 
     this.VPGatherFields()
@@ -41,7 +40,6 @@ export class Fieldset extends Mixins<Validatable>(Validatable) {
   VPStrategy$: (ValidationStrategy | string) = this.VPStrategy || 'all'
   VPFields$: VPField[] = this.VPFields || []
   VPOptions$: VPFieldsetOptions = this.VPOptions || {}
-  VPValid$: ValidationLifecycle = this.VPValid || {}
 
   VPChangeAnchor (el: HTMLElement) {
     (this.VPFieldset as VPFieldset).generateMessageNode(el)
