@@ -7,10 +7,11 @@ import { VPFieldset } from "./Fieldset";
 export declare const Validatable: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
+        $element: HTMLElement | undefined;
         addEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
         removeEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
-        dispatchEvent(event: Event, data: any): boolean | void;
-        createEvent(eventName: string): Event;
+        dispatchEvent(event: string | import("./models/Event").pEvent, data: any): boolean | void;
+        createEvent(eventName: string): import("./models/Event").pEvent;
     };
 } & {
     new (options: VPOptions, element: HTMLElement): {

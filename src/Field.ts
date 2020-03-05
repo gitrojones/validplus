@@ -1,4 +1,4 @@
-import { merge as mergeDeep } from 'lodash'
+import { merge } from 'lodash'
 
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
@@ -36,7 +36,7 @@ export class VPField extends Validatable implements Cloneable {
     options: (VPFieldOptions | object) = {},
     customRules: CustomValidationRule[] = []
   ) {
-    super(new VPField.Options(mergeDeep({
+    super(new VPField.Options(merge({
       CustomRules: customRules || [],
       DirtyOn: {
         blur: toBoolean(element.getAttribute('vp-dirtyBlur'), false),
@@ -102,9 +102,9 @@ export class VPField extends Validatable implements Cloneable {
     }
   }
 
-  clone (): VPField {
+  clone (element: HTMLElement = this.$element.cloneNode(true) as HTMLElement, options: (VPFieldOptions | object) = {}): VPField {
     debug('[VPField] Cloning element')
-    return new VPField(this.$element.cloneNode(true) as HTMLElement, this.$options.$options)
+    return new VPField(element, merge(options, this.$options.$options))
   }
 
   parseInput (): ValidationAttributes {

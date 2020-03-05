@@ -5,10 +5,13 @@ import { Constructor } from '@/types/Constructor'
 import { BasicEventTarget } from '@/interfaces/events/BasicEventTarget'
 import { EventListener } from '@/interfaces/events/EventListener'
 import { EventCallback } from '@/interfaces/events/EventCallback'
+import { debug } from '@/util/debug'
+import { pEvent } from '@/models/Event'
 
 export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
     $listeners: EventListener = {}
+    $element: (HTMLElement | undefined)
 
     addEventListener (type: string, callback: EventCallback): void {
       if (!(type in this.$listeners)) {
@@ -35,8 +38,25 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
      * @param event - the Event object to dispatch
      * @param data - Data to be passed to the callback
      */
-    dispatchEvent (event: Event, data: any): boolean | void {
-      if (!(event.type in this.$listeners)) return true
+    dispatchEvent (event: (pEvent | string), data: any): boolean | void {
+      if (typeof event === 'string') {
+        event = this.createEvent(event)
+      }
+
+      if (!(event.type in this.$listeners)) {
+        if (this.$element instanceof HTMLElement) {
+          let child: HTMLElement = this.$element
+          while (child && child.parentNode && !event.propagationStopped) {
+            child = child.parentNode as HTMLElement
+            debug('Dispatching on ParentNode', child, event.propagationStopped)
+
+            // Support detached DOMs (Similar to how JQuery handles bubbling)
+            child.dispatchEvent(event)
+          }
+        }
+
+        return true
+      }
 
       let stack = this.$listeners[event.type].slice()
       let stackLength = stack.length
@@ -47,7 +67,7 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
       return !event.defaultPrevented
     }
 
-    createEvent (eventName: string): Event {
+    createEvent (eventName: string): pEvent {
       return createEvent(eventName)
     }
   }

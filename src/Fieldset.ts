@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
@@ -10,8 +11,9 @@ import { VPField } from '@/Field'
 import { Validatable } from '@/Validatable'
 
 import { FieldsetOptions } from '@/models/VPOptions/FieldsetOptions'
+import Cloneable from '@/interfaces/Cloneable'
 
-export class VPFieldset extends Validatable {
+export class VPFieldset extends Validatable implements Cloneable {
   static Options = FieldsetOptions
 
   // noinspection ES6ClassMemberInitializationOrder
@@ -56,9 +58,9 @@ export class VPFieldset extends Validatable {
     this.$options.ValidationStrategy = this.$strategy = validationStrategy
   }
 
-  clone (): VPFieldset {
+  clone (element: HTMLElement = this.$element.cloneNode(true) as HTMLElement, options: (VPFieldsetOptions | object) = {}): VPFieldset {
     debug('[VPFieldset] Cloning element')
-    return new VPFieldset(this.$element.cloneNode(true) as HTMLElement, this.$strategy, this.$options.$options)
+    return new VPFieldset(element, this.$strategy, merge(options, this.$options.$options))
   }
 
   isValid (validateDirty: boolean = true): (boolean | Promise<boolean>) {

@@ -5,9 +5,11 @@ import { Validatable } from '@/Validatable'
 const { describe } = require('mocha')
 const { expect } = require('chai')
 
-export default (Messagable: (Validatable)) => function () {
+// @ts-ignore
+export default (Messagable: Validatable) => function () {
   const ErrorMessage = 'Not Valid'
 
+  // @ts-ignore
   let VPMessagable: Validatable
   let ArbitraryAnchor: HTMLElement
   let InnerElement: HTMLElement

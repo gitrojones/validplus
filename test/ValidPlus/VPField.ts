@@ -1,6 +1,7 @@
 /* tslint:disable:no-unused-expression */
 import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
 import DOMMessaging from './DOMMessaging'
+import EventEmitter from './EventEmitter'
 
 const ValidPlus = require('validplus').default
 const sinon = require('sinon')
@@ -29,6 +30,7 @@ export const VPField = function () {
   })
 
   describe('Messaging', DOMMessaging(new ValidPlus.Field(testField)))
+  describe('EventEmitter', EventEmitter(new ValidPlus.Field(testField)))
 
   describe('Fields Properties', function () {
     it('Should use specified ControllerInput')
@@ -373,7 +375,7 @@ export const VPField = function () {
         const shouldGetCalled = sinon.fake();
         (new ValidPlus.Field(testField, {
           ValidateLazyFieldRules: false,
-          ValidateLazyCustomRules: false,
+          ValidateLazyCustomRules: false
         }, [
           () => false,
           shouldGetCalled
@@ -385,7 +387,7 @@ export const VPField = function () {
       it('Should return as promise if any customRule is async', function () {
         let field = new ValidPlus.Field(testField, {
           ValidateLazyFieldRules: false,
-          ValidateLazyCustomRules: false,
+          ValidateLazyCustomRules: false
         }, [
           async () => false
         ])
@@ -396,7 +398,7 @@ export const VPField = function () {
       it('Should properly validate sync as async', function (done: (err?: any) => void) {
         let field = new ValidPlus.Field(testField, {
           ValidateLazyFieldRules: false,
-          ValidateLazyCustomRules: false,
+          ValidateLazyCustomRules: false
         }, [
           () => false,
           async () => true
@@ -408,7 +410,7 @@ export const VPField = function () {
       it('Should properly validate async with mixed sync', function (done: (err?: any) => void) {
         let field = new ValidPlus.Field(testField, {
           ValidateLazyFieldRules: false,
-          ValidateLazyCustomRules: false,
+          ValidateLazyCustomRules: false
         }, [
           () => true,
           async () => false

@@ -4,7 +4,8 @@ import { CustomValidationRule } from "./interfaces/validation/CustomValidationRu
 import { VPField } from "./Field";
 import { Validatable } from "./Validatable";
 import { FieldsetOptions } from "./models/VPOptions/FieldsetOptions";
-export declare class VPFieldset extends Validatable {
+import Cloneable from "./interfaces/Cloneable";
+export declare class VPFieldset extends Validatable implements Cloneable {
     static Options: typeof FieldsetOptions;
     $options: VPFieldsetOptions;
     $strategy: ValidationStrategy;
@@ -13,7 +14,7 @@ export declare class VPFieldset extends Validatable {
     $fieldWatch: (_e: Event, trigger: VPField) => void;
     readonly $visibleFields: VPField[];
     constructor(element: HTMLElement, strategy: (string | ValidationStrategy), options: (VPFieldsetOptions | object));
-    clone(): VPFieldset;
+    clone(element?: HTMLElement, options?: (VPFieldsetOptions | object)): VPFieldset;
     isValid(validateDirty?: boolean): (boolean | Promise<boolean>);
     removeField(field: VPField): VPField | null | undefined;
     watchField(field: VPField): void;

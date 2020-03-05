@@ -16,7 +16,7 @@ export declare class VPField extends Validatable implements Cloneable {
     };
     constructor(element: HTMLElement, options?: (VPFieldOptions | object), customRules?: CustomValidationRule[]);
     $input: ValidInput;
-    clone(): VPField;
+    clone(element?: HTMLElement, options?: (VPFieldOptions | object)): VPField;
     parseInput(): ValidationAttributes;
     setInput(input: ValidInput | null): void;
     isValid(formattedExternal?: boolean): (boolean | Promise<boolean>);
