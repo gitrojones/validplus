@@ -1,6 +1,6 @@
 const path = require('path');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	entry: {
@@ -30,10 +30,10 @@ module.exports = {
 
 	optimization: {
 		minimizer: [
-			new UglifyJSPlugin({
-				uglifyOptions: {
+		  new TerserPlugin({
+				terserOptions: {
 					compress: {
-						pure_funcs: [ 'debug' ]
+						pure_funcs: ['debug']
 					},
 					mangle: {
 						reserved: [ 'debug' ]
@@ -66,7 +66,8 @@ module.exports = {
 									'@babel/preset-env',
 									{
 										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage'
+										useBuiltIns: 'usage',
+										corejs: 3
 									},
 									'@babel/preset-typescript'
 								]
