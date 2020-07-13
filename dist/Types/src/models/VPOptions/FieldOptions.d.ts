@@ -3,7 +3,7 @@ import { InputFormatters } from "../../interfaces/InputFormatters";
 import { ChangeActions } from "../../interfaces/events/ChangeActions";
 import { HTMLValidationRules } from "../../interfaces/validation/HTMLValidationRules";
 import { CustomValidationRule } from "../../interfaces/validation/CustomValidationRule";
-import { ValidatableOptions } from './ValidatableOptions';
+import { ValidatableOptions } from "./ValidatableOptions";
 export declare class FieldOptions extends ValidatableOptions implements VPFieldOptions {
     ForceRules: boolean;
     InputRules: HTMLValidationRules;

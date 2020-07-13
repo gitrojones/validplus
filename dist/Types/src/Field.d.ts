@@ -15,7 +15,8 @@ export declare class VPField extends Validatable {
         post: boolean;
     };
     constructor(element: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: (ValidationLifecycle | undefined));
-    $input: ValidInput;
+    get $input(): ValidInput;
+    set $input(input: ValidInput);
     parseInput(): ValidationAttributes;
     setInput(input: ValidInput | null): void;
     isValid(formattedExternal?: boolean): (boolean | Promise<boolean>);

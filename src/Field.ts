@@ -20,7 +20,7 @@ import { Validatable } from '@/Validatable'
 import { FieldOptions } from '@/models/VPOptions/FieldOptions'
 
 export class VPField extends Validatable {
-  static Options = FieldOptions;
+  static Options = FieldOptions
 
   $Input: (ValidInput | null) = null
   $dirty: boolean = false
@@ -56,7 +56,7 @@ export class VPField extends Validatable {
         change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
-    }, options) as VPFieldOptions, element), element);
+    }, options) as VPFieldOptions, element), element)
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPField] Expected element')

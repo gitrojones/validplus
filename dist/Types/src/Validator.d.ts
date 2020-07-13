@@ -17,13 +17,13 @@ export declare class VPValidator extends Validatable {
     $emitFieldsets: VPFieldset[];
     $fieldsets: VPFieldset[];
     $fieldsetWatch: (_e: Event, trigger: VPFieldset) => void;
-    private readonly $visibleFieldsets;
+    private get $visibleFieldsets();
     /**
      * @param options - Configuration for the Validator
      * @param element - Validator Anchor Element (Typically a form)
      */
     constructor(options: VPValidatorOptions, element: HTMLElement);
-    isValid(): boolean | Promise<{}>;
+    isValid(): boolean | Promise<unknown>;
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
     removeFieldset(fieldset: VPFieldset): VPFieldset | null | undefined;
