@@ -57,30 +57,7 @@ module.exports = {
 			{
 				test: /\.(js|ts)x?$/,
 				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
-				use: [
-					{
-						loader: 'babel-loader',
-						options: {
-							presets: [
-								[
-									'@babel/preset-env',
-									{
-										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage',
-										corejs: 3
-									},
-									'@babel/preset-typescript'
-								]
-							],
-							plugins: [
-								'@babel/plugin-transform-runtime',
-								'@babel/plugin-transform-typescript',
-								'@babel/plugin-proposal-class-properties',
-								'@babel/plugin-proposal-object-rest-spread'
-							]
-						}
-					}
-				]
+				loader: 'babel-loader'
 			}
 		]
 	},

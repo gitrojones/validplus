@@ -1,0 +1,57 @@
+p {
+    font-size: 18px;
+}
+label {
+    font-weight: bold;
+    color: #0D405B;
+}
+
+.description {
+    margin-bottom: 2rem;
+}
+.method-parameter {
+    font-size: 16px;
+}
+.content {
+    overflow: auto;
+}
+.content h1 {
+    font-size: 3em;
+    color: #1d1d1d;
+}
+.content h2 {
+    font-size: 2em;
+    color: #2d2d2d;
+}
+.content h3 {
+    font-size: 1.5em;
+    color: #3d3d3d;
+}
+.content h4 {
+    font-size: 1em;
+    color: #4d4d4d;
+}
+.content h5 {
+    font-size: 1em;
+    color: #5d5d5d;
+}
+.content table td.description p {
+    font-size: 14px;
+}
+.member>.description p {
+    font-size: 16px;
+}
+.member>.name .code-name {
+    font-size: 18px;
+}
+.type-signature {
+    font-size: 0.8em;
+}
+.method-parameter.columns:last-child .column:last-child {
+    white-space: nowrap;
+}
+#main > #sidebarNav {
+    width: auto;
+    overflow: auto;
+    white-space: nowrap;
+}

@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
-    "noUnusedLocals": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
     "declarationDir": "dist/Types",
@@ -15,13 +16,17 @@
     "moduleResolution": "node",
     "strict": true,
     "outDir": "dist",
-    "lib": ["es6", "es7", "dom", "dom.iterable", "scripthost"],
+    "lib": ["es6", "es7", "dom", "dom.iterable", "ScriptHost"],
     "jsx": "react",
     "noEmit": false,
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@lib/*": ["lib/*"],
+      "@test/*": ["test/*"],
+      "@dev/*": ["dev/*"],
+      "validplus": ["validplus.ts"]
     },
     "plugins": [
       { "transform": "typescript-transform-paths", "afterDeclarations": true }
@@ -29,47 +34,8 @@
   },
   "include": [
     "validplus.ts",
-    "@types/node/globals.d.ts"
+    "src/vue/index.ts",
+    "src/vue/index.ssr.ts"
   ],
-  "exclude": ["node_modules", "dist", "coverage", "dev"],
-  "tasks": [
-    {
-      "type": "npm",
-      "script": "build",
-      "group": "build",
-      "problemMatcher": ["$ts-webpack", "$tslint-webpack"]
-    },
-    {
-      "type": "npm",
-      "script": "build:watch",
-      "group": "build",
-      "isBackground": true,
-      "problemMatcher": [
-        {
-          "base": "$ts-webpack",
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": {
-              "regexp": "Compilation starting…"
-            },
-            "endsPattern": {
-              "regexp": "Compilation finished"
-            }
-          }
-        },
-        {
-          "base": "$tslint-webpack",
-          "background": {
-            "activeOnStart": true,
-            "beginsPattern": {
-              "regexp": "Compilation starting…"
-            },
-            "endsPattern": {
-              "regexp": "Compilation finished"
-            }
-          }
-        }
-      ]
-    }
-  ]
+  "exclude": ["node_modules", "dist", "coverage", "dev"]
 }

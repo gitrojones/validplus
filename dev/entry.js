@@ -2,7 +2,7 @@ import Vue from 'vue'
 import TestingGround from './src/testing-ground.vue'
 import 'webpack-hot-middleware/client?reload=true'
 
-const vue = new Vue({
+export default new Vue({
   el: '#app',
   components: {
     dev: TestingGround
@@ -10,4 +10,4 @@ const vue = new Vue({
   render: h => {
     return h('dev', null, null)
   }
-})
+});

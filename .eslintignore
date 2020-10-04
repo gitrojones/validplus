@@ -1,0 +1,9 @@
+node_modules
+docs
+dist
+lib
+.idea
+.githooks
+*.webpack.js
+*.config.js
+wallaby.js

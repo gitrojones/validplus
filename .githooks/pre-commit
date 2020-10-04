@@ -1,11 +1,10 @@
 #!/bin/bash
 #
-# Build Docs and Package before commiting code
+# Build Docs and Package before committing code
 
 npm run build
 npm run build:types
 npm run docs
-touch docs/.nojekyll
 git add .
 
 echo "Built production package and appended new docs Automagically!"

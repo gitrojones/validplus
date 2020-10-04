@@ -1,93 +1,31 @@
 const path = require('path');
-const nodeExternals = require('webpack-node-externals');
+const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-
-const isCoverage = process.env.NODE_ENV === 'coverage';
-const isProd = process.env.PROD === 'true' ? true : process.env.NODE_ENV === 'production';
+const EslintPlugin = require('eslint-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = {
 	entry: {
-		testapp: './dev/entry.js'
+		validplus: path.resolve(__dirname, './validplus')
 	},
-
-	output: {
-		path: path.resolve(__dirname, 'dev/dist'),
-		devtoolModuleFilenameTemplate: '[absolute-resource-path]',
-		devtoolFallbackModuleFilenameTemplate: '[absolute-resource-path]?[hash]',
-		filename: '[name].js'
-	},
-
-	target: 'node',
 	devtool: 'inline-cheap-module-source-map',
-
-	node: {
-		__dirname: true,
-		__filename: true
-	},
-
-	externals: [ nodeExternals() ],
-
 	resolve: {
 		extensions: [ '.js', '.ts', '.json', '.vue' ],
 		alias: {
 			'@': path.resolve(__dirname, 'src'),
 			'@lib': path.resolve(__dirname, './lib'),
-			'#': path.resolve(__dirname, 'dev/src'),
-			VPVue: path.resolve(__dirname, 'src/vue/index'),
-			'SSR/VPVue': path.resolve(__dirname, 'src/vue/index.ssr'),
-			validplus: path.resolve(__dirname, './validplus')
+			'@test': path.resolve(__dirname, './test'),
+			'@dev': path.resolve(__dirname, './dev'),
+      'validplus': path.resolve(__dirname, './validplus.ts')
 		}
 	},
-
-	mode: isProd ? 'production' : 'development',
-
+	externals: [nodeExternals()],
 	module: {
 		rules: [
-			...(isCoverage
-				? [
-						{
-							test: /\.(js|ts)x?$/,
-							include: (file) => /src/.test(file),
-							exclude: (file) => /src\/vue/.test(file) || /dev/.test(file),
-							loader: 'istanbul-instrumenter-loader',
-							enforce: 'post',
-							query: {
-								esModules: true
-							}
-						}
-					]
-				: []),
-			{
-				test: /\.js$/,
-				use: [ 'source-map-loader' ],
-				enforce: 'pre'
-			},
 			{
 				test: /\.(js|ts)x?$/,
 				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
-				use: [
-					{
-						loader: 'babel-loader',
-						options: {
-							presets: [
-								[
-									'@babel/preset-env',
-									{
-										targets: '>0.25%, not dead',
-										useBuiltIns: 'usage'
-									},
-									'@babel/preset-typescript'
-								]
-							],
-							plugins: [
-								'@babel/plugin-transform-runtime',
-								'@babel/plugin-transform-typescript',
-								'@babel/plugin-proposal-class-properties',
-								'@babel/plugin-proposal-object-rest-spread'
-							]
-						}
-					}
-				]
+        loader: 'babel-loader'
 			},
 			{
 				test: /\.vue$/,
@@ -111,17 +49,12 @@ module.exports = {
 					limit: 10000,
 					name: 'img/[name].[ext]'
 				}
-			},
-			{
-				test: /\.(woff2?|eot|ttf|otf)$/,
-				loader: 'file-loader',
-				options: {
-					limit: 10000,
-					name: '[name].[ext]',
-					outputPath: 'fonts/'
-				}
 			}
 		]
 	},
-	plugins: [ new VueLoaderPlugin() ]
+	plugins: [
+		new EslintPlugin({}),
+		new VueLoaderPlugin(),
+		new webpack.NormalModuleReplacementPlugin(/\.(gif|png|scss|less|css)/, 'node-noop')
+	]
 };
