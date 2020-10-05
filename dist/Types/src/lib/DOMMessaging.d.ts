@@ -54,7 +54,7 @@ export declare class DOMMessaging {
      * @param [status] - An optional class to append indicating message status
      * @throws If the $MessageNode isn't set or isn't an HTMLElement
      */
-    addMessages(messages: string[], status: string): void;
+    addMessages(messages: string[], status?: string): void;
     /**
      * Remove a message
      * @param message - The message to remove

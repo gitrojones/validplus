@@ -128,7 +128,7 @@ export class DOMMessaging {
    * @param [status] - An optional class to append indicating message status
    * @throws If the $MessageNode isn't set or isn't an HTMLElement
    */
-  addMessages (messages: string[], status: string): void {
+  addMessages (messages: string[], status: string = ''): void {
     messages.forEach((message) => {
       this.addMessage(message, status)
     })
