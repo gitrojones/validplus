@@ -2,7 +2,7 @@ import { VerticalPosition } from '@/enums/Positions'
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
+import {ValidationStrategy, ValidationStrategyNames} from '@/interfaces/validation/ValidationStrategy'
 import { InputFormatters } from '@/interfaces/InputFormatters'
 import { ChangeActions } from '@/interfaces/events/ChangeActions'
 import { ValidInput } from '@/types/ValidInput'
@@ -46,7 +46,7 @@ export interface VPFieldsetOptions extends ValidatableOptions, VPOptions {
 
   // ValidationOptions
   FieldClass: string,
-  ValidationStrategy: (ValidationStrategy | null)
+  ValidationStrategy: (ValidationStrategyNames|ValidationStrategy)
 }
 export interface VPFieldOptions extends ValidatableOptions, VPOptions {
   // ControlFlow

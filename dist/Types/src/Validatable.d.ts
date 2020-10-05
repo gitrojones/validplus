@@ -1,8 +1,9 @@
 import { VPOptions } from "./interfaces/VPOptions";
 import { ValidationStrategies } from "./interfaces/validation/ValidationStrategy";
 import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
+import { DOMMessaging } from "./lib/DOMMessaging";
 import { ValidatableOptions } from "./models/VPOptions/ValidatableOptions";
-export declare const Validatable: {
+declare const EEMessaging: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;
         addEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
@@ -10,30 +11,18 @@ export declare const Validatable: {
         dispatchEvent(event: Event, data: any): boolean | void;
         createEvent(eventName: string): Event;
     };
-} & {
-    new (options: VPOptions, element: HTMLElement): {
-        [index: string]: any;
-        dispatchEvent: any;
-        createEvent: any;
-        $options: VPOptions;
-        $element: HTMLElement;
-        $strategies: ValidationStrategies;
-        $valid: boolean | null;
-        $isValid: boolean | null;
-        setLifecycle(lifecycle: ValidationLifecycle): void;
-        isElementVisible(element: HTMLElement): boolean;
-        $MessageContainerClassName: string;
-        $MessageClassName: string;
-        $MessageNode: HTMLElement | null;
-        $MessageAnchor: HTMLElement | null;
-        $MessageNodePOS: import("./enums/Positions").VerticalPosition;
-        DOMCreateElement(innerHTML: string, className: string): HTMLElement;
-        generateMessageNode(anchor?: HTMLElement | null, pos?: import("./enums/Positions").VerticalPosition): void;
-        removeMessageNode(): void;
-        addMessage(message: string, status: string): void;
-        addMessages(messages: string[], status: string): void;
-        removeMessage(message: string): void;
-        clearMessages(): void;
-    };
-    Options: typeof ValidatableOptions;
-};
+} & typeof DOMMessaging;
+export declare class Validatable extends EEMessaging {
+    static Options: typeof ValidatableOptions;
+    $options: VPOptions;
+    $element: HTMLElement;
+    $lifecycleElements: HTMLElement[];
+    $strategies: ValidationStrategies;
+    $valid: boolean | null;
+    constructor(element: HTMLElement, options: VPOptions);
+    get $isValid(): boolean | null;
+    set $isValid(isValid: boolean | null);
+    setLifecycle(lifecycle: ValidationLifecycle): void;
+    isElementVisible(element: HTMLElement): boolean;
+}
+export {};

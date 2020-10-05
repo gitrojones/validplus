@@ -21,15 +21,8 @@ import { ValidatorOptions } from '@/models/VPOptions/ValidatorOptions'
 export class VPValidator extends Validatable {
   static Options = ValidatorOptions;
 
-  $options: VPValidatorOptions = this.$options
   $emitFieldsets: VPFieldset[]
   $fieldsets: VPFieldset[]
-  $fieldsetWatch = ((_e: Event, trigger: VPFieldset) => {
-    _e.stopPropagation()
-
-    this.$emitFieldsets.push(trigger)
-    this.isValid()
-  }).bind(this)
 
   private get $visibleFieldsets (): VPFieldset[] {
     return this.$fieldsets.filter((fieldset: VPFieldset) => {
@@ -37,15 +30,18 @@ export class VPValidator extends Validatable {
     })
   }
 
-  /**
-   * @param options - Configuration for the Validator
-   * @param element - Validator Anchor Element (Typically a form)
-   */
-  constructor (options: VPValidatorOptions, element: HTMLElement) {
-    super(new VPValidator.Options(options, element), element)
+  constructor (element: HTMLElement, options: VPValidatorOptions = {} as VPValidatorOptions) {
+    super(element, new VPValidator.Options(options, element))
 
     this.$emitFieldsets = []
     this.$fieldsets = []
+  }
+
+  $fieldsetWatch (_e: Event, trigger: VPFieldset): void {
+    _e.stopPropagation()
+
+    this.$emitFieldsets.push(trigger)
+    this.isValid()
   }
 
   isValid () {

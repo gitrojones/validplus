@@ -13,16 +13,11 @@ import { ValidatorOptions } from "./models/VPOptions/ValidatorOptions";
  */
 export declare class VPValidator extends Validatable {
     static Options: typeof ValidatorOptions;
-    $options: VPValidatorOptions;
     $emitFieldsets: VPFieldset[];
     $fieldsets: VPFieldset[];
-    $fieldsetWatch: (_e: Event, trigger: VPFieldset) => void;
     private get $visibleFieldsets();
-    /**
-     * @param options - Configuration for the Validator
-     * @param element - Validator Anchor Element (Typically a form)
-     */
-    constructor(options: VPValidatorOptions, element: HTMLElement);
+    constructor(element: HTMLElement, options?: VPValidatorOptions);
+    $fieldsetWatch(_e: Event, trigger: VPFieldset): void;
     isValid(): boolean | Promise<unknown>;
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;

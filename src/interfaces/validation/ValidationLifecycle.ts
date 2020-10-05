@@ -1,8 +1,6 @@
-import { VPField } from '@/Field'
-import { VPFieldset } from '@/Fieldset'
-import { VPValidator } from '@/Validator'
+import { Validatable } from '@/Validatable'
 
-export type ValidationCB = (VPInstance: (VPField | VPFieldset | VPValidator)) => null
+export type ValidationCB = (VPInstance: (Validatable)) => null
 export interface ValidationLifecycle {
   Valid: {
     Message?: string,

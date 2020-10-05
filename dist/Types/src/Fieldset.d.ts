@@ -1,23 +1,20 @@
 import { VPFieldsetOptions, VPFieldOptions } from "./interfaces/VPOptions";
 import { ValidationStrategy } from "./interfaces/validation/ValidationStrategy";
-import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
-import { CustomValidationRule } from "./interfaces/validation/CustomValidationRule";
 import { VPField } from "./Field";
 import { Validatable } from "./Validatable";
 import { FieldsetOptions } from "./models/VPOptions/FieldsetOptions";
 export declare class VPFieldset extends Validatable {
     static Options: typeof FieldsetOptions;
-    $options: VPFieldsetOptions;
     $strategy: ValidationStrategy;
     $fields: VPField[];
     $emitFields: VPField[];
-    $fieldWatch: (_e: Event, trigger: VPField) => void;
     get $visibleFields(): VPField[];
-    constructor(element: HTMLElement, strategy: string | ValidationStrategy, options: VPFieldsetOptions, onValidate: (ValidationLifecycle | undefined));
+    constructor(element: HTMLElement, options?: VPFieldsetOptions);
+    $fieldWatch(_e: Event, trigger: VPField): void;
     isValid(validateDirty?: boolean): (boolean | Promise<boolean>);
-    removeField(field: VPField): VPField | null | undefined;
+    removeField(field: VPField): (VPField | undefined);
     watchField(field: VPField): void;
     addField(field: VPField): void;
-    createField(el: HTMLElement, options: VPFieldOptions, customRules: CustomValidationRule[], onValidate: ValidationLifecycle): VPField;
+    createField(el: HTMLElement, options: VPFieldOptions): VPField;
     findFields(fieldOptions?: (VPFieldOptions | VPFieldOptions[])): void;
 }

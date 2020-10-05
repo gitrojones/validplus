@@ -11,21 +11,22 @@ import { EventEmitter } from '@/mixins/EventEmitter'
 
 import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions'
 
-export const Validatable = EventEmitter(class extends DOMMessaging {
-  [index: string]: any // Allow for child properties to be accessible
+const EEMessaging = EventEmitter(DOMMessaging);
+export class Validatable extends EEMessaging {
   static Options = ValidatableOptions;
 
-  dispatchEvent: any // Defined by EventEmitter
-  createEvent: any // Defined by EventEmitter
   $options: VPOptions
   $element: HTMLElement
+  $lifecycleElements: HTMLElement[]
   $strategies: ValidationStrategies
   $valid: boolean | null
 
-  constructor (options: VPOptions, element: HTMLElement) {
+  constructor (element: HTMLElement, options: VPOptions) {
     super()
 
+    this.$lifecycleElements = [];
     this.$element = element
+    this.$lifecycleElements.push(element);
     this.$valid = null
 
     // Set some logical defaults
@@ -51,12 +52,11 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     // DOMMessaging
     this.$MessageClassName = this.$options.MessageClassName
     this.$MessageContainerClassName = this.$options.MessageContainerClassName
-    this.$MessageNodePOS = this.$options.MessagePOS
 
     // Allow for manually calling the messageNodeBuilder if it cannot be accomplished right away
     // Used in Vue Bindings
     if (this.$options.MessageAnchor instanceof HTMLElement) {
-      this.generateMessageNode(this.$options.MessageAnchor)
+      this.generateMessageNode(this.$options.MessageAnchor, this.$options.MessagePOS)
     }
     // END DOMMessaging
   }
@@ -69,20 +69,17 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
     this.$valid = isValid
 
     if (isValid) {
-      this.$element.classList.add(this.$options.ValidClassName)
-      this.$element.classList.remove(this.$options.ErrorClassName)
-
-      if (this.$Input instanceof HTMLElement) {
-        this.$Input.classList.add(this.$options.ValidClassName)
-        this.$Input.classList.remove(this.$options.ErrorClassName)
-      }
+      this.$lifecycleElements.forEach((element) => {
+        element.classList.add(this.$options.ValidClassName)
+        element.classList.remove(this.$options.ErrorClassName)
+      })
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB
-          .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
+          .forEach((CB: ValidationCB) => CB(this))
       }
 
-      let ValidMessage: (string | undefined) = this.$options.Lifecycle.Valid.Message
+      const ValidMessage: (string | undefined) = this.$options.Lifecycle.Valid.Message
       if (typeof ValidMessage === 'string' && ValidMessage.length > 0) {
         this.addMessage(
           this.$options.Lifecycle.Valid.Message as string,
@@ -90,20 +87,17 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         )
       }
     } else {
-      this.$element.classList.remove(this.$options.ValidClassName)
-      this.$element.classList.add(this.$options.ErrorClassName)
-
-      if (this.$Input instanceof HTMLElement) {
-        this.$Input.classList.remove(this.$options.ValidClassName)
-        this.$Input.classList.add(this.$options.ErrorClassName)
-      }
+      this.$lifecycleElements.forEach((element) => {
+        element.classList.add(this.$options.ValidClassName)
+        element.classList.remove(this.$options.ErrorClassName)
+      })
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
         this.$options.Lifecycle.Invalid.CB
-          .forEach((CB: ValidationCB) => (CB as Function).call(null, this))
+          .forEach((CB: ValidationCB) => CB(this));
       }
 
-      let InvalidMessage: (string | undefined) = this.$options.Lifecycle.Invalid.Message
+      const InvalidMessage: (string | undefined) = this.$options.Lifecycle.Invalid.Message
       if (typeof InvalidMessage === 'string' && InvalidMessage.length > 0) {
         this.addMessage(
           this.$options.Lifecycle.Invalid.Message as string,
@@ -111,7 +105,7 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
         )
       }
 
-      if (this.$options.ScrollTo === true) {
+      if (this.$options.ScrollTo) {
         // While always true, we check due to limitations with JSDOM
         // tslint:disable-next-line: strict-type-predicates
         if (this.$options.ScrollAnchor && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
@@ -122,20 +116,20 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
       }
     }
 
-    if (this.$options.Watch === true) {
+    if (this.$options.Watch) {
       debug('[Validatable] Emit watch')
       this.dispatchEvent(this.createEvent('onValidate'), this)
     }
   }
 
   setLifecycle (lifecycle: ValidationLifecycle): void {
-    const isValidationLifecycle = function (lifecycle: any): lifecycle is ValidationLifecycle {
+    const isValidationLifecycle = function (lifecycle: ValidationLifecycle) {
       return isSet(lifecycle) &&
         ('Valid' in lifecycle || 'Invalid' in lifecycle)
     }
 
-    let valid = this.$options.Lifecycle.Valid || {}
-    let invalid = this.$options.Lifecycle.Invalid || {}
+    const valid = this.$options.Lifecycle.Valid || {}
+    const invalid = this.$options.Lifecycle.Invalid || {}
     this.$options.Lifecycle = {
       Valid: {
         Message: valid.Message,
@@ -187,6 +181,4 @@ export const Validatable = EventEmitter(class extends DOMMessaging {
 
     return false
   }
-})
-
-Validatable.prototype.Options = ValidatableOptions;
+}

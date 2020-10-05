@@ -20,6 +20,7 @@
     "jsx": "react",
     "noEmit": false,
     "sourceMap": true,
+    "inlineSourceMap": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],

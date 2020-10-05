@@ -6,7 +6,7 @@ import { VerticalPosition } from '@/enums/Positions'
 
 export class ValidatableOptions implements VPOptions {
   // ControlFlow
-  Watch: boolean = true;
+  Watch = true;
   Lifecycle: ValidationLifecycle = {
     Valid: {
       CB: [],
@@ -19,21 +19,21 @@ export class ValidatableOptions implements VPOptions {
   };
 
   // ClassNames
-  ErrorClassName: string = '-isError';
-  ValidClassName: string = '-isValid';
+  ErrorClassName = '-isError';
+  ValidClassName = '-isValid';
 
   // Input Controller
   PrimaryInput: (null | ValidInput) = null;
-  PrimaryInputIndex: number = 0;
+  PrimaryInputIndex = 0;
   PrimaryInputType: (null | string) = null;
   InputTypes: ('select' | 'input' | 'textarea')[] = ['select', 'input', 'textarea'];
 
   // Messaging
-  MessageClassName: string = 'VPMessage';
-  MessageContainerClassName: string = 'VPMessages';
+  MessageClassName = 'VPMessage';
+  MessageContainerClassName = 'VPMessages';
   MessageAnchor: (HTMLElement | null) = null;
   MessagePOS: VerticalPosition = VerticalPosition.bottom;
-  ScrollTo: boolean = true;
+  ScrollTo = true;
   ScrollAnchor: (HTMLElement | null) = null;
 
   constructor(options: VPOptions, element: (HTMLElement | null) = null) {
@@ -46,4 +46,4 @@ export class ValidatableOptions implements VPOptions {
 
     Object.assign(this, options);
   }
-};
+}

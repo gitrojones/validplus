@@ -9,17 +9,50 @@ import {
 } from 'chai';
 import * as VP from 'validplus';
 
-describe.each(['Validator', 'Fieldset', 'Field'])('Validatable (%s)', (Validatable) => {
+describe.each([
+  'Validator',
+  'Fieldset',
+  'Field'
+])('Validatable (%s)', (Validatable: ('Validator'|'Fieldset'|'Field')) => {
+  /**
+   * For DOMMessaging implementation details, see lib/DOMMessaging tests
+   */
   describe('DOMMessaging', () => {
-    test.todo('Implements AddEventListener');
-    test.todo('Implements RemoveEventListener');
-    test.todo('Implements DispatchEvent');
-    test.todo('Implements CreateEvent helper');
+    test('Implements AddEventListener', () => {
+      const fakeEl = window.document.createElement('div');
+      const fakeInput = window.document.createElement('input');
+      fakeEl.appendChild(fakeInput);
 
-    test.todo('AddEventListener adds a listener to the listener property')
-    test.todo('RemoveEventListener removes a listener on the listener property');
-    test.todo('DispatchEvent fires an event');
-    test.todo('CreateEvent creates an event');
+      const validator = new VP[Validatable](fakeEl);
+      expect(typeof validator.addEventListener).to.equal('function');
+    });
+
+    test('Implements RemoveEventListener', () => {
+      const fakeEl = window.document.createElement('div');
+      const fakeInput = window.document.createElement('input');
+      fakeEl.appendChild(fakeInput);
+
+      const validator = new VP[Validatable](fakeEl);
+      expect(typeof validator.removeEventListener).to.equal('function');
+    });
+
+    test('Implements DispatchEvent', () => {
+      const fakeEl = window.document.createElement('div');
+      const fakeInput = window.document.createElement('input');
+      fakeEl.appendChild(fakeInput);
+
+      const validator = new VP[Validatable](fakeEl);
+      expect(typeof validator.dispatchEvent).to.equal('function');
+    });
+
+    test('Implements CreateEvent helper', () => {
+      const fakeEl = window.document.createElement('div');
+      const fakeInput = window.document.createElement('input');
+      fakeEl.appendChild(fakeInput);
+
+      const validator = new VP[Validatable](fakeEl, {});
+      expect(typeof validator.createEvent).to.equal('function');
+    });
   });
 
   describe('Validation Lifecycle', () => {
@@ -37,7 +70,6 @@ describe.each(['Validator', 'Fieldset', 'Field'])('Validatable (%s)', (Validatab
   });
 
   describe('Standard Validation Options', () => {
-
   });
 });
 

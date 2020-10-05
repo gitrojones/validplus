@@ -26,9 +26,10 @@ module.exports = function (wallaby) {
 
         setup(wallaby) {
             const config = require('./package.json').jest;
-            Object.keys(config.moduleNameMapper).forEach(k =>
-              (config.moduleNameMapper[k] = config.moduleNameMapper[k]
-                .replace('<rootDir>', wallaby.localProjectDir)))
+            ['moduleNameMapper', 'setupFiles'].forEach((key) =>
+              Object.keys(config[key]).forEach(k =>
+                (config[key][k] = config[key][k]
+                  .replace('<rootDir>', wallaby.localProjectDir))));
             wallaby.testFramework.configure(config);
         }
     };

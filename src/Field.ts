@@ -1,8 +1,8 @@
+import merge from 'lodash/merge'
 import { debug } from '@/util/debug'
 import { hasAsync } from '@/util/hasAsync'
 import { isAsync } from '@/util/isAsync'
 import { isValidInput } from '@/util/isValidInput'
-import { mergeDeep } from '@/util/mergeDeep'
 import { toBoolean } from '@/util/casts/toBoolean'
 import { toNumber } from '@/util/casts/toNumber'
 import { toRegexp } from '@/util/casts/toRegexp'
@@ -11,7 +11,6 @@ import { isSet } from '@/util/isSet'
 
 import { VPFieldOptions } from '@/interfaces/VPOptions'
 import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
 import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
 import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
 
@@ -19,36 +18,46 @@ import { ValidInput } from '@/types/ValidInput'
 import { Validatable } from '@/Validatable'
 import { FieldOptions } from '@/models/VPOptions/FieldOptions'
 
+const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post')) {
+  const formatter = self.$options.InputFormatter[type];
+  if (self.$input === null) {
+    throw new Error('[VPField] Cannot format Input as it is unset.')
+  }
+
+  if (typeof formatter === 'function') {
+    formatter(self.$input, (eventName: string) => {
+      if (self.$input instanceof HTMLElement) {
+        self.$formatterEvent[type] = true
+        self.$input.dispatchEvent(self.createEvent(eventName))
+      }
+    })
+  }
+}
+
 export class VPField extends Validatable {
   static Options = FieldOptions
 
   $Input: (ValidInput | null) = null
-  $dirty: boolean = false
-  $canValidate: boolean = true
+  $dirty = false
+  $canValidate = true
   $formatterEvent: { pre: boolean, post: boolean } = {
     pre: false,
     post: false
   }
 
-  constructor (
-    element: HTMLElement,
-    options: VPFieldOptions,
-    customRules: CustomValidationRule[],
-    onValidate: (ValidationLifecycle | undefined)
-  ) {
-    super(new VPField.Options(mergeDeep({
-      CustomRules: customRules || [],
+  constructor (element: HTMLElement, options: VPFieldOptions = {} as VPFieldOptions) {
+    super(element, new VPField.Options(merge({
       DirtyOn: {
-        blur: toBoolean(element.getAttribute('vp-dirtyBlur'), false),
-        input: toBoolean(element.getAttribute('vp-dirtyInput'), true),
-        change: toBoolean(element.getAttribute('vp-dirtyChange'), false),
-        mouseleave: toBoolean(element.getAttribute('vp-dirtyMouseLeave'), false)
+        blur: toBoolean(element.getAttribute('vp-dirty-blur'), false),
+        input: toBoolean(element.getAttribute('vp-dirty-input'), true),
+        change: toBoolean(element.getAttribute('vp-dirty-change'), false),
+        mouseleave: toBoolean(element.getAttribute('vp-dirty-mouseleave'), false)
       },
       FormatOn: {
-        blur: toBoolean(element.getAttribute('vp-formatBlur'), false),
-        input: toBoolean(element.getAttribute('vp-formatInput'), true),
-        change: toBoolean(element.getAttribute('vp-formatChange'), false),
-        mouseleave: toBoolean(element.getAttribute('vp-formatMouseleave'), false)
+        blur: toBoolean(element.getAttribute('vp-format-blur'), false),
+        input: toBoolean(element.getAttribute('vp-format-input'), true),
+        change: toBoolean(element.getAttribute('vp-format-change'), false),
+        mouseleave: toBoolean(element.getAttribute('vp-format-mouseleave'), false)
       },
       ValidateOn: {
         blur: toBoolean(element.getAttribute('vp-blur'), false),
@@ -56,36 +65,30 @@ export class VPField extends Validatable {
         change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
-    }, options) as VPFieldOptions, element), element)
+    }, options) as VPFieldOptions, element))
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPField] Expected element')
     }
 
-    if (onValidate) {
-      this.setLifecycle(onValidate)
-    }
-
     this.setInput(this.$options.PrimaryInput)
   }
 
-  get $input () { return this.$Input as ValidInput }
+  get $input (): ValidInput { return this.$Input as ValidInput }
   set $input (input: ValidInput) {
     const handleEventDefault = (e: Event) => {
-      let eventType: string = e.type
+      const eventType: string = e.type
 
       const format: boolean = this.$options.FormatOn[eventType] || false
       const validate: boolean = this.$options.ValidateOn[eventType] || false
       const dirty: boolean = this.$options.DirtyOn[eventType] || false
 
-      if (dirty === true) {
-        this.$dirty = true
-      }
+      if (dirty) this.$dirty = true;
+      const formatterEvent = this.$formatterEvent.pre || this.$formatterEvent.post
 
-      let formatterEvent = this.$formatterEvent.pre === true || this.$formatterEvent.post === true
       // We alias this for our purposes
       if (format && !formatterEvent) this.formatInputPre()
-      if (this.$canValidate === true && this.$dirty === true && validate) {
+      if (this.$canValidate && this.$dirty && validate) {
         this.isValid(true)
       }
       if (format && !formatterEvent) this.formatInputPost()
@@ -96,6 +99,7 @@ export class VPField extends Validatable {
 
     if (input && isValidInput(input)) {
       this.$Input = input
+      this.$lifecycleElements.push(input);
 
       input.addEventListener('input', handleEventDefault)
       input.addEventListener('change', handleEventDefault)
@@ -138,17 +142,18 @@ export class VPField extends Validatable {
     }
   }
 
-  setInput (input: ValidInput | null) {
+  setInput (input: ValidInput | null): void {
     interface FilteredControllerTypes { [type: string]: ValidInput[] }
     const flipflop = () => {
       ['ValidateOn', 'DirtyOn', 'FormatOn'].forEach((property) => {
         const options = this.$options[property]
-        if (options.input === true && options.change === false) {
+        if (options.input && !options.change) {
           options.input = false
           options.change = true
         }
       })
     }
+
     const parseInput = (items: ValidInput[], item: ValidInput, index: number) => {
         // Primary Input, force accept
       if (items.length === 0 || item.getAttribute('vp-primary')) return [item]
@@ -159,14 +164,14 @@ export class VPField extends Validatable {
     let _input: (ValidInput | null) = input
     if (_input === null) {
       debug('[VPField] Querying controllers')
-      let controllers: FilteredControllerTypes = this.$options.InputTypes
+      const controllers: FilteredControllerTypes = this.$options.InputTypes
         .reduce((items: FilteredControllerTypes, type: string) => {
           items[type] = ((Array.from(this.$element.getElementsByTagName(type)) || []) as ValidInput[]).reduce(parseInput, []) as ValidInput[]
           debug(`[VPField] Fetched ${type} controllers`, items[type])
           return items
         }, {} as FilteredControllerTypes)
 
-      let primaryInputType = this.$options.PrimaryInputType
+      const primaryInputType = this.$options.PrimaryInputType
       if (primaryInputType !== null && controllers[primaryInputType].length > 0) {
         debug(`[VPField] Picking primary ${primaryInputType} controllers`)
         _input = controllers[primaryInputType].shift() as ValidInput
@@ -196,16 +201,16 @@ export class VPField extends Validatable {
     }
   }
 
-  isValid (formattedExternal: boolean = false): (boolean | Promise<boolean>) {
+  isValid (formattedExternal = false): (boolean | Promise<boolean>) {
     this.$canValidate = false
     if (!formattedExternal) this.formatInputPre()
     // TODO: Diff messages
     this.clearMessages()
 
     // Main validation loop
-    let attributes = this.parseInput()
-    let { value, checked, type, name, rules } = attributes
-    let attributeRules: (() => (boolean | string))[] = [
+    const attributes = this.parseInput()
+    const { value, checked, type, name, rules } = attributes
+    const attributeRules: (() => (boolean | string))[] = [
       () => {
         if (isSet(rules.min)) {
           const numValue = toNumber(value)
@@ -284,13 +289,13 @@ export class VPField extends Validatable {
     ]
 
     let errors: (boolean | string)[]
-    let hasErrors: boolean = false
+    let hasErrors = false
     if (this.$options.ValidateLazyFieldRules) {
       debug('ValidateLazyFieldRules')
       errors = attributeRules
         .reduce((errors: (boolean | string)[], rule: () => (boolean | string)) => {
           if (hasErrors) return errors
-          let isValid = rule()
+          const isValid = rule()
           if (isValid !== true) {
             debug('EndEvaluationEarly')
             hasErrors = true
@@ -309,7 +314,8 @@ export class VPField extends Validatable {
 
     if (this.$options.ShowFieldRuleErrors) {
       debug('ShowFieldRuleErrors')
-      let messages: string[] = errors.filter((error) => typeof error === 'string' && error.length > 0) as string[]
+      const messages: string[] = errors.filter((error) =>
+        typeof error === 'string' && error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
     }
 
@@ -323,15 +329,15 @@ export class VPField extends Validatable {
     }
 
     // Custom validation loop
-    let customRules = this.$options.CustomRules
+    const customRules = this.$options.CustomRules
     let customErrors: (boolean | string | Promise<boolean | string>)[]
-    let hasCustomErrors: boolean = false
+    let hasCustomErrors = false
     if (this.$options.ValidateLazyCustomRules) {
       debug('ValidateLazyCustomRules')
       customErrors = customRules
         .reduce((errors: (boolean | string | Promise<(boolean | string)>)[], rule: CustomValidationRule) => {
           if (hasCustomErrors) return errors
-          let isValid = rule(attributes, this.$element, this.$input as HTMLInputElement)
+          const isValid = rule(attributes, this.$element, this.$input as HTMLInputElement)
           if (!isAsync(isValid) && isValid !== true) {
             debug('EndEvaluationEarly')
             hasCustomErrors = true
@@ -350,7 +356,7 @@ export class VPField extends Validatable {
     // Show custom error messages up to this point
     if (this.$options.ShowCustomRuleErrors) {
       debug('ShowCustomRuleErrors')
-      let messages: string[] = customErrors
+      const messages: string[] = customErrors
         .filter((error) => typeof error === 'string' && error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
     }
@@ -408,7 +414,7 @@ export class VPField extends Validatable {
             const customErrors = isValid.filter((e) => e !== true)
 
             if (this.$options.ShowCustomRuleErrors) {
-              let messages = customErrors.filter((e) => typeof e === 'string' && e.length > 0) as string[]
+              const messages = customErrors.filter((e) => typeof e === 'string' && e.length > 0) as string[]
               this.addMessages(messages, this.$options.ErrorClassName)
             }
 
@@ -446,35 +452,11 @@ export class VPField extends Validatable {
     }
   }
 
-  formatInputPre () {
-    const formatter = this.$options.InputFormatter.pre
-    if (this.$input === null) {
-      throw new Error('[VPField] Cannot format Input as it is unset.')
-    }
-
-    if (typeof formatter === 'function') {
-      formatter(this.$input, (eventName: string) => {
-        if (this.$input instanceof HTMLElement) {
-          this.$formatterEvent.pre = true
-          this.$input.dispatchEvent(this.createEvent(eventName))
-        }
-      })
-    }
+  formatInputPre(): void {
+    InputFormatter(this, 'pre');
   }
 
-  formatInputPost () {
-    const formatter = this.$options.InputFormatter.post
-    if (this.$input === null) {
-      throw new Error('[VPField] Cannot format Input as it is unset.')
-    }
-
-    if (typeof formatter === 'function') {
-      formatter(this.$input, (eventName: string) => {
-        if (this.$input instanceof HTMLElement) {
-          this.$formatterEvent.post = true
-          this.$input.dispatchEvent(this.createEvent(eventName))
-        }
-      })
-    }
+  formatInputPost(): void {
+    InputFormatter(this, 'post');
   }
 }

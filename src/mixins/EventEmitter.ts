@@ -20,8 +20,8 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
     removeEventListener (type: string, callback: EventCallback): void {
       if (!(type in this.$listeners)) return
 
-      let stack = this.$listeners[type]
-      let stackLength = stack.length
+      const stack = this.$listeners[type]
+      const stackLength = stack.length
       for (let i = 0; i < stackLength; i++) {
         if (stack[i] === callback) {
           stack.splice(i, 1)
@@ -38,8 +38,8 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
     dispatchEvent (event: Event, data: any): boolean | void {
       if (!(event.type in this.$listeners)) return true
 
-      let stack = this.$listeners[event.type].slice()
-      let stackLength = stack.length
+      const stack = this.$listeners[event.type].slice()
+      const stackLength = stack.length
       for (let i = 0; i < stackLength; i++) {
         stack[i].call(this, event, data)
       }

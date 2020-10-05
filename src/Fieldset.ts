@@ -4,8 +4,6 @@ import { isAsync } from '@/util/isAsync'
 
 import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
 import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
 
 import { VPField } from '@/Field'
 import { Validatable } from '@/Validatable'
@@ -15,16 +13,9 @@ import { FieldsetOptions } from '@/models/VPOptions/FieldsetOptions'
 export class VPFieldset extends Validatable {
   static Options = FieldsetOptions;
 
-  $options: VPFieldsetOptions = this.$options
   $strategy: ValidationStrategy
   $fields: VPField[]
   $emitFields: VPField[]
-  $fieldWatch = ((_e: Event, trigger: VPField) => {
-    _e.stopPropagation()
-    this.$emitFields.push(trigger)
-
-    this.isValid(false)
-  }).bind(this)
 
   get $visibleFields (): VPField[] {
     return this.$fields.filter((field: VPField) => {
@@ -32,45 +23,42 @@ export class VPFieldset extends Validatable {
     })
   }
 
-  constructor (
-    element: HTMLElement,
-    strategy: string | ValidationStrategy,
-    options: VPFieldsetOptions,
-    onValidate: (ValidationLifecycle | undefined)
-  ) {
-    super(new VPFieldset.Options(options, element), element)
+  constructor (element: HTMLElement, options: VPFieldsetOptions = {} as VPFieldsetOptions) {
+    super(element, new VPFieldset.Options(options, element) as VPFieldsetOptions)
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPFieldset] Expected element')
     }
 
-    let validationStrategy = strategy
-    if (typeof strategy === 'string') {
-      validationStrategy = this.$strategies[strategy]
+    let validationStrategy = this.$options.ValidationStrategy;
+    if (typeof validationStrategy === 'string') {
+      validationStrategy = this.$strategies[validationStrategy];
     }
     if (typeof validationStrategy !== 'function') {
       throw new Error('[VPFieldset] Expected ValidationStrategy to be a function.')
     }
-
-    this.$options.ValidationStrategy = this.$strategy = validationStrategy;
-
-    if (onValidate) {
-      this.setLifecycle(onValidate)
-    }
+    this.$strategy = validationStrategy;
 
     this.$fields = []
     this.$emitFields = []
   }
 
-  isValid (validateDirty: boolean = true): (boolean | Promise<boolean>) {
+  $fieldWatch (_e: Event, trigger: VPField): void {
+    _e.stopPropagation()
+    this.$emitFields.push(trigger)
+
+    this.isValid(false)
+  }
+
+  isValid (validateDirty = true): (boolean | Promise<boolean>) {
     this.clearMessages()
-    let fields = (this.$options.ValidateVisible
+    const fields = (this.$options.ValidateVisible
       ? this.$visibleFields
       : this.$fields).filter((field, index) => {
         let validate = true
 
         // Don't validate dirty fields
-        if (!validateDirty && field.$dirty === false) {
+        if (!validateDirty && !field.$dirty) {
           debug('[VPFieldset] Skip dirty field', index)
           validate = false
         }
@@ -88,7 +76,7 @@ export class VPFieldset extends Validatable {
           debug('[VPFieldset] Cached Valid', index)
           valid = field.$valid
         } else {
-          let originalWatchValue = field.$options.Watch
+          const originalWatchValue = field.$options.Watch
           // Concat to the emitFields watch to prevent
           // further loops of validation as they trigger
           this.$emitFields.push(field)
@@ -113,7 +101,7 @@ export class VPFieldset extends Validatable {
       })
 
     if (hasAsync(fieldsetStatus)) {
-      let deferredFieldsetStatus = fieldsetStatus.map((status: (boolean | Promise<boolean>)) => {
+      const deferredFieldsetStatus = fieldsetStatus.map((status: (boolean | Promise<boolean>)) => {
         if (isAsync(status)) return status
         else return Promise.resolve(status as boolean)
       })
@@ -140,78 +128,60 @@ export class VPFieldset extends Validatable {
     }
   }
 
-  removeField (field: VPField) {
-    if (!(field instanceof VPField)) {
-      throw new Error('[VPFieldset] Field must be an instanceof VPField')
-    }
+  removeField (field: VPField): (VPField | undefined) {
+    debug('[VPFieldset] Removing field', field)
 
     const index = this.$fields.indexOf(field)
     if (index !== -1) {
-      let field = this.$fields.splice(index, 1).pop()
+      const field = this.$fields.splice(index, 1).pop()
       if (field) {
         field.clearMessages()
         field.removeMessageNode()
         field.removeEventListener('onValidate', this.$fieldWatch)
       }
 
-      return field
+      return field;
     }
 
-    return null
+    return;
   }
 
-  watchField (field: VPField) {
-    if (!(field instanceof VPField)) {
-      throw new Error('Field must be an instance of VPField')
-    }
+  watchField (field: VPField): void {
+    debug('[VPFieldset] Watching field', field)
 
     // TODO: Optimize by tracking state and only revalidating
-    // if internal state changes. Currently wasteful
+    //       if internal state changes. Currently wasteful.
     field.addEventListener('onValidate', this.$fieldWatch)
   }
 
-  addField (field: VPField) {
-    if (!(field instanceof VPField)) {
-      throw new Error('[VPFieldset] Field must be an instanceof VPField')
-    }
-    debug('[VPFieldset] Adding field')
+  addField (field: VPField): void {
+    debug('[VPFieldset] Adding field', field)
 
     this.$fields.push(field)
     this.watchField(field)
   }
 
-  createField (
-    el: HTMLElement,
-    options: VPFieldOptions,
-    customRules: CustomValidationRule[],
-    onValidate: ValidationLifecycle
-  ) {
+  createField (el: HTMLElement, options: VPFieldOptions): VPField {
     if (!(el instanceof Element)) {
       throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
     }
 
-    const field = new VPField(el, options, customRules || [], onValidate)
+    const field = new VPField(el, options)
     this.$fields.push(field)
     this.watchField(field)
 
     return field
   }
 
-  findFields (fieldOptions: (VPFieldOptions | VPFieldOptions[]) = {} as VPFieldOptions) {
-    let fields = Array.from(
-      this.$element.getElementsByClassName(this.$options.FieldClass)
-    )
+  findFields (fieldOptions: (VPFieldOptions | VPFieldOptions[]) = {} as VPFieldOptions) : void {
+    const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldClass))
 
-    // TODO: Attribute parsing to fill in the gaps
     this.$fields = fields.map((field: Element, index: number) => {
       const options: VPFieldOptions = Array.isArray(fieldOptions) ? fieldOptions[index] : fieldOptions
-      const _field = new VPField(
-        field as HTMLElement, options,
-        [] as CustomValidationRule[],
-        { Valid: {}, Invalid: {} } as ValidationLifecycle)
+      const _field = new VPField(field as HTMLElement, options);
       this.watchField(_field)
 
       return _field
-    })
+    });
   }
 }
