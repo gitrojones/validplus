@@ -185,18 +185,9 @@ export class VPValidator extends Validatable {
   // TODO: Append Predefined Fields w/ CB logic
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
-  createFieldset (fs: HTMLElement,
-    strategy: ValidationStrategy,
-    options: VPFieldsetOptions,
-    fields: VPField[] = [],
-    onValidate: ValidationLifecycle = {
-      Valid: {}, Invalid: {}
-    }) {
-    const fieldset = new VPFieldset(fs, strategy, options, onValidate)
-
-    fields.forEach(field => {
-      fieldset.addField(field)
-    })
+  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]) {
+    const fieldset = new VPFieldset(fs, options);
+    fields.forEach((field) => fieldset.addField(field));
 
     this.addFieldset(fieldset)
     return fieldset

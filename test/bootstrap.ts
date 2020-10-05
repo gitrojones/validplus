@@ -1,4 +1,5 @@
 import 'module-alias'
+
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import chaiLike from 'chai-like'
@@ -11,4 +12,3 @@ chai.use(chaiArrays);
 chai.use(chaiLike);
 chai.use(chaiString);
 chai.use(sinonChai);
-export default chai;

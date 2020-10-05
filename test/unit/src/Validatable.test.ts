@@ -9,6 +9,8 @@ import {
 } from 'chai';
 import * as VP from 'validplus';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 describe.each([
   'Validator',
   'Fieldset',
@@ -50,7 +52,7 @@ describe.each([
       const fakeInput = window.document.createElement('input');
       fakeEl.appendChild(fakeInput);
 
-      const validator = new VP[Validatable](fakeEl, {});
+      const validator = new VP[Validatable](fakeEl);
       expect(typeof validator.createEvent).to.equal('function');
     });
   });

@@ -1,5 +1,3 @@
-import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
-import { ValidationStrategy } from "./interfaces/validation/ValidationStrategy";
 import { VPValidatorOptions, VPFieldsetOptions } from "./interfaces/VPOptions";
 import { Validatable } from "./Validatable";
 import { VPFieldset } from "./Fieldset";
@@ -22,5 +20,5 @@ export declare class VPValidator extends Validatable {
     addFieldset(fieldset: VPFieldset): void;
     watchFieldset(fieldset: VPFieldset): void;
     removeFieldset(fieldset: VPFieldset): VPFieldset | null | undefined;
-    createFieldset(fs: HTMLElement, strategy: ValidationStrategy, options: VPFieldsetOptions, fields?: VPField[], onValidate?: ValidationLifecycle): VPFieldset;
+    createFieldset(fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]): VPFieldset;
 }

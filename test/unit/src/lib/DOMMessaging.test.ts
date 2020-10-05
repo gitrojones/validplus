@@ -1,8 +1,8 @@
 import {beforeEach, describe, test} from '@jest/globals'
 import {expect} from 'chai'
 
-import { DOMMessaging } from '@/lib/DOMMessaging'
-import { VerticalPosition } from '@/enums/Positions'
+import { DOMMessaging } from 'src/lib/DOMMessaging'
+import { VerticalPosition } from 'src/enums/Positions'
 
 describe('DOMMessaging', () => {
   let instance: DOMMessaging;
