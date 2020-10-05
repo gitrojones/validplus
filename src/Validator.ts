@@ -1,16 +1,16 @@
-import { debug } from '@/util/debug'
-import { hasAsync } from '@/util/hasAsync'
-import { isAsync } from '@/util/isAsync'
+import { debug } from 'src/util/debug'
+import { hasAsync } from 'src/util/hasAsync'
+import { isAsync } from 'src/util/isAsync'
 
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
-import { VPValidatorOptions, VPFieldsetOptions } from '@/interfaces/VPOptions'
+import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle'
+import { ValidationStrategy } from 'src/interfaces/validation/ValidationStrategy'
+import { VPValidatorOptions, VPFieldsetOptions } from 'src/interfaces/VPOptions'
 
-import { Validatable } from '@/Validatable'
-import { VPFieldset } from '@/Fieldset'
-import { VPField } from '@/Field'
+import { Validatable } from 'src/Validatable'
+import { VPFieldset } from 'src/Fieldset'
+import { VPField } from 'src/Field'
 
-import { ValidatorOptions } from '@/models/VPOptions/ValidatorOptions'
+import { ValidatorOptions } from 'src/models/VPOptions/ValidatorOptions'
 
 /**
  * ValidPlus Validator instance, the container

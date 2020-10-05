@@ -1,14 +1,14 @@
-import { debug } from '@/util/debug'
-import { hasAsync } from '@/util/hasAsync'
-import { isAsync } from '@/util/isAsync'
+import { debug } from 'src/util/debug'
+import { hasAsync } from 'src/util/hasAsync'
+import { isAsync } from 'src/util/isAsync'
 
-import { VPFieldsetOptions, VPFieldOptions } from '@/interfaces/VPOptions'
-import { ValidationStrategy } from '@/interfaces/validation/ValidationStrategy'
+import { VPFieldsetOptions, VPFieldOptions } from 'src/interfaces/VPOptions'
+import { ValidationStrategy } from 'src/interfaces/validation/ValidationStrategy'
 
-import { VPField } from '@/Field'
-import { Validatable } from '@/Validatable'
+import { VPField } from 'src/Field'
+import { Validatable } from 'src/Validatable'
 
-import { FieldsetOptions } from '@/models/VPOptions/FieldsetOptions'
+import { FieldsetOptions } from 'src/models/VPOptions/FieldsetOptions'
 
 export class VPFieldset extends Validatable {
   static Options = FieldsetOptions;

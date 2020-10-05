@@ -1,4 +1,4 @@
-import { debug } from '@/util/debug'
+import { debug } from 'src/util/debug'
 
 export function toRegexp (value: any): (RegExp | null) {
   try {

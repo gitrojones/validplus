@@ -3,7 +3,7 @@
  * @author: Ryann Jones<gitrojones>
  * @license: GPL 3.0
  */
-import '@lib/polyfills'
+import 'lib/polyfills'
 
 /**
  * Main export
@@ -11,6 +11,6 @@ import '@lib/polyfills'
  * @param {VPFieldset} Fieldset - ValidPlus Fieldset
  * @param {VPField} Field - ValidPlus Field
  */
-export { VPValidator as Validator } from '@/Validator';
-export { VPFieldset as Fieldset } from '@/Fieldset';
-export { VPField as Field } from '@/Field';
+export { VPValidator as Validator } from 'src/Validator';
+export { VPFieldset as Fieldset } from 'src/Fieldset';
+export { VPField as Field } from 'src/Field';

@@ -1,8 +1,8 @@
-import { VPFieldOptions } from '@/interfaces/VPOptions'
-import { InputFormatters } from '@/interfaces/InputFormatters'
-import { ChangeActions } from '@/interfaces/events/ChangeActions'
-import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
+import { VPFieldOptions } from 'src/interfaces/VPOptions'
+import { InputFormatters } from 'src/interfaces/InputFormatters'
+import { ChangeActions } from 'src/interfaces/events/ChangeActions'
+import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRules'
+import { CustomValidationRule } from 'src/interfaces/validation/CustomValidationRule'
 
 import { ValidatableOptions } from './ValidatableOptions'
 

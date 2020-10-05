@@ -1,4 +1,4 @@
-import { InputFormatter } from '@/types/InputFormatter'
+import { InputFormatter } from 'src/types/InputFormatter'
 
 export interface InputFormatters {
   pre: InputFormatter,

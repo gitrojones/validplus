@@ -20,10 +20,9 @@
   },
   "nyc": {
     "include": [
-      "src/**/*.js",
-      "src/**/*.ts"
+      "src/**/*.(ts|js)$"
     ],
-    "all": true
+    "exclude-after-remap": true
   },
   "repository": {
     "type": "git",
@@ -35,10 +34,10 @@
     "forms"
   ],
   "_moduleAliases": {
-    "@": "src",
-    "@dev": "dev",
-    "@lib": "lib",
-    "@test": "test"
+    "src": "src",
+    "dev": "dev",
+    "lib": "lib",
+    "test": "test"
   },
   "jest": {
     "verbose": true,
@@ -49,10 +48,10 @@
       "<rootDir>/test/bootstrap.ts"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1",
-      "^@lib/(.*)$": "<rootDir>/lib/$1",
-      "^@test/(.*)$": "<rootDir>/test/$1",
-      "^@dev/(.*)$": "<rootDir>/dev/$1",
+      "^src/(.*)$": "<rootDir>/src/$1",
+      "^lib/(.*)$": "<rootDir>/lib/$1",
+      "^test/(.*)$": "<rootDir>/test/$1",
+      "^dev/(.*)$": "<rootDir>/dev/$1",
       "^validplus$": "<rootDir>/validplus.ts"
     },
     "globals": {

@@ -20,13 +20,12 @@
     "jsx": "react",
     "noEmit": false,
     "sourceMap": true,
-    "inlineSourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@lib/*": ["lib/*"],
-      "@test/*": ["test/*"],
-      "@dev/*": ["dev/*"],
+      "src/*": ["src/*"],
+      "lib/*": ["lib/*"],
+      "test/*": ["test/*"],
+      "dev/*": ["dev/*"],
       "validplus": ["validplus.ts"]
     },
     "plugins": [

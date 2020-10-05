@@ -1,15 +1,15 @@
-import { debug } from '@/util/debug'
-import { isSet } from '@/util/isSet'
-import { toBoolean } from '@/util/casts/toBoolean'
+import { debug } from 'src/util/debug'
+import { isSet } from 'src/util/isSet'
+import { toBoolean } from 'src/util/casts/toBoolean'
 
-import { VPOptions } from '@/interfaces/VPOptions'
-import { ValidationStrategies } from '@/interfaces/validation/ValidationStrategy'
-import { ValidationLifecycle, ValidationCB } from '@/interfaces/validation/ValidationLifecycle'
+import { VPOptions } from 'src/interfaces/VPOptions'
+import { ValidationStrategies } from 'src/interfaces/validation/ValidationStrategy'
+import { ValidationLifecycle, ValidationCB } from 'src/interfaces/validation/ValidationLifecycle'
 
-import { DOMMessaging } from '@/lib/DOMMessaging'
-import { EventEmitter } from '@/mixins/EventEmitter'
+import { DOMMessaging } from 'src/lib/DOMMessaging'
+import { EventEmitter } from 'src/mixins/EventEmitter'
 
-import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions'
+import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions'
 
 const EEMessaging = EventEmitter(DOMMessaging);
 export class Validatable extends EEMessaging {

@@ -1,10 +1,10 @@
-import { createEvent } from '@/util/createEvent'
+import { createEvent } from 'src/util/createEvent'
 
-import { Constructor } from '@/types/Constructor'
+import { Constructor } from 'src/types/Constructor'
 
-import { BasicEventTarget } from '@/interfaces/events/BasicEventTarget'
-import { EventListener } from '@/interfaces/events/EventListener'
-import { EventCallback } from '@/interfaces/events/EventCallback'
+import { BasicEventTarget } from 'src/interfaces/events/BasicEventTarget'
+import { EventListener } from 'src/interfaces/events/EventListener'
+import { EventCallback } from 'src/interfaces/events/EventCallback'
 
 export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {

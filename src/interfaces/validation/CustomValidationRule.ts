@@ -1,4 +1,4 @@
-import { ValidationAttributes } from '@/interfaces/validation/ValidationAttributes'
+import { ValidationAttributes } from 'src/interfaces/validation/ValidationAttributes'
 
 export interface CustomValidationRule {
   (

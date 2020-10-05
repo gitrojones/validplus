@@ -16,10 +16,7 @@ module.exports = function (wallaby) {
 
         compilers: {
             "**/*.js": wallaby.compilers.babel(),
-            "**/*.ts?(x)": wallaby.compilers.typeScript({
-                isolatedModules: true,
-                typescript: require('ttypescript')
-            }),
+            "**/*.ts?(x)": wallaby.compilers.typeScript(),
         },
 
         testFramework: 'jest',

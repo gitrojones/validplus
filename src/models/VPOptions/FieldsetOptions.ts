@@ -1,5 +1,5 @@
-import { VPFieldsetOptions } from '@/interfaces/VPOptions'
-import { ValidationStrategyNames } from '@/interfaces/validation/ValidationStrategy'
+import { VPFieldsetOptions } from 'src/interfaces/VPOptions'
+import { ValidationStrategyNames } from 'src/interfaces/validation/ValidationStrategy'
 
 import { ValidatableOptions } from './ValidatableOptions'
 

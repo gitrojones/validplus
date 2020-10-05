@@ -1,13 +1,13 @@
-import { VerticalPosition } from '@/enums/Positions'
-import { HTMLValidationRules } from '@/interfaces/validation/HTMLValidationRules'
-import { CustomValidationRule } from '@/interfaces/validation/CustomValidationRule'
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
-import {ValidationStrategy, ValidationStrategyNames} from '@/interfaces/validation/ValidationStrategy'
-import { InputFormatters } from '@/interfaces/InputFormatters'
-import { ChangeActions } from '@/interfaces/events/ChangeActions'
-import { ValidInput } from '@/types/ValidInput'
+import { VerticalPosition } from 'src/enums/Positions'
+import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRules'
+import { CustomValidationRule } from 'src/interfaces/validation/CustomValidationRule'
+import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle'
+import {ValidationStrategy, ValidationStrategyNames} from 'src/interfaces/validation/ValidationStrategy'
+import { InputFormatters } from 'src/interfaces/InputFormatters'
+import { ChangeActions } from 'src/interfaces/events/ChangeActions'
+import { ValidInput } from 'src/types/ValidInput'
 
-import { ValidatableOptions } from '@/models/VPOptions/ValidatableOptions';
+import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions';
 
 export interface VPOptions {
   [property: string]: any,

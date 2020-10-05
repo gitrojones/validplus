@@ -1,8 +1,8 @@
-import { VPOptions } from '@/interfaces/VPOptions'
+import { VPOptions } from 'src/interfaces/VPOptions'
 
-import { ValidationLifecycle } from '@/interfaces/validation/ValidationLifecycle'
-import { ValidInput } from '@/types/ValidInput'
-import { VerticalPosition } from '@/enums/Positions'
+import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle'
+import { ValidInput } from 'src/types/ValidInput'
+import { VerticalPosition } from 'src/enums/Positions'
 
 export class ValidatableOptions implements VPOptions {
   // ControlFlow
