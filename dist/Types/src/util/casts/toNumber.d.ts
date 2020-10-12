@@ -1,1 +1,1 @@
-export declare function toNumber(value: any): (Number | null);
+export declare function toNumber(value: any): (number | null);

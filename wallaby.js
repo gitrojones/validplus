@@ -4,6 +4,10 @@ module.exports = function (wallaby) {
 
         autoDetect: true,
 
+        hints: {
+            ignoreCoverage: /ignore coverage/
+        },
+
         files: [
             'src/**/*.ts'
         ],
@@ -14,6 +18,8 @@ module.exports = function (wallaby) {
 
         env: {
             type: 'node'
-        }
+        },
+
+        runMode: 'onsave'
     };
 };

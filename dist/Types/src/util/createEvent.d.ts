@@ -1,4 +1,5 @@
 /**
  * Helper for supporting old browsers (IE8+)
  */
-export declare function createEvent(eventName: string): Event;
+import { EventOptions } from "../interfaces/events/EventOptions";
+export declare function createEvent(eventName: string, options: EventOptions): Event;

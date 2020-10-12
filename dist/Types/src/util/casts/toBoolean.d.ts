@@ -1,1 +1,1 @@
-export declare function toBoolean(param: string | number | null, _default: (boolean | null)): (boolean | null);
+export declare function toBoolean(param: any, _default?: boolean | null): (boolean | null);
