@@ -85,7 +85,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPValidator_VPValidator.html">VPValidator</a></li></ul><h3>Interfaces</h3><ul><li><a href="BasicEventTarget.html">BasicEventTarget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createEvent">createEvent</a></li><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#mergeDeep">mergeDeep</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div>
                 
             </nav>
         </div>
@@ -102,36 +102,38 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { createEvent } from '@/util/createEvent'
+            <pre class="prettyprint source linenums"><code>import { createEvent } from 'src/util/createEvent'
 
-import { Constructor } from '@/types/Constructor'
+import { Constructor } from 'src/types/Constructor'
 
-import { BasicEventTarget } from '@/interfaces/events/BasicEventTarget'
-import { EventListener } from '@/interfaces/events/EventListener'
-import { EventCallback } from '@/interfaces/events/EventCallback'
+import { BasicEventTarget } from 'src/interfaces/events/BasicEventTarget'
+import { EventListener } from 'src/interfaces/events/EventListener'
+import { EventCallback } from 'src/interfaces/events/EventCallback'
+import { EventOptions } from 'src/interfaces/events/EventOptions'
 
 export function EventEmitter&lt;TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
     $listeners: EventListener = {}
 
     addEventListener (type: string, callback: EventCallback): void {
-      if (!(type in this.$listeners)) {
+      if (!Array.isArray(this.$listeners[type])) {
         this.$listeners[type] = []
       }
       this.$listeners[type].push(callback)
     }
 
-    removeEventListener (type: string, callback: EventCallback): void {
-      if (!(type in this.$listeners)) return
-
-      let stack = this.$listeners[type]
-      let stackLength = stack.length
-      for (let i = 0; i &lt; stackLength; i++) {
-        if (stack[i] === callback) {
-          stack.splice(i, 1)
-          return
+    removeEventListener (type: string, callback: EventCallback): (EventCallback | null) {
+      if (Array.isArray(this.$listeners[type]) &amp;&amp; this.$listeners[type].length > 0) {
+        const stack = this.$listeners[type]
+        const stackLength = stack.length
+        for (let i = 0; i &lt; stackLength; i++) {
+          if (stack[i] === callback) {
+            return stack.splice(i, 1)[0];
+          }
         }
       }
+
+      return null;
     }
 
     /**
@@ -139,20 +141,30 @@ export function EventEmitter&lt;TBase extends Constructor> (Base: TBase) {
      * @param event - the Event object to dispatch
      * @param data - Data to be passed to the callback
      */
-    dispatchEvent (event: Event, data: any): boolean | void {
-      if (!(event.type in this.$listeners)) return true
+    dispatchEvent (event: Event, data: any = undefined): boolean {
+      const listeners = this.$listeners[event.type];
+      if (Array.isArray(listeners) &amp;&amp; listeners.length > 0) {
+        const stack = this.$listeners[event.type].slice()
+        const stackLength = stack.length
+        for (let i = 0; i &lt; stackLength; i++) {
+          stack[i].call(this, event, data)
+        }
 
-      let stack = this.$listeners[event.type].slice()
-      let stackLength = stack.length
-      for (let i = 0; i &lt; stackLength; i++) {
-        stack[i].call(this, event, data)
+        return !event.defaultPrevented
       }
 
-      return !event.defaultPrevented
+      return true;
     }
 
-    createEvent (eventName: string): Event {
-      return createEvent(eventName)
+    createEvent (eventName: string, options?: EventOptions): Event {
+      if (typeof options !== 'object') {
+        options = { } as EventOptions;
+      }
+      if (typeof options.bubbles !== 'boolean') options.bubbles = false;
+      if (typeof options.cancelable !== 'boolean') options.cancelable = false;
+      if (typeof options.composed !== 'boolean') options.composed = false;
+
+      return createEvent(eventName, options)
     }
   }
 }

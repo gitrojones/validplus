@@ -51,12 +51,14 @@ describe('DOMMessaging', () => {
       const innerChild = window.document.createElement('div');
       const anchor = instance.$MessageAnchor as HTMLElement;
       anchor.append(innerChild);
+      // @ts-ignore
       expect(() => instance.generateMessageNode(null, 'left')).to.throw('Unknown anchor position');
     });
 
     test('Should throw if anchor is passed but is not an HTMLElement', () => {
       const anchor = {};
       const initAnchor = instance.$MessageAnchor as HTMLElement;
+      // @ts-ignore
       expect(() => instance.generateMessageNode(anchor)).to.throw('MessageNode anchor must be an HTMLElement');
     });
 
@@ -131,7 +133,8 @@ describe('DOMMessaging', () => {
       expect(messageNode.children.length).to.equal(0);
     });
 
-    test('Should throw if $MessageNode is not initalized', () => {
+    test('Should throw if $MessageNode is not initialized', () => {
+      // @ts-ignore
       expect(() => instance.clearMessages('')).to.throw('MessageNode must be an HTMLElement');
     });
   });

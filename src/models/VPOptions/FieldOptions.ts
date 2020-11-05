@@ -7,15 +7,15 @@ import { CustomValidationRule } from 'src/interfaces/validation/CustomValidation
 import { ValidatableOptions } from './ValidatableOptions'
 
 export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
-  ForceRules: boolean = false;
+  ForceRules = false;
   InputRules: HTMLValidationRules = {} as HTMLValidationRules;
   CustomRules: CustomValidationRule[] = [];
   InputFormatter: InputFormatters = {} as InputFormatters;
-  ShowFieldRuleErrors: boolean = false;
-  ShowCustomRuleErrors: boolean = true;
-  ValidateLazyCustomRules: boolean = true;
-  ValidateLazyFieldRules: boolean = true;
-  ValidateAsyncResolved: boolean = true;
+  ShowFieldRuleErrors = false;
+  ShowCustomRuleErrors = true;
+  ValidateLazyCustomRules = true;
+  ValidateLazyFieldRules = true;
+  ValidateAsyncResolved = true;
   DirtyOn: ChangeActions = {} as ChangeActions;
   FormatOn: ChangeActions = {} as ChangeActions;
   ValidateOn: ChangeActions = {} as ChangeActions;

@@ -85,7 +85,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPValidator_VPValidator.html">VPValidator</a></li></ul><h3>Interfaces</h3><ul><li><a href="BasicEventTarget.html">BasicEventTarget</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createEvent">createEvent</a></li><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#mergeDeep">mergeDeep</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div>
                 
             </nav>
         </div>
@@ -102,127 +102,169 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { VerticalPosition } from '@/enums/Positions'
-import { debug } from '@/util/debug'
+            <pre class="prettyprint source linenums"><code>import { VerticalPosition } from 'src/enums/Positions'
 
 /**
  * Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement
  *
- * @requires MessageNodePOS - The position (top, bottom) where messages append to the node
- * @requires MessageAnchor - The node where messages are to be appended to
- * @requires ClassName - The name to use as the base class name
+ * @prop $MessageAnchor - The anchor element where the $MessageNode will be rigged to
+ * @prop $MessageContainerClassName - The $MessageNode default class name
+ * @prop $MessageClassName - The individual message nodes default class name
+ * @prop $MessageNode - The node where messages will be appended
  */
-
 export class DOMMessaging {
   $MessageContainerClassName: string = 'DOMMessages'
   $MessageClassName: string = 'DOMMessage'
   $MessageNode: HTMLElement | null = null
   $MessageAnchor: HTMLElement | null = null
-  $MessageNodePOS: VerticalPosition = VerticalPosition.bottom
 
-  DOMCreateElement (innerHTML: string, className: string): HTMLElement {
+  /**
+   * Internal helper for generating an element
+   * @param innerHTML - InnerHTML content
+   * @param [classes] - Default classes to append to the element
+   * @private
+   */
+  private DOMCreateElement (innerHTML: string, classes: (string|string[])): HTMLElement {
     let el = document.createElement('div')
-    el.className = className
     el.innerHTML = innerHTML
+
+    if (!Array.isArray(classes)) classes = [classes];
+    classes.forEach((className) => {
+      if (className.length > 0) el.classList.add(className);
+    })
 
     return el
   }
 
-  generateMessageNode (anchor: HTMLElement | null = null,
-    pos: VerticalPosition = this.$MessageNodePOS): void {
+  /**
+   * Internal helper for appending children to a parent node based on the provided POS
+   * @param parent
+   * @param children
+   * @param pos
+   * @throws If the pos isn't valid (top/bottom)
+   * @private
+   */
+  private appendNodeChildrenPOS (
+    parent: HTMLElement,
+    children: (HTMLElement|HTMLElement[]),
+    pos: VerticalPosition = VerticalPosition.bottom) {
+    let strategy: ('prepend'|'appendChild');
+    if (pos === VerticalPosition.top) strategy = 'prepend';
+    else if (pos === VerticalPosition.bottom) strategy = 'appendChild';
+    else throw new Error('[DOMMessaging] Unknown anchor position specified');
+
+    if (!Array.isArray(children)) children = [children];
+    children.forEach((child) => {
+      if (pos === VerticalPosition.top) parent[strategy](child)
+      else if (pos === VerticalPosition.bottom) parent[strategy](child)
+    });
+  }
+
+  /**
+   * Generate a messageNode where messages can be added and removed in a managed way.
+   * @param [anchor] - The anchor to use for the $MessageNode (Defaults to $MessageAnchor)
+   * @param [pos] - The position to set $MessageNode inside the $MessageAnchor
+   * @throws If anchor isn't an Element
+   * @throws If pos isn't a valid {VerticalPosition}
+   */
+  generateMessageNode (
+    anchor: (HTMLElement | null) = this.$MessageAnchor,
+    pos: VerticalPosition = VerticalPosition.bottom): void {
+    if (!anchor) anchor = this.$MessageAnchor;
     if (!(anchor instanceof HTMLElement)) {
-      debug('Using existing anchor')
-      anchor = this.$MessageAnchor
-
-      if (!(anchor instanceof HTMLElement)) {
-        throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
-      }
-    } else {
-      debug('Appending anchor')
-      this.$MessageAnchor = anchor
+      throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
     }
 
-    // Override POS here
-    if (pos !== this.$MessageNodePOS) {
-      this.$MessageNodePOS = pos
-    }
+    // Remove Previous Message Node
+    if (this.$MessageNode instanceof HTMLElement) this.$MessageNode.remove()
 
-    if (this.$MessageNode instanceof HTMLElement) {
-      debug('Removing MessageNode', this.$MessageNode)
-      this.$MessageNode.remove()
-    }
+    // Set the MessageAnchor
+    if (this.$MessageAnchor !== anchor) this.$MessageAnchor = anchor
 
-    this.$MessageNode = this.DOMCreateElement('', this.$MessageContainerClassName)
-    debug('Creating message node', this.$MessageContainerClassName, this.$MessageNode)
-    if (pos === VerticalPosition.top) {
-      anchor.prepend(this.$MessageNode)
-    } else if (pos === VerticalPosition.bottom) {
-      anchor.appendChild(this.$MessageNode)
-    } else {
-      debug('NoPos', pos, this.$MessageNodePOS)
+    // Create the new $MessageNode on the anchor (if it doesnt exist)
+    const messageNodeExists = Array.from(this.$MessageAnchor.children)
+      .some((m: Element) => m.className.indexOf(this.$MessageContainerClassName) !== -1);
+    if (!messageNodeExists) {
+      this.$MessageNode = this.DOMCreateElement('',
+        this.$MessageContainerClassName);
+
+      this.appendNodeChildrenPOS(anchor, this.$MessageNode, pos);
     }
   }
 
+  /**
+   * Removes the $MessageNode from the $MessageAnchor
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
   removeMessageNode () {
-    if (this.$MessageNode instanceof HTMLElement) {
-      debug('Removing MessageNode', this.$MessageNode)
-      this.$MessageNode.remove()
-    } else {
-      throw new Error('MessageNode does not exist')
-    }
+    if (this.$MessageNode instanceof HTMLElement) this.$MessageNode.remove()
+    else throw new Error('[DOMMessaging] MessageNode does not exist')
   }
 
-  addMessage (message: string, status: string): void {
+  /**
+   * Adds a unique message to the $MessageNode
+   * @param message - The message to append
+   * @param [status] - An optional class to append indicating message status
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  addMessage (message: string, status: string = ''): void {
     if (!(this.$MessageNode instanceof HTMLElement)) {
       throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
     }
 
-    const MessageDoesNotExist: boolean = Array.from(this.$MessageNode.children)
-      .every((m: Element) => m.innerHTML !== message)
+    // De-dupe messages
+    const messageDoesNotExist: boolean = Array.from(this.$MessageNode.children)
+      .every((m: Element) => m.innerHTML !== message);
 
-    if (MessageDoesNotExist) {
-      let DOMMessage: HTMLElement = this.DOMCreateElement(message, `${this.$MessageClassName} ${status}`)
+    if (messageDoesNotExist) {
+      let DOMMessage: HTMLElement = this.DOMCreateElement(message, [
+        this.$MessageClassName,
+        status
+      ]);
 
-      if (this.$MessageNodePOS === VerticalPosition.top) {
-        this.$MessageNode.prepend(DOMMessage)
-      } else if (this.$MessageNodePOS === VerticalPosition.bottom) {
-        this.$MessageNode.appendChild(DOMMessage)
-      }
-    } else {
-      debug('Message exists', message)
+      this.appendNodeChildrenPOS(this.$MessageNode, DOMMessage);
     }
   }
 
-  addMessages (messages: string[], status: string): void {
+  /**
+   * Batch append messages
+   * @param messages - The messages to append
+   * @param [status] - An optional class to append indicating message status
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  addMessages (messages: string[], status: string = ''): void {
     messages.forEach((message) => {
       this.addMessage(message, status)
     })
   }
 
+  /**
+   * Remove a message
+   * @param message - The message to remove
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
   removeMessage (message: string): void {
     if (!(this.$MessageNode instanceof HTMLElement)) {
       throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
     }
 
-    const MessageNode: HTMLElement = this.$MessageNode
-
     Array.from(this.$MessageNode.children)
-      .forEach((child: Element) => {
-        if (child.innerHTML === message &amp;&amp; this.$MessageNode) {
-          MessageNode.removeChild(child)
-        }
+      .forEach((child) => {
+        if (child.innerHTML === message) child.remove();
       })
   }
 
+  /**
+   * Clear all messages from the $MessageNode
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
   clearMessages (): void {
     if (!(this.$MessageNode instanceof HTMLElement)) {
-      debug('MessageNode', this.$MessageNode)
       throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
     }
 
-    while (this.$MessageNode.firstChild) {
-      this.$MessageNode.removeChild(this.$MessageNode.firstChild)
-    }
+    Array.from(this.$MessageNode.children)
+      .forEach((child) => child.remove());
   }
 }
 </code></pre>

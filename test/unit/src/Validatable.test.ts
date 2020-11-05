@@ -144,8 +144,4 @@ describe.each([
       test.todo('Should source valid class from options if specified');
     });
   });
-
-  describe('Standard Validation Options', () => {
-  });
 });
-

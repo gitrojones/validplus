@@ -1,6 +1,16 @@
 {
   "source": {
-    "includePattern": "\\.(jsx|js|ts|tsx|vue)$"
+    "include": [
+      "src",
+      "dev/src/components"
+    ],
+    "exclude": [
+      "lib",
+      "dev",
+      "test",
+      "node_modules"
+    ],
+    "includePattern": ".(js|ts|vue)$"
   },
   "recurseDepth": 10,
   "sourceType": "module",

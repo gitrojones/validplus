@@ -2,8 +2,6 @@ import { debug } from 'src/util/debug'
 import { hasAsync } from 'src/util/hasAsync'
 import { isAsync } from 'src/util/isAsync'
 
-import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle'
-import { ValidationStrategy } from 'src/interfaces/validation/ValidationStrategy'
 import { VPValidatorOptions, VPFieldsetOptions } from 'src/interfaces/VPOptions'
 
 import { Validatable } from 'src/Validatable'
@@ -37,6 +35,10 @@ export class VPValidator extends Validatable {
     this.$fieldsets = []
   }
 
+  /**
+   * Standard fieldset change watcher
+   * @todo Optimize to track internal state and only revalidate if internal state has changed.
+   */
   $fieldsetWatch (_e: Event, trigger: VPFieldset): void {
     _e.stopPropagation()
 
@@ -44,13 +46,29 @@ export class VPValidator extends Validatable {
     this.isValid()
   }
 
-  isValid () {
+  /**
+   * Validate internal state
+   * @description
+   * IsValid is a standard method for validating the internal state
+   * of a validator and all it's associated children. This method supports dynamic
+   * checks for determining if validation should be performed async or sync.
+   *
+   * If any custom validation rules resolve async, validation will be performed async. Otherwise,
+   * all validation is performed synchronously. Optionally, You may enforce async validation through
+   * a validation option. This will enforce all validation is returned as a promise.
+   *
+   * Further, this validation library is capable of short-circuit validation. Lazy validation will
+   * stop validation on the first instance of an error.
+   *
+   * @see {@link ValidatorOptions}
+   */
+  isValid (): (Promise<boolean> | boolean) {
     this.clearMessages()
-    let fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
+    const fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
     let isValid: (boolean | Promise<boolean>) = true
-    let resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
-      .reduce((resolved: any[], fieldset, index) => {
+    const resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
+      .reduce((resolved: (boolean|Promise<boolean>)[], fieldset, index) => {
         if (isValid === false && this.$options.ValidateLazy) return resolved
 
         let valid: (boolean | Promise<boolean>)
@@ -58,7 +76,7 @@ export class VPValidator extends Validatable {
           debug('[VPValidator] Cached Valid', index)
           valid = fieldset.$valid
         } else {
-          let originalWatchValue = fieldset.$options.Watch
+          const originalWatchValue = fieldset.$options.Watch
           // Concat to the emitFieldsets watch to prevent
           // further loops of validation as they trigger
           this.$emitFieldsets.push(fieldset)
@@ -86,7 +104,7 @@ export class VPValidator extends Validatable {
 
     if (hasAsync(resolvedIsValid)) {
       let promises: Promise<boolean>[]
-      let asyncIsValid: Promise<boolean>[] = resolvedIsValid.map((result) => {
+      const asyncIsValid: Promise<boolean>[] = resolvedIsValid.map((result) => {
         if (isAsync(result)) return result as Promise<boolean>
         else return Promise.resolve(result)
       })
@@ -118,7 +136,7 @@ export class VPValidator extends Validatable {
       // Return the promise for async
       return new Promise((resolve) => {
         Promise.all(promises).then((isValid: boolean[]) => {
-          this.$isValid = isValid.every((valid) => valid === true)
+          this.$isValid = isValid.every((valid) => valid)
           this.$emitFieldsets = []
           return resolve(this.$isValid)
         }).catch((err) => {
@@ -143,33 +161,25 @@ export class VPValidator extends Validatable {
 
   // TODO: Child state checks
   // TODO: Add MutationObserver on children
-  addFieldset (fieldset: VPFieldset) {
-    if (!(fieldset instanceof VPFieldset)) {
-      throw new Error('[Validator] Fieldset must be an instanceof VPFieldset')
-    }
-
+  addFieldset (fieldset: VPFieldset): void {
     this.$fieldsets.push(fieldset)
     this.watchFieldset(fieldset)
   }
 
   // TODO: method to remove watchers
-  watchFieldset (fieldset: VPFieldset) {
-    if (!(fieldset instanceof VPFieldset)) return
-
-    // TODO: Optimize by tracking state and only revalidating
-    // if internal state changes. Currently wasteful
+  watchFieldset (fieldset: VPFieldset): void {
     fieldset.addEventListener('onValidate', this.$fieldsetWatch)
   }
 
-  removeFieldset (fieldset: VPFieldset) {
-    if (!(fieldset instanceof VPFieldset)) {
-      throw new Error('[VPFieldset] Field must be an instanceof VPField')
-    }
+  unwatchFieldset(fieldset: VPFieldset): void {
+    fieldset.removeEventListener('onValidate', this.$fieldsetWatch);
+  }
 
+  removeFieldset (fieldset: VPFieldset) : (VPFieldset | undefined) {
     const index = this.$fieldsets.indexOf(fieldset)
     if (index !== -1) {
       // TODO: Remove MutationObserver
-      let fieldset = this.$fieldsets.splice(index, 1).pop()
+      const fieldset = this.$fieldsets.splice(index, 1).pop()
       if (fieldset) {
         fieldset.clearMessages()
         fieldset.removeMessageNode()
@@ -179,13 +189,13 @@ export class VPValidator extends Validatable {
       return fieldset
     }
 
-    return null
+    return undefined
   }
 
   // TODO: Append Predefined Fields w/ CB logic
   // TODO: Validate onValidate structure
   // TODO: Add MutationObserver on children
-  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]) {
+  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]) : VPFieldset {
     const fieldset = new VPFieldset(fs, options);
     fields.forEach((field) => fieldset.addField(field));
 

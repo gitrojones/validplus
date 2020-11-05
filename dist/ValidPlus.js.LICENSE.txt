@@ -1,0 +1,5 @@
+/**
+ * ValidPlus 2019-Present
+ * @author: Ryann Jones<gitrojones>
+ * @license: GPL 3.0
+ */

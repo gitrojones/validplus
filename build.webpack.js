@@ -22,8 +22,8 @@ module.exports = {
 
 	resolve: {
 		alias: {
-			'@': path.resolve(__dirname, './src'),
-			'@lib': path.resolve(__dirname, './lib')
+			'src': path.resolve(__dirname, './src'),
+			'lib': path.resolve(__dirname, './lib')
 		},
 		extensions: [ '.js', '.ts' ]
 	},
@@ -55,7 +55,14 @@ module.exports = {
 				enforce: 'pre'
 			},
 			{
-				test: /\.(js|ts)x?$/,
+			  test: /\.tsx?$/,
+				use: [
+					'babel-loader',
+					'ts-loader'
+				]
+			},
+			{
+				test: /\.jsx?$/,
 				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
 				loader: 'babel-loader'
 			}
@@ -63,7 +70,7 @@ module.exports = {
 	},
 	plugins: [
 		new CompressionPlugin({
-			filename: '[path].gz[query]',
+			filename: '[path][base].gz[query]',
 			algorithm: 'gzip',
 			test: /\.js$/,
 			threshold: 10240,
@@ -71,7 +78,7 @@ module.exports = {
 		}),
 
 		new CompressionPlugin({
-			filename: '[path].br[query]',
+			filename: '[path][base].br[query]',
 			algorithm: 'brotliCompress',
 			test: /\.(js|css|html|svg)$/,
       compressionOptions: {
