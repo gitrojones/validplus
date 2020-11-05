@@ -1,7 +1,7 @@
-import { Constructor } from "../types/Constructor";
-import { EventListener } from "../interfaces/events/EventListener";
-import { EventCallback } from "../interfaces/events/EventCallback";
-import { EventOptions } from "../interfaces/events/EventOptions";
+import { Constructor } from 'src/types/Constructor';
+import { EventListener } from 'src/interfaces/events/EventListener';
+import { EventCallback } from 'src/interfaces/events/EventCallback';
+import { EventOptions } from 'src/interfaces/events/EventOptions';
 export declare function EventEmitter<TBase extends Constructor>(Base: TBase): {
     new (...args: any[]): {
         $listeners: EventListener;

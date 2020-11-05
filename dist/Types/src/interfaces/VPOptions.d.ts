@@ -1,12 +1,12 @@
-import { VerticalPosition } from "../enums/Positions";
-import { HTMLValidationRules } from "./validation/HTMLValidationRules";
-import { CustomValidationRule } from "./validation/CustomValidationRule";
-import { ValidationLifecycle } from "./validation/ValidationLifecycle";
-import { ValidationStrategy, ValidationStrategyNames } from "./validation/ValidationStrategy";
-import { InputFormatters } from "./InputFormatters";
-import { ChangeActions } from "./events/ChangeActions";
-import { ValidInput } from "../types/ValidInput";
-import { ValidatableOptions } from "../models/VPOptions/ValidatableOptions";
+import { VerticalPosition } from 'src/enums/Positions';
+import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRules';
+import { CustomValidationRule } from 'src/interfaces/validation/CustomValidationRule';
+import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle';
+import { ValidationStrategy, ValidationStrategyNames } from 'src/interfaces/validation/ValidationStrategy';
+import { InputFormatters } from 'src/interfaces/InputFormatters';
+import { ChangeActions } from 'src/interfaces/events/ChangeActions';
+import { ValidInput } from 'src/types/ValidInput';
+import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions';
 export interface VPOptions {
     [property: string]: any;
     Watch: boolean;

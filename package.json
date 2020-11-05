@@ -9,8 +9,8 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development APP=true node --inspect build.js",
-    "build": "NODE_ENV=production $(npm bin)/webpack --config build.webpack.js --progress --color && npm run build:types && npm run docs",
-    "build:dev": "NODE_ENV=development $(npm bin)/webpack --config build.webpack.js --progress --color",
+    "build": "NODE_ENV=production $(npm bin)/webpack --config ./build.webpack.js --progress --color && npm run build:types && npm run docs",
+    "build:dev": "NODE_ENV=development $(npm bin)/webpack --config ./build.webpack.js --progress --color",
     "build:types": "NODE_ENV=production ttsc --noUnusedLocals --noUnusedParameters --emitDeclarationOnly",
     "test": "$(npm bin)/jest",
     "docs": "$(npm bin)/jsdoc -c jsdoc.json",

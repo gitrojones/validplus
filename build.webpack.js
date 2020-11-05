@@ -16,6 +16,18 @@ module.exports = {
 		libraryTarget: 'commonjs2'
 	},
 
+	cache: {
+	  type: 'filesystem',
+		buildDependencies: {
+	  	config: [__filename],
+			dotFiles: [
+				path.resolve(__dirname, '.eslintrc'),
+				path.resolve(__dirname, 'babel.config.js'),
+        path.resolve(__dirname, 'tsconfig.json')
+			]
+		}
+	},
+
 	externals: {
 		validplus: 'validplus'
 	},

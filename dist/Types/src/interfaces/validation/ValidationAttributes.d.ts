@@ -1,4 +1,4 @@
-import { HTMLValidationRules } from "./HTMLValidationRules";
+import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRules';
 export interface ValidationAttributes {
     value: string;
     checked: boolean;

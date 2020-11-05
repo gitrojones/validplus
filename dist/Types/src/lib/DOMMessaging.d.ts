@@ -1,4 +1,4 @@
-import { VerticalPosition } from "../enums/Positions";
+import { VerticalPosition } from 'src/enums/Positions';
 /**
  * Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement
  *

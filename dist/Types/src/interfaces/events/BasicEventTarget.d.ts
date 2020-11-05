@@ -1,7 +1,7 @@
 /**
  * Basic EventEmitter Mixin implementing EventTarget API
  */
-import { EventOptions } from "./EventOptions";
+import { EventOptions } from 'src/interfaces/events/EventOptions';
 export interface BasicEventTarget {
     addEventListener(type: string, callback: () => void): void;
     removeEventListener(type: string, callback: () => void): void;
