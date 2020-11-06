@@ -34,7 +34,9 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
   }
 }
 
-export class VPField extends Validatable {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export class VPField extends Validatable<FieldOptions> {
   static Options = FieldOptions
 
   $Input: (ValidInput | null) = null
@@ -45,7 +47,7 @@ export class VPField extends Validatable {
     post: false
   }
 
-  constructor (element: HTMLElement, options: VPFieldOptions = {} as VPFieldOptions) {
+  constructor (element: HTMLElement, options: (VPFieldOptions|FieldOptions) = {} as VPFieldOptions) {
     super(element, new VPField.Options(merge({
       DirtyOn: {
         blur: toBoolean(element.getAttribute('vp-dirty-blur'), false),
@@ -65,7 +67,7 @@ export class VPField extends Validatable {
         change: toBoolean(element.getAttribute('vp-change'), false),
         mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
       }
-    }, options) as VPFieldOptions, element))
+    }, options), element))
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPField] Expected element')
@@ -145,8 +147,11 @@ export class VPField extends Validatable {
   setInput (input: ValidInput | null): void {
     interface FilteredControllerTypes { [type: string]: ValidInput[] }
     const flipflop = () => {
-      ['ValidateOn', 'DirtyOn', 'FormatOn'].forEach((property) => {
-        const options = this.$options[property]
+      [
+        this.$options.ValidateOn,
+        this.$options.DirtyOn,
+        this.$options.FormatOn
+      ].forEach((options) => {
         if (options.input && !options.change) {
           options.input = false
           options.change = true

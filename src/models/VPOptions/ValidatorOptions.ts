@@ -1,7 +1,7 @@
 import { VPValidatorOptions } from 'src/interfaces/VPOptions'
 import { ValidatableOptions } from './ValidatableOptions'
 
-export class ValidatorOptions extends ValidatableOptions implements VPValidatorOptions {
+export class ValidatorOptions extends ValidatableOptions<ValidatorOptions> implements VPValidatorOptions {
   // ControlFlow
   ValidateLazy = true;
   ValidateVisible = true;

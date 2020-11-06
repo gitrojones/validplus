@@ -16,7 +16,7 @@ import { ValidatorOptions } from 'src/models/VPOptions/ValidatorOptions'
  *
  * @name VPValidator
  */
-export class VPValidator extends Validatable {
+export class VPValidator extends Validatable<ValidatorOptions> {
   static Options = ValidatorOptions;
 
   $emitFieldsets: VPFieldset[]
@@ -28,11 +28,16 @@ export class VPValidator extends Validatable {
     })
   }
 
-  constructor (element: HTMLElement, options: VPValidatorOptions = {} as VPValidatorOptions) {
+  constructor (element: HTMLElement, options: VPValidatorOptions|ValidatorOptions = {} as VPValidatorOptions) {
     super(element, new VPValidator.Options(options, element))
 
     this.$emitFieldsets = []
     this.$fieldsets = []
+
+    // Disable HTML Validation in favor of ValidPlus validation
+    if (element instanceof HTMLFormElement) {
+      element.setAttribute('novalidate', 'true');
+    }
   }
 
   /**

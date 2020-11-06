@@ -1,7 +1,7 @@
-import { VPOptions } from 'src/interfaces/VPOptions';
-import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle';
-import { ValidInput } from 'src/types/ValidInput';
-import { VerticalPosition } from 'src/enums/Positions';
+import { VPOptions } from "../../interfaces/VPOptions";
+import { ValidationLifecycle } from "../../interfaces/validation/ValidationLifecycle";
+import { ValidInput } from "../../types/ValidInput";
+import { VerticalPosition } from "../../enums/Positions";
 export declare class ValidatableOptions implements VPOptions {
     Watch: boolean;
     Lifecycle: ValidationLifecycle;

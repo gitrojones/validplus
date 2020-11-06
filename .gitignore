@@ -5,3 +5,4 @@ node_modules
 coverage
 .dir-locals.el
 .DS_Store
+dev/public

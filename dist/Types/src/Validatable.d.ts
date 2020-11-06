@@ -1,8 +1,8 @@
-import { VPOptions } from 'src/interfaces/VPOptions';
-import { ValidationStrategies } from 'src/interfaces/validation/ValidationStrategy';
-import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle';
-import { DOMMessaging } from 'src/lib/DOMMessaging';
-import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions';
+import { VPOptions } from "./interfaces/VPOptions";
+import { ValidationStrategies } from "./interfaces/validation/ValidationStrategy";
+import { ValidationLifecycle } from "./interfaces/validation/ValidationLifecycle";
+import { DOMMessaging } from "./lib/DOMMessaging";
+import { ValidatableOptions } from "./models/VPOptions/ValidatableOptions";
 declare const EEMessaging: {
     new (...args: any[]): {
         $listeners: import("./interfaces/events/EventListener").EventListener;

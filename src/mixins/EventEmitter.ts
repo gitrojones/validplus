@@ -7,6 +7,7 @@ import { EventListener } from 'src/interfaces/events/EventListener'
 import { EventCallback } from 'src/interfaces/events/EventCallback'
 import { EventOptions } from 'src/interfaces/events/EventOptions'
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
     $listeners: EventListener = {}
@@ -37,7 +38,7 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
      * @param event - the Event object to dispatch
      * @param data - Data to be passed to the callback
      */
-    dispatchEvent (event: Event, data: any = undefined): boolean {
+    dispatchEvent (event: Event, data: unknown = undefined): boolean {
       const listeners = this.$listeners[event.type];
       if (Array.isArray(listeners) && listeners.length > 0) {
         const stack = this.$listeners[event.type].slice()

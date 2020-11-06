@@ -1,4 +1,4 @@
-import { Validatable } from 'src/Validatable';
+import { Validatable } from "../../Validatable";
 export declare type ValidationCB = (VPInstance: (Validatable)) => null;
 export interface ValidationLifecycle {
     Valid: {

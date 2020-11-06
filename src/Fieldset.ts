@@ -10,7 +10,9 @@ import { Validatable } from 'src/Validatable'
 
 import { FieldsetOptions } from 'src/models/VPOptions/FieldsetOptions'
 
-export class VPFieldset extends Validatable {
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+export class VPFieldset extends Validatable<FieldsetOptions> {
   static Options = FieldsetOptions;
 
   $strategy: ValidationStrategy
@@ -23,14 +25,14 @@ export class VPFieldset extends Validatable {
     })
   }
 
-  constructor (element: HTMLElement, options: VPFieldsetOptions = {} as VPFieldsetOptions) {
-    super(element, new VPFieldset.Options(options, element) as VPFieldsetOptions)
+  constructor (element: HTMLElement, options: (VPFieldsetOptions|FieldsetOptions) = {} as VPFieldsetOptions) {
+    super(element, new VPFieldset.Options(options, element))
 
     if (!(element instanceof HTMLElement)) {
       throw new Error('[VPFieldset] Expected element')
     }
 
-    let validationStrategy = this.$options.ValidationStrategy;
+    let validationStrategy: (ValidationStrategy|string) = this.$options.ValidationStrategy;
     if (typeof validationStrategy === 'string') {
       validationStrategy = this.$strategies[validationStrategy];
     }

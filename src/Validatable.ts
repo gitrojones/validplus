@@ -12,16 +12,14 @@ import { EventEmitter } from 'src/mixins/EventEmitter'
 import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions'
 
 const EEMessaging = EventEmitter(DOMMessaging);
-export class Validatable extends EEMessaging {
-  static Options = ValidatableOptions;
-
-  $options: VPOptions
+export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
+  $options: T
   $element: HTMLElement
   $lifecycleElements: HTMLElement[]
   $strategies: ValidationStrategies
   $valid: boolean | null
 
-  constructor (element: HTMLElement, options: VPOptions) {
+  constructor (element: HTMLElement, options: (VPOptions<T> | ValidatableOptions<T>)) {
     super()
 
     this.$lifecycleElements = [];
@@ -29,12 +27,9 @@ export class Validatable extends EEMessaging {
     this.$lifecycleElements.push(element);
     this.$valid = null
 
-    // Set some logical defaults
-    if (!(options instanceof ValidatableOptions)) {
-      this.$options = new Validatable.Options(options, element);
-    } else {
-      this.$options = options;
-    }
+    // This is a generic. If options aren't derived from ValidatableOptions, we throw
+    if (!(options instanceof ValidatableOptions)) throw new Error('Options were unset');
+    else this.$options = options as T;
 
     if (element && element instanceof HTMLElement) {
       this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
@@ -76,7 +71,7 @@ export class Validatable extends EEMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
         this.$options.Lifecycle.Valid.CB
-          .forEach((CB: ValidationCB) => CB(this))
+          .forEach((CB: ValidationCB<T>) => CB(this))
       }
 
       const ValidMessage: (string | undefined) = this.$options.Lifecycle.Valid.Message
@@ -94,7 +89,7 @@ export class Validatable extends EEMessaging {
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
         this.$options.Lifecycle.Invalid.CB
-          .forEach((CB: ValidationCB) => CB(this));
+          .forEach((CB: ValidationCB<T>) => CB(this));
       }
 
       const InvalidMessage: (string | undefined) = this.$options.Lifecycle.Invalid.Message
@@ -122,8 +117,8 @@ export class Validatable extends EEMessaging {
     }
   }
 
-  setLifecycle (lifecycle: ValidationLifecycle): void {
-    const isValidationLifecycle = function (lifecycle: ValidationLifecycle) {
+  setLifecycle (lifecycle: ValidationLifecycle<T>): void {
+    const isValidationLifecycle = function (lifecycle: ValidationLifecycle<T>) {
       return isSet(lifecycle) &&
         ('Valid' in lifecycle || 'Invalid' in lifecycle)
     }

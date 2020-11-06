@@ -4,6 +4,9 @@ dist
 lib
 .idea
 .githooks
+dev/public
+dev/server.js
 *.webpack.js
+webpack.js
 *.config.js
 wallaby.js

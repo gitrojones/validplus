@@ -1,8 +1,8 @@
-import { VPFieldOptions } from 'src/interfaces/VPOptions';
-import { ValidationAttributes } from 'src/interfaces/validation/ValidationAttributes';
-import { ValidInput } from 'src/types/ValidInput';
-import { Validatable } from 'src/Validatable';
-import { FieldOptions } from 'src/models/VPOptions/FieldOptions';
+import { VPFieldOptions } from "./interfaces/VPOptions";
+import { ValidationAttributes } from "./interfaces/validation/ValidationAttributes";
+import { ValidInput } from "./types/ValidInput";
+import { Validatable } from "./Validatable";
+import { FieldOptions } from "./models/VPOptions/FieldOptions";
 export declare class VPField extends Validatable {
     static Options: typeof FieldOptions;
     $Input: (ValidInput | null);

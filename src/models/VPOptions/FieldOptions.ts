@@ -6,7 +6,7 @@ import { CustomValidationRule } from 'src/interfaces/validation/CustomValidation
 
 import { ValidatableOptions } from './ValidatableOptions'
 
-export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
+export class FieldOptions extends ValidatableOptions<FieldOptions> implements VPFieldOptions {
   ForceRules = false;
   InputRules: HTMLValidationRules = {} as HTMLValidationRules;
   CustomRules: CustomValidationRule[] = [];
@@ -24,4 +24,4 @@ export class FieldOptions extends ValidatableOptions implements VPFieldOptions {
     super(options, element);
     Object.assign(this, options);
   }
-};
+}

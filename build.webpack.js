@@ -4,15 +4,16 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
 	entry: {
-		ValidPlus: path.resolve(__dirname, './validplus'),
-		VPVue: path.resolve(__dirname, './src/vue'),
-		'SSR/VPVue': path.resolve(__dirname, './src/vue/index.ssr')
+		validplus: path.resolve(__dirname, './validplus'),
+		vpvue: path.resolve(__dirname, './src/vue'),
+		'ssr/vpvue': path.resolve(__dirname, './src/vue/index.ssr')
 	},
+
+	target: ['web', 'es5'],
 
 	output: {
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].js',
-		library: '[name]',
 		libraryTarget: 'commonjs2'
 	},
 
@@ -26,10 +27,6 @@ module.exports = {
         path.resolve(__dirname, 'tsconfig.json')
 			]
 		}
-	},
-
-	externals: {
-		validplus: 'validplus'
 	},
 
 	resolve: {
@@ -55,7 +52,10 @@ module.exports = {
 		]
 	},
 
-	mode: 'production',
+	// VPVue uses validplus internally
+	externals: {
+		validplus: 'validplus'
+	},
 
 	devtool: 'source-map',
 
@@ -68,6 +68,7 @@ module.exports = {
 			},
 			{
 			  test: /\.tsx?$/,
+				exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
 				use: [
 					'babel-loader',
 					'ts-loader'

@@ -3,12 +3,12 @@ import { ValidationStrategyNames } from 'src/interfaces/validation/ValidationStr
 
 import { ValidatableOptions } from './ValidatableOptions'
 
-export class FieldsetOptions extends ValidatableOptions implements VPFieldsetOptions {
+export class FieldsetOptions extends ValidatableOptions<FieldsetOptions> implements VPFieldsetOptions {
   // ControlFlow
   ValidateVisible = true;
   // ValidationOptions
   FieldClass = 'VPField';
-  ValidationStrategy: ValidationStrategyNames = 'one';
+  ValidationStrategy: ValidationStrategyNames = 'all';
 
   constructor(options: VPFieldsetOptions, element: (HTMLElement | null) = null) {
     super(options, element);
@@ -17,4 +17,4 @@ export class FieldsetOptions extends ValidatableOptions implements VPFieldsetOpt
       Watch: false
     }, options);
   }
-};
+}
