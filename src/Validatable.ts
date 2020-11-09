@@ -1,15 +1,18 @@
-import { debug } from 'src/util/debug'
-import { isSet } from 'src/util/isSet'
-import { toBoolean } from 'src/util/casts/toBoolean'
+import merge from 'lodash/merge'
 
-import { VPOptions } from 'src/interfaces/VPOptions'
-import { ValidationStrategies } from 'src/interfaces/validation/ValidationStrategy'
-import { ValidationLifecycle, ValidationCB } from 'src/interfaces/validation/ValidationLifecycle'
+import {debug} from 'src/util/debug'
+import {isSet} from 'src/util/isSet'
+import {toBoolean} from 'src/util/casts/toBoolean'
 
-import { DOMMessaging } from 'src/lib/DOMMessaging'
-import { EventEmitter } from 'src/mixins/EventEmitter'
+import {VPOptions} from 'src/interfaces/VPOptions'
+import {ValidationStrategies} from 'src/interfaces/validation/ValidationStrategy'
+import {ValidationLifecycle, ValidationCB} from 'src/interfaces/validation/ValidationLifecycle'
 
-import { ValidatableOptions } from 'src/models/VPOptions/ValidatableOptions'
+import {DOMMessaging} from 'src/lib/DOMMessaging'
+import {EventEmitter} from 'src/mixins/EventEmitter'
+
+import {ValidatableOptions} from 'src/models/VPOptions/ValidatableOptions'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
 
 const EEMessaging = EventEmitter(DOMMessaging);
 export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
@@ -29,7 +32,12 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
 
     // This is a generic. If options aren't derived from ValidatableOptions, we throw
     if (!(options instanceof ValidatableOptions)) throw new Error('Options were unset');
-    else this.$options = options as T;
+    else {
+      this.$options = merge(options, {
+        ErrorClassName: getAttributeIfSet(element, 'vp-error-class', '-isError'),
+        ValidClassName: getAttributeIfSet(element, 'vp-valid-class', '-isValid')
+      }) as T;
+    }
 
     if (element && element instanceof HTMLElement) {
       this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
@@ -65,8 +73,8 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
 
     if (isValid) {
       this.$lifecycleElements.forEach((element) => {
-        element.classList.add(this.$options.ValidClassName)
         element.classList.remove(this.$options.ErrorClassName)
+        element.classList.add(this.$options.ValidClassName)
       })
 
       if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
@@ -83,8 +91,8 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
       }
     } else {
       this.$lifecycleElements.forEach((element) => {
-        element.classList.add(this.$options.ValidClassName)
-        element.classList.remove(this.$options.ErrorClassName)
+        element.classList.remove(this.$options.ValidClassName)
+        element.classList.add(this.$options.ErrorClassName)
       })
 
       if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
@@ -100,11 +108,10 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
         )
       }
 
-      if (this.$options.ScrollTo) {
+      if (this.$options.ScrollTo && this.$options.ScrollAnchor instanceof Element) {
         // While always true, we check due to limitations with JSDOM
-        // tslint:disable-next-line: strict-type-predicates
-        if (this.$options.ScrollAnchor && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
-          this.$options.ScrollAnchor.scrollIntoView({ behavior: 'smooth' })
+        if (typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
+          this.$options.ScrollAnchor.scrollIntoView(this.$options.ScrollOptions);
         } else {
           debug('[VP] Element Scrolling failed.')
         }

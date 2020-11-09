@@ -1,22 +1,23 @@
 import merge from 'lodash/merge'
-import { debug } from 'src/util/debug'
-import { hasAsync } from 'src/util/hasAsync'
-import { isAsync } from 'src/util/isAsync'
-import { isValidInput } from 'src/util/isValidInput'
-import { toBoolean } from 'src/util/casts/toBoolean'
-import { toNumber } from 'src/util/casts/toNumber'
-import { toRegexp } from 'src/util/casts/toRegexp'
-import { filterNullObject } from 'src/util/filterNullObject'
-import { isSet } from 'src/util/isSet'
+import {debug} from 'src/util/debug'
+import {hasAsync} from 'src/util/hasAsync'
+import {isAsync} from 'src/util/isAsync'
+import {isValidInput} from 'src/util/isValidInput'
+import {toBoolean} from 'src/util/casts/toBoolean'
+import {toNumber} from 'src/util/casts/toNumber'
+import {toRegexp} from 'src/util/casts/toRegexp'
+import {filterNullObject} from 'src/util/filterNullObject'
+import {isSet} from 'src/util/isSet'
 
-import { VPFieldOptions } from 'src/interfaces/VPOptions'
-import { CustomValidationRule } from 'src/interfaces/validation/CustomValidationRule'
-import { ValidationAttributes } from 'src/interfaces/validation/ValidationAttributes'
-import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRules'
+import {VPFieldOptions} from 'src/interfaces/VPOptions'
+import {CustomValidationRule} from 'src/interfaces/validation/CustomValidationRule'
+import {ValidationAttributes} from 'src/interfaces/validation/ValidationAttributes'
+import {HTMLValidationRules} from 'src/interfaces/validation/HTMLValidationRules'
 
-import { ValidInput } from 'src/types/ValidInput'
-import { Validatable } from 'src/Validatable'
-import { FieldOptions } from 'src/models/VPOptions/FieldOptions'
+import {ValidInput} from 'src/types/ValidInput'
+import {Validatable} from 'src/Validatable'
+import {FieldOptions} from 'src/models/VPOptions/FieldOptions'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
 
 const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post')) {
   const formatter = self.$options.InputFormatter[type];
@@ -34,8 +35,6 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 export class VPField extends Validatable<FieldOptions> {
   static Options = FieldOptions
 
@@ -50,22 +49,22 @@ export class VPField extends Validatable<FieldOptions> {
   constructor (element: HTMLElement, options: (VPFieldOptions|FieldOptions) = {} as VPFieldOptions) {
     super(element, new VPField.Options(merge({
       DirtyOn: {
-        blur: toBoolean(element.getAttribute('vp-dirty-blur'), false),
-        input: toBoolean(element.getAttribute('vp-dirty-input'), true),
-        change: toBoolean(element.getAttribute('vp-dirty-change'), false),
-        mouseleave: toBoolean(element.getAttribute('vp-dirty-mouseleave'), false)
+        blur: toBoolean(getAttributeIfSet(element, 'vp-dirty-blur', false)),
+        input: toBoolean(getAttributeIfSet(element, 'vp-dirty-input', true)),
+        change: toBoolean(getAttributeIfSet(element, 'vp-dirty-change', false)),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-dirty-mouseleave', false))
       },
       FormatOn: {
-        blur: toBoolean(element.getAttribute('vp-format-blur'), false),
-        input: toBoolean(element.getAttribute('vp-format-input'), true),
-        change: toBoolean(element.getAttribute('vp-format-change'), false),
-        mouseleave: toBoolean(element.getAttribute('vp-format-mouseleave'), false)
+        blur: toBoolean(getAttributeIfSet(element, 'vp-format-blur', false)),
+        input: toBoolean(getAttributeIfSet(element, 'vp-format-input', true)),
+        change: toBoolean(getAttributeIfSet(element, 'vp-format-change', false)),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-format-mouseleave', false))
       },
       ValidateOn: {
-        blur: toBoolean(element.getAttribute('vp-blur'), false),
-        input: toBoolean(element.getAttribute('vp-input'), true),
-        change: toBoolean(element.getAttribute('vp-change'), false),
-        mouseleave: toBoolean(element.getAttribute('vp-mouseleave'), false)
+        blur: toBoolean(getAttributeIfSet(element, 'vp-blur', false)),
+        input: toBoolean(getAttributeIfSet(element, 'vp-input', true)),
+        change: toBoolean(getAttributeIfSet(element, 'vp-change', false)),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-mouseleave', false))
       }
     }, options), element))
 
@@ -117,18 +116,19 @@ export class VPField extends Validatable<FieldOptions> {
       throw new Error('[VPField] Input must be Input/Select/TextArea')
     }
 
+    const required = getAttributeIfSet(this.$input, 'required', false);
     const inputRules: HTMLValidationRules = filterNullObject({
-      min: toNumber(this.$input.getAttribute('min')),
-      minlength: toNumber(this.$input.getAttribute('minlength')),
-      max: toNumber(this.$input.getAttribute('max')),
-      maxlength: toNumber(this.$input.getAttribute('maxlength')),
-      pattern: toRegexp(this.$input.getAttribute('pattern')),
-      required: this.$input.required || toBoolean(this.$input.getAttribute('required'), null)
+      min: toNumber(getAttributeIfSet(this.$input, 'min', null)),
+      minlength: toNumber(getAttributeIfSet(this.$input, 'minlength', null)),
+      max: toNumber(getAttributeIfSet(this.$input, 'max', null)),
+      maxlength: toNumber(getAttributeIfSet(this.$input, 'maxlength', null)),
+      pattern: toRegexp(getAttributeIfSet(this.$input, 'pattern', null)),
+      required: required === 'required' ? true : toBoolean(required)
     })
 
     const rules = this.$options.ForceRules
-      ? Object.assign({}, inputRules, this.$options.InputRules)
-      : Object.assign({}, this.$options.InputRules, inputRules)
+      ? merge({}, inputRules, this.$options.InputRules)
+      : merge({}, this.$options.InputRules, inputRules)
 
     return {
       value: this.$input.value,

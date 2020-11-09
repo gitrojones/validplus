@@ -100,7 +100,7 @@ module.exports = {
               esModule: false
             }
           },
-          'less-loader',
+          'less-loader'
         ],
       },
       {

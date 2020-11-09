@@ -5,6 +5,7 @@ import { HTMLValidationRules } from 'src/interfaces/validation/HTMLValidationRul
 import { CustomValidationRule } from 'src/interfaces/validation/CustomValidationRule'
 
 import { ValidatableOptions } from './ValidatableOptions'
+import {ValidInput} from 'src/types/ValidInput'
 
 export class FieldOptions extends ValidatableOptions<FieldOptions> implements VPFieldOptions {
   ForceRules = false;
@@ -19,6 +20,13 @@ export class FieldOptions extends ValidatableOptions<FieldOptions> implements VP
   DirtyOn: ChangeActions = {} as ChangeActions;
   FormatOn: ChangeActions = {} as ChangeActions;
   ValidateOn: ChangeActions = {} as ChangeActions;
+
+  // Input Controller
+  PrimaryInput: (null | ValidInput) = null;
+  PrimaryInputIndex = 0;
+  PrimaryInputType: (null | string) = null;
+  InputTypes: ('select' | 'input' | 'textarea')[] = ['select', 'input', 'textarea'];
+
 
   constructor(options: VPFieldOptions, element: (HTMLElement | null) = null) {
     super(options, element);

@@ -44,7 +44,7 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
         const stack = this.$listeners[event.type].slice()
         const stackLength = stack.length
         for (let i = 0; i < stackLength; i++) {
-          stack[i].call(this, event, data)
+          stack[i](event, data)
         }
 
         return !event.defaultPrevented

@@ -1,3 +1,4 @@
+import merge from 'lodash/merge'
 import { debug } from 'src/util/debug'
 import { hasAsync } from 'src/util/hasAsync'
 import { isAsync } from 'src/util/isAsync'
@@ -9,6 +10,8 @@ import { VPFieldset } from 'src/Fieldset'
 import { VPField } from 'src/Field'
 
 import { ValidatorOptions } from 'src/models/VPOptions/ValidatorOptions'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
+import {toBoolean} from 'src/util/casts/toBoolean'
 
 /**
  * ValidPlus Validator instance, the container
@@ -29,14 +32,23 @@ export class VPValidator extends Validatable<ValidatorOptions> {
   }
 
   constructor (element: HTMLElement, options: VPValidatorOptions|ValidatorOptions = {} as VPValidatorOptions) {
-    super(element, new VPValidator.Options(options, element))
+    if (!(element instanceof HTMLElement)) throw new Error('[VPValidator] Expected element');
+    super(element, new VPValidator.Options(merge({
+      FieldsetClass: getAttributeIfSet(element, 'vp-fieldset-class', 'VPFieldset'),
+      FindFieldsets: toBoolean(getAttributeIfSet(element, 'vp-find', false))
+    }, options) as VPValidatorOptions, element));
 
+    this.$options.Validator = element;
     this.$emitFieldsets = []
     this.$fieldsets = []
 
     // Disable HTML Validation in favor of ValidPlus validation
     if (element instanceof HTMLFormElement) {
       element.setAttribute('novalidate', 'true');
+    }
+
+    if (this.$options.FindFieldsets && this.$options.FieldsetClass) {
+      this.findFieldsets();
     }
   }
 
@@ -167,17 +179,19 @@ export class VPValidator extends Validatable<ValidatorOptions> {
   // TODO: Child state checks
   // TODO: Add MutationObserver on children
   addFieldset (fieldset: VPFieldset): void {
+    fieldset.$options.Validator = this.$options.Validator;
+    console.log('Add', fieldset.$options.Validator, this.$options.Validator)
+
     this.$fieldsets.push(fieldset)
     this.watchFieldset(fieldset)
   }
 
-  // TODO: method to remove watchers
   watchFieldset (fieldset: VPFieldset): void {
-    fieldset.addEventListener('onValidate', this.$fieldsetWatch)
+    fieldset.addEventListener('onValidate', this.$fieldsetWatch.bind(this))
   }
 
   unwatchFieldset(fieldset: VPFieldset): void {
-    fieldset.removeEventListener('onValidate', this.$fieldsetWatch);
+    fieldset.removeEventListener('onValidate', this.$fieldsetWatch.bind(this));
   }
 
   removeFieldset (fieldset: VPFieldset) : (VPFieldset | undefined) {
@@ -188,7 +202,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
       if (fieldset) {
         fieldset.clearMessages()
         fieldset.removeMessageNode()
-        fieldset.removeEventListener('onValidate', this.$fieldsetWatch)
+        fieldset.removeEventListener('onValidate', this.$fieldsetWatch.bind(this))
       }
 
       return fieldset
@@ -206,5 +220,16 @@ export class VPValidator extends Validatable<ValidatorOptions> {
 
     this.addFieldset(fieldset)
     return fieldset
+  }
+
+  findFieldsets (fieldsetOptions: (VPFieldsetOptions | VPFieldsetOptions[]) = {} as VPFieldsetOptions) : void {
+    const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldsetClass))
+    fields.forEach((field: Element, index: number) => {
+      const options: VPFieldsetOptions = Array.isArray(fieldsetOptions) ? fieldsetOptions[index] : fieldsetOptions
+      options.Validator = this.$options.Validator;
+      const _fieldset = new VPFieldset(field as HTMLElement, options);
+
+      this.addFieldset(_fieldset);
+    });
   }
 }

@@ -1,12 +1,12 @@
 import {VPOptions} from 'src/interfaces/VPOptions'
 
 import {ValidationLifecycle} from 'src/interfaces/validation/ValidationLifecycle'
-import {ValidInput} from 'src/types/ValidInput'
 import {VerticalPosition} from 'src/enums/Positions'
 
 export class ValidatableOptions<T extends ValidatableOptions<T>> implements VPOptions<T> {
   // ControlFlow
   Watch = true;
+  Validator: (Element|null) = null;
   Lifecycle: ValidationLifecycle<T> = {
     Valid: {
       CB: [],
@@ -22,12 +22,6 @@ export class ValidatableOptions<T extends ValidatableOptions<T>> implements VPOp
   ErrorClassName = '-isError';
   ValidClassName = '-isValid';
 
-  // Input Controller
-  PrimaryInput: (null | ValidInput) = null;
-  PrimaryInputIndex = 0;
-  PrimaryInputType: (null | string) = null;
-  InputTypes: ('select' | 'input' | 'textarea')[] = ['select', 'input', 'textarea'];
-
   // Messaging
   MessageClassName = 'VPMessage';
   MessageContainerClassName = 'VPMessages';
@@ -35,13 +29,13 @@ export class ValidatableOptions<T extends ValidatableOptions<T>> implements VPOp
   MessagePOS: VerticalPosition = VerticalPosition.bottom;
   ScrollTo = true;
   ScrollAnchor: (HTMLElement | null) = null;
+  ScrollOptions: (ScrollIntoViewOptions|boolean) = {
+    behavior: 'smooth'
+  };
 
   constructor(options: VPOptions<T>, element: (HTMLElement | null) = null) {
     if (!(options.MessageAnchor instanceof HTMLElement)) {
       options.MessageAnchor = element;
-    }
-    if (!(options.ScrollAnchor instanceof HTMLElement)) {
-      options.ScrollAnchor = element;
     }
 
     Object.assign(this, options);

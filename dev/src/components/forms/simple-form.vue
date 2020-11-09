@@ -1,70 +1,128 @@
 <template>
-<form ref="form" class="ui form" @submit="validationCheck">
-  <div ref="name" class="field">
-    <label for="full-name" class="name">Full Name</label>
-    <input type="text" id="full-name"
-           placeholder="Full Name"
-           required="true"
-           v-model="data.name">
-  </div>
+  <sui-form ref="form" @submit="validationCheck" vp-find>
+    <sui-form-field class="VPFieldset" vp-find>
+      <div class="VPField">
+        <sui-label for="full-name">Full Name</sui-label>
+        <sui-input
+            type="text"
+            id="full-name"
+            placeholder="Full Name"
+            v-model="data.name"
+            required/>
+      </div>
+    </sui-form-field>
 
-  <div ref="email" class="field">
-    <label for="email" class="name">Email Address</label>
-    <input type="text" id="email"
-           placeholder="Email Address"
-           required="true"
-           :pattern="emailRegex"
-           v-model="data.email">
-  </div>
+    <sui-form-field class="VPFieldset" vp-find>
+      <div class="VPField">
+        <sui-label for="email">Email Address</sui-label>
+        <sui-input
+            type="text"
+            id="email"
+            placeholder="Email Address"
+            v-model="data.email"
+            :pattern="emailRegex"
+            required/>
+      </div>
+    </sui-form-field>
 
-  <div ref="age" class="field">
-    <label for="age" class="name">Age</label>
-    <input type="tel" id="age" placeholder="Age" v-model.number="data.age">
-  </div>
+    <sui-form-field class="VPFieldset" vp-find>
+      <div class="VPField">
+        <sui-label for="age">Age</sui-label>
+        <sui-input
+            id="age"
+            type="number"
+            placeholder="Age"
+            step="1"
+            min="13"
+            max="120"
+            v-model.number="data.age"
+            required/>
+      </div>
+    </sui-form-field>
 
-  <div ref="confirm" class="field">
-    <label for="confirm">I agree with the <a href="#">Terms & Conditions</a> and have read the <a href="#">Privacy Policy</a></label>
-    <input class="ui checkbox" type="checkbox" id="confirm" v-model="data.compliance">
-  </div>
+    <sui-form-field class="VPFieldset" vp-strategy="one" vp-find>
+      <div class="VPField">
+        <sui-label for="option-one">Option #1</sui-label>
+        <sui-input
+            id="option-one"
+            name="option"
+            type="radio"
+            value="one"
+            @input="data.option_select = $event"
+            required />
+      </div>
+      <div class="VPField">
+        <sui-label for="option-two">Option #2</sui-label>
+        <sui-input
+            id="option-two"
+            name="option"
+            type="radio"
+            value="two"
+            @input="data.option_select = $event"
+            required />
+      </div>
+      <div class="VPField">
+        <sui-label for="option-three">Option #3</sui-label>
+        <sui-input
+            id="option-three"
+            name="option"
+            type="radio"
+            value="three"
+            @input="data.option_select = $event"
+            required />
+      </div>
+    </sui-form-field>
 
-  <button class="ui button" type="submit">
-    Submit Form
-  </button>
-</form>
+    <sui-form-field class="VPFieldset" vp-find>
+      <div class="VPField">
+        <sui-label for="confirm">I agree with the <a href="#">Terms & Conditions</a> and have read the <a href="#">Privacy
+          Policy</a></sui-label>
+        <sui-checkbox
+            id="confirm"
+            type="checkbox"
+            v-model.number="data.compliance"
+            required/>
+      </div>
+    </sui-form-field>
+
+    <sui-button type="submit">
+      Submit Form
+    </sui-button>
+
+    <sui-comment v-html="data"></sui-comment>
+  </sui-form>
 </template>
 
 <script>
 import * as VP from 'validplus';
 
 export default {
-  data () {
+  data() {
     return {
+      default_config: {
+        ErrorClassName: 'error',
+        ValidClassName: 'success'
+      },
       validator: undefined,
       isValid: undefined,
       data: {
         name: undefined,
         age: undefined,
         email: undefined,
-        compliance: undefined
+        compliance: undefined,
+        option_select: undefined
       },
       emailRegex: /.+@.+\..+/
     }
   },
-  mounted () {
+  mounted() {
     this.initValidator();
   },
   methods: {
     initValidator() {
-      const validator = this.validator = new VP.Validator(this.$refs.form);
-
-      const NameField = new VP.Fieldset(this.$refs.name, new VP.Fieldset.Options({
-        FieldClass: 'field',
-        ValidationStrategy: 'all',
-        ValidateVisible: true
-      }));
-      NameField.findFields();
+      this.validator = new VP.Validator(this.$refs.form.$el);
     },
-    validationCheck (e) {
+    validationCheck(e) {
       e.preventDefault();
       e.stopPropagation();
 
@@ -73,3 +131,15 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+.VPFieldset.-isValid {
+  background: fade(green, 10%)!important;
+  border: 1px solid green!important;
+}
+
+.VPFieldset.-isError {
+  background: fade(red, 10%)!important;
+  border: 1px solid red!important;
+}
+</style>
