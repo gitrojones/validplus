@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> lib/DOMMessaging.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>lib/DOMMessaging.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { VerticalPosition } from 'src/enums/Positions'
+
+/**
+ * Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement
+ *
+ * @prop $MessageAnchor - The anchor element where the $MessageNode will be rigged to
+ * @prop $MessageContainerClassName - The $MessageNode default class name
+ * @prop $MessageClassName - The individual message nodes default class name
+ * @prop $MessageNode - The node where messages will be appended
+ */
+export class DOMMessaging {
+  $MessageContainerClassName: string = 'DOMMessages'
+  $MessageClassName: string = 'DOMMessage'
+  $MessageNode: HTMLElement | null = null
+  $MessageAnchor: HTMLElement | null = null
+
+  /**
+   * Internal helper for generating an element
+   * @param innerHTML - InnerHTML content
+   * @param [classes] - Default classes to append to the element
+   * @private
+   */
+  private DOMCreateElement (innerHTML: string, classes: (string|string[])): HTMLElement {
+    let el = document.createElement('div')
+    el.innerHTML = innerHTML
+
+    if (!Array.isArray(classes)) classes = [classes];
+    classes.forEach((className) => {
+      if (className.length > 0) el.classList.add(className);
+    })
+
+    return el
+  }
+
+  /**
+   * Internal helper for appending children to a parent node based on the provided POS
+   * @param parent
+   * @param children
+   * @param pos
+   * @throws If the pos isn't valid (top/bottom)
+   * @private
+   */
+  private appendNodeChildrenPOS (
+    parent: HTMLElement,
+    children: (HTMLElement|HTMLElement[]),
+    pos: VerticalPosition = VerticalPosition.bottom) {
+    let strategy: ('prepend'|'appendChild');
+    if (pos === VerticalPosition.top) strategy = 'prepend';
+    else if (pos === VerticalPosition.bottom) strategy = 'appendChild';
+    else throw new Error('[DOMMessaging] Unknown anchor position specified');
+
+    if (!Array.isArray(children)) children = [children];
+    children.forEach((child) => {
+      if (pos === VerticalPosition.top) parent[strategy](child)
+      else if (pos === VerticalPosition.bottom) parent[strategy](child)
+    });
+  }
+
+  /**
+   * Generate a messageNode where messages can be added and removed in a managed way.
+   * @param [anchor] - The anchor to use for the $MessageNode (Defaults to $MessageAnchor)
+   * @param [pos] - The position to set $MessageNode inside the $MessageAnchor
+   * @throws If anchor isn't an Element
+   * @throws If pos isn't a valid {VerticalPosition}
+   */
+  generateMessageNode (
+    anchor: (HTMLElement | null) = this.$MessageAnchor,
+    pos: VerticalPosition = VerticalPosition.bottom): void {
+    if (!anchor) anchor = this.$MessageAnchor;
+    if (!(anchor instanceof HTMLElement)) {
+      throw new Error('[DOMMessaging] MessageNode anchor must be an HTMLElement')
+    }
+
+    // Remove Previous Message Node
+    if (this.$MessageNode instanceof HTMLElement) this.$MessageNode.remove()
+
+    // Set the MessageAnchor
+    if (this.$MessageAnchor !== anchor) this.$MessageAnchor = anchor
+
+    // Create the new $MessageNode on the anchor (if it doesnt exist)
+    const messageNodeExists = Array.from(this.$MessageAnchor.children)
+      .some((m: Element) => m.className.indexOf(this.$MessageContainerClassName) !== -1);
+    if (!messageNodeExists) {
+      this.$MessageNode = this.DOMCreateElement('',
+        this.$MessageContainerClassName);
+
+      this.appendNodeChildrenPOS(anchor, this.$MessageNode, pos);
+    }
+  }
+
+  /**
+   * Removes the $MessageNode from the $MessageAnchor
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  removeMessageNode () {
+    if (this.$MessageNode instanceof HTMLElement) this.$MessageNode.remove()
+    else throw new Error('[DOMMessaging] MessageNode does not exist')
+  }
+
+  /**
+   * Adds a unique message to the $MessageNode
+   * @param message - The message to append
+   * @param [status] - An optional class to append indicating message status
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  addMessage (message: string, status: string = ''): void {
+    if (!(this.$MessageNode instanceof HTMLElement)) {
+      throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
+    }
+
+    // De-dupe messages
+    const messageDoesNotExist: boolean = Array.from(this.$MessageNode.children)
+      .every((m: Element) => m.innerHTML !== message);
+
+    if (messageDoesNotExist) {
+      let DOMMessage: HTMLElement = this.DOMCreateElement(message, [
+        this.$MessageClassName,
+        status
+      ]);
+
+      this.appendNodeChildrenPOS(this.$MessageNode, DOMMessage);
+    }
+  }
+
+  /**
+   * Batch append messages
+   * @param messages - The messages to append
+   * @param [status] - An optional class to append indicating message status
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  addMessages (messages: string[], status: string = ''): void {
+    messages.forEach((message) => {
+      this.addMessage(message, status)
+    })
+  }
+
+  /**
+   * Remove a message
+   * @param message - The message to remove
+   * @throws If the $MessageNode isn't set or isn't an HTMLElement
+   */
+  removeMessage (message: string): void {
+    if (!(this.$MessageNode instanceof HTMLElement)) {
+      throw new Error('[DOMMessaging] MessageNode must be an HTMLElement')
+    }
+
+    Array.from(this.$MessageNode.children)
+      .forEach((child) => {
+        if (child.innerHTML === message) child.remove();
+      })
+  }
+
+  /** Clear all messages from the $MessageNode (If set) */
+  clearMessages (): void {
+    if (!(this.$MessageNode instanceof HTMLElement)) return;
+
+    Array.from(this.$MessageNode.children)
+      .forEach((child) => child.remove());
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

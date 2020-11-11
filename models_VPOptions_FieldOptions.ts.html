@@ -1,0 +1,261 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> models/VPOptions/FieldOptions.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>models/VPOptions/FieldOptions.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import merge from 'lodash/merge'
+import {VPFieldOptions} from 'src/interfaces/VPOptions'
+import {InputFormatters} from 'src/interfaces/InputFormatters'
+import {ChangeActions} from 'src/interfaces/events/ChangeActions'
+import {HTMLValidationRules} from 'src/interfaces/validation/HTMLValidationRules'
+import {CustomValidationRule} from 'src/interfaces/validation/CustomValidationRule'
+
+import {ValidatableOptions} from './ValidatableOptions'
+import {ValidInput} from 'src/types/ValidInput'
+import {toBoolean} from 'src/util/casts/toBoolean'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
+
+/**
+ * Field Options instance for VPField
+ * @category Options
+ * @description
+ * Internally created VPField options instance, implementing the VPFieldOptions interface w/
+ * standard defaults applied dynamically from the DOM bindings or statically if undefined.
+ *
+ * __NOTE:__ See property descriptions for DOM binding attribute names, if implemented
+ * @prop {boolean} [Notify=true] - vp-notify
+ * @prop {boolean} [ShowFieldRuleErrors=false] - vp-field-errors
+ * @prop {boolean} [ShowCustomRuleErrors=true] - vp-custom-errors
+ * @prop {boolean} [ValidateLazyCustomRules=true] - vp-lazy-custom || vp-lazy
+ * @prop {boolean} [ValidateLazyFieldFields=true] - vp-lazy-fields || vp-lazy
+ * @prop {boolean} [ValidateAsync=false] - vp-async
+ * @prop {boolean} [ValidateAsyncResolved=true] - vp-await
+ * @prop {boolean} [DirtyOn.blur=false] - vp-dirty-blur
+ * @prop {boolean} [DirtyOn.input=true] - vp-dirty-input
+ * @prop {boolean} [DirtyOn.change=false] - vp-dirty-change
+ * @prop {boolean} [DirtyOn.mouseleave=false] - vp-dirty-mouseleave
+ * @prop {boolean} [FormatOn.blur=false] - vp-format-blur
+ * @prop {boolean} [FormatOn.input=true] - vp-format-input
+ * @prop {boolean} [FormatOn.change=false] - vp-format-change
+ * @prop {boolean} [FormatOn.mouseleave=false] - vp-format-mouseleave
+ * @prop {boolean} [ValidateOn.blur=true] - vp-blur || vp-validate-blur
+ * @prop {boolean} [ValidateOn.input=false] - vp-input || vp-validate-input
+ * @prop {boolean} [ValidateOn.change=false] - vp-change || vp-validate-change
+ * @prop {boolean} [ValidateOn.mouseleave=false] - vp-mouseleave || vp-validate-mouseleave
+ * @prop {boolean} [ForceRules=false]
+ * @prop {HTMLValidationRules} [InputRules={}]
+ * @prop {CustomValidationRule[]} [CustomRules=[]]
+ * @prop {InputFormatters} [InputFormatter={}]
+ * @prop {null|ValidInput} [PrimaryInput=null]
+ * @prop {number} [PrimaryInputIndex=0]
+ * @prop {null|string} [PrimaryInputType=null]
+ * @prop {string[]} [InputTypes=['select','input','textarea']]
+ * @see {@link VPFieldOptions} For more information on properties defined
+ * @augments ValidatableOptions
+ */
+export class FieldOptions extends ValidatableOptions&lt;FieldOptions> implements VPFieldOptions {
+  Notify = true;
+  ValidateAsync = false;
+  ValidateAsyncResolved = true;
+  ShowFieldRuleErrors = false;
+  ShowCustomRuleErrors = true;
+  ValidateLazyCustomRules = true;
+  ValidateLazyFieldRules = true;
+  DirtyOn: ChangeActions = {
+    blur: false,
+    input: true,
+    change: false,
+    mouseleave: false
+  } as ChangeActions;
+  FormatOn: ChangeActions = {
+    blur: false,
+    input: true,
+    change: false,
+    mouseleave: false
+  } as ChangeActions;
+  ValidateOn: ChangeActions = {
+    blur: true,
+    input: false,
+    change: false,
+    mouseleave: false
+  } as ChangeActions;
+  ForceRules = false;
+  InputRules: HTMLValidationRules = {} as HTMLValidationRules;
+  CustomRules: CustomValidationRule[] = [];
+  InputFormatter: InputFormatters = {} as InputFormatters;
+  PrimaryInput: (null | ValidInput) = null;
+  PrimaryInputIndex = 0;
+  PrimaryInputType: (null | string) = null;
+  InputTypes: ('select' | 'input' | 'textarea')[] = ['select', 'input', 'textarea'];
+
+  constructor(options: VPFieldOptions, element: HTMLElement) {
+    super(options, element);
+
+    // DOM Options merge
+    const _options = {
+      Notify: toBoolean(getAttributeIfSet(element, 'vp-notify', this.Notify)),
+      ValidateAsync: toBoolean(getAttributeIfSet(element, 'vp-async', this.ValidateAsync)),
+      ValidateAsyncResolved: toBoolean(getAttributeIfSet(element, 'vp-await', this.ValidateAsyncResolved)),
+      DirtyOn: {
+        blur: toBoolean(getAttributeIfSet(element, 'vp-dirty-blur', this.DirtyOn.blur)),
+        input: toBoolean(getAttributeIfSet(element, 'vp-dirty-input', this.DirtyOn.input)),
+        change: toBoolean(getAttributeIfSet(element, 'vp-dirty-change', this.DirtyOn.change)),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-dirty-mouseleave', this.DirtyOn.mouseleave))
+      },
+      FormatOn: {
+        blur: toBoolean(getAttributeIfSet(element, 'vp-format-blur', this.FormatOn.blur)),
+        input: toBoolean(getAttributeIfSet(element, 'vp-format-input', this.FormatOn.input)),
+        change: toBoolean(getAttributeIfSet(element, 'vp-format-change', this.FormatOn.change)),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-format-mouseleave', this.FormatOn.mouseleave))
+      },
+      ValidateOn: {
+        blur: toBoolean(getAttributeIfSet(element, 'vp-blur',
+          getAttributeIfSet(element, 'vp-validate-blur', this.ValidateOn.blur))),
+        input: toBoolean(getAttributeIfSet(element, 'vp-input',
+          getAttributeIfSet(element, 'vp-validate-input', this.ValidateOn.input))),
+        change: toBoolean(getAttributeIfSet(element, 'vp-change',
+          getAttributeIfSet(element, 'vp-validate-change', this.ValidateOn.change))),
+        mouseleave: toBoolean(getAttributeIfSet(element, 'vp-mouseleave',
+          getAttributeIfSet(element, 'vp-validate-mouseleave', this.ValidateOn.mouseleave)))
+      },
+      ShowFieldRuleErrors: toBoolean(getAttributeIfSet(element, 'vp-field-errors', this.ShowFieldRuleErrors)),
+      ShowCustomRuleErrors: toBoolean(getAttributeIfSet(element, 'vp-custom-errors', this.ShowCustomRuleErrors)),
+      ValidateLazyCustomRules: toBoolean(getAttributeIfSet(element, 'vp-lazy-custom',
+        getAttributeIfSet(element, 'vp-lazy', this.ValidateLazyCustomRules))),
+      ValidateLazyFieldRules: toBoolean(getAttributeIfSet(element, 'vp-lazy-field',
+        getAttributeIfSet(element, 'vp-lazy', this.ValidateLazyCustomRules)))
+    }
+
+    merge(this, _options, options);
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> VPFieldOptions</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Interface</p>
+                    <h1>VPFieldOptions</h1>
+                </header>
+                
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>VPFieldOptions</h2>
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>A partial interface which can be passed into any VPField constructor
+to be initialized as a FieldOption instance with standard defaults applied</p></div>
+        
+
+        
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line131">line 131</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+        
+    
+    </div>
+    
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li><a href="VPOptions.html">VPOptions</a></li>
+    </ul>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class='vertical-section'>
+            <h1>Members</h1>
+            <div class="members">
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="CustomRules">
+    <a class="href-link" href="#CustomRules">#</a>
+    
+    <span class="code-name">
+        CustomRules
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Custom Validation rules to apply</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line170">line 170</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ChangeActions</span>
+
+
+    </span>
+
+<h4 class="name" id="DirtyOn">
+    <a class="href-link" href="#DirtyOn">#</a>
+    
+    <span class="code-name">
+        DirtyOn
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Input events required to consider input state as dirty</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line145">line 145</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="ErrorClassName">
+    <a class="href-link" href="#ErrorClassName">#</a>
+    
+    <span class="code-name">
+        ErrorClassName
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Classname appended when validation is erroneous</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#ErrorClassName">VPOptions#ErrorClassName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line28">line 28</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ForceRules">
+    <a class="href-link" href="#ForceRules">#</a>
+    
+    <span class="code-name">
+        ForceRules
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Force DOM rules to supersede option rules</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line160">line 160</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ChangeActions</span>
+
+
+    </span>
+
+<h4 class="name" id="FormatOn">
+    <a class="href-link" href="#FormatOn">#</a>
+    
+    <span class="code-name">
+        FormatOn
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Input events required to trigger formatters for inputs</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line150">line 150</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">InputFormatters</span>
+
+
+    </span>
+
+<h4 class="name" id="InputFormatter">
+    <a class="href-link" href="#InputFormatter">#</a>
+    
+    <span class="code-name">
+        InputFormatter
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Formatters to apply according to FormatOn rules</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line175">line 175</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">HTMLValidationRules</span>
+
+
+    </span>
+
+<h4 class="name" id="InputRules">
+    <a class="href-link" href="#InputRules">#</a>
+    
+    <span class="code-name">
+        InputRules
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Standard HTML Validation rules to apply</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line165">line 165</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">Array</span>
+
+
+    </span>
+
+<h4 class="name" id="InputTypes">
+    <a class="href-link" href="#InputTypes">#</a>
+    
+    <span class="code-name">
+        InputTypes
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The types of inputs we look for when parsing for inputs</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line205">line 205</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ValidationLifecycle.&lt;T></span>
+
+
+    </span>
+
+<h4 class="name" id="Lifecycle">
+    <a class="href-link" href="#Lifecycle">#</a>
+    
+    <span class="code-name">
+        Lifecycle
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Lifecycle bindings to perform on Valid or Invalid states</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#Lifecycle">VPOptions#Lifecycle</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line23">line 23</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">HTMLElement</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </span>
+
+<h4 class="name" id="MessageAnchor">
+    <a class="href-link" href="#MessageAnchor">#</a>
+    
+    <span class="code-name">
+        MessageAnchor
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An anchor point for message nodes. Will default to the internal element if undefined</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#MessageAnchor">VPOptions#MessageAnchor</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line48">line 48</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="MessageClassName">
+    <a class="href-link" href="#MessageClassName">#</a>
+    
+    <span class="code-name">
+        MessageClassName
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Classname message nodes will bear</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#MessageClassName">VPOptions#MessageClassName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line38">line 38</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="MessageContainerClassName">
+    <a class="href-link" href="#MessageContainerClassName">#</a>
+    
+    <span class="code-name">
+        MessageContainerClassName
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Classname message node container will bear</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#MessageContainerClassName">VPOptions#MessageContainerClassName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line43">line 43</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">VerticalPosition</span>
+
+
+    </span>
+
+<h4 class="name" id="MessagePOS">
+    <a class="href-link" href="#MessagePOS">#</a>
+    
+    <span class="code-name">
+        MessagePOS
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Message positioning; Determines how the messaging container is mounted to the anchor point</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#MessagePOS">VPOptions#MessagePOS</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line53">line 53</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="Notify">
+    <a class="href-link" href="#Notify">#</a>
+    
+    <span class="code-name">
+        Notify
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Notify parent of changes, validating siblings together</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line140">line 140</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">null</span>
+|
+
+<span class="param-type">ValidInput</span>
+
+
+    </span>
+
+<h4 class="name" id="PrimaryInput">
+    <a class="href-link" href="#PrimaryInput">#</a>
+    
+    <span class="code-name">
+        PrimaryInput
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The input we will validate against</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line190">line 190</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">number</span>
+
+
+    </span>
+
+<h4 class="name" id="PrimaryInputIndex">
+    <a class="href-link" href="#PrimaryInputIndex">#</a>
+    
+    <span class="code-name">
+        PrimaryInputIndex
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The index to pluck from if we find multiple eligible inputs to parse</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line195">line 195</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">null</span>
+|
+
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="PrimaryInputType">
+    <a class="href-link" href="#PrimaryInputType">#</a>
+    
+    <span class="code-name">
+        PrimaryInputType
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>The type of input we should prioritize picking from if multiple eligible inputs of different types are found</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line200">line 200</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">HTMLElement</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </span>
+
+<h4 class="name" id="ScrollAnchor">
+    <a class="href-link" href="#ScrollAnchor">#</a>
+    
+    <span class="code-name">
+        ScrollAnchor
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>An anchor point to scroll to if scrolling is enabled and an instance is erroneous</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#ScrollAnchor">VPOptions#ScrollAnchor</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line63">line 63</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ScrollIntoViewOptions</span>
+|
+
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ScrollOptions">
+    <a class="href-link" href="#ScrollOptions">#</a>
+    
+    <span class="code-name">
+        ScrollOptions
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Standard ScrollItnoViewOptions, see MDN</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#ScrollOptions">VPOptions#ScrollOptions</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line68">line 68</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ScrollTo">
+    <a class="href-link" href="#ScrollTo">#</a>
+    
+    <span class="code-name">
+        ScrollTo
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Indicates if we should scroll to the instance on failed validation</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#ScrollTo">VPOptions#ScrollTo</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line58">line 58</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ShowCustomRuleErrors">
+    <a class="href-link" href="#ShowCustomRuleErrors">#</a>
+    
+    <span class="code-name">
+        ShowCustomRuleErrors
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Show custom validation error messages</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line215">line 215</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ShowFieldRuleErrors">
+    <a class="href-link" href="#ShowFieldRuleErrors">#</a>
+    
+    <span class="code-name">
+        ShowFieldRuleErrors
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Show standard HTML5 validation error messages</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line210">line 210</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidateAsync">
+    <a class="href-link" href="#ValidateAsync">#</a>
+    
+    <span class="code-name">
+        ValidateAsync
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Force IsValid to always resolve async, regardless of the presence of promises</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line180">line 180</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidateAsyncResolved">
+    <a class="href-link" href="#ValidateAsyncResolved">#</a>
+    
+    <span class="code-name">
+        ValidateAsyncResolved
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Force waiting for async validation to finish before being able to validate again</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line185">line 185</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidateLazyCustomRules">
+    <a class="href-link" href="#ValidateLazyCustomRules">#</a>
+    
+    <span class="code-name">
+        ValidateLazyCustomRules
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Validate custom rules lazily</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line225">line 225</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">boolean</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidateLazyFieldRules">
+    <a class="href-link" href="#ValidateLazyFieldRules">#</a>
+    
+    <span class="code-name">
+        ValidateLazyFieldRules
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Validate HTML validation rules lazily</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line220">line 220</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">ChangeActions</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidateOn">
+    <a class="href-link" href="#ValidateOn">#</a>
+    
+    <span class="code-name">
+        ValidateOn
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Input events required to trigger validation for inputs</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line155">line 155</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+    <span class="method-parameter is-pulled-right">
+        <label>Type:</label>
+        
+<span class="param-type">string</span>
+
+
+    </span>
+
+<h4 class="name" id="ValidClassName">
+    <a class="href-link" href="#ValidClassName">#</a>
+    
+    <span class="code-name">
+        ValidClassName
+    </span>
+    
+        <span class='tag'>Optional</span>
+    
+</h4>
+
+
+
+
+<div class="description">
+    <p>Classname appended when validation is successful</p>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+    <dt class="inherited-from">Inherited From:</dt>
+    <dd class="inherited-from"><ul class="dummy"><li>
+        <a href="VPOptions.html#ValidClassName">VPOptions#ValidClassName</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="interfaces_VPOptions.ts.html" class="button">View Source</a>
+            <span>
+                <a href="interfaces_VPOptions.ts.html">interfaces/VPOptions.ts</a>, <a href="interfaces_VPOptions.ts.html#line33">line 33</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+</div>
+            
+            </div>
+        </div>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>
