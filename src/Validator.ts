@@ -199,7 +199,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
     return undefined
   }
 
-  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]) : VPFieldset {
+  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[] = []) : VPFieldset {
     const fieldset = new VPFieldset(fs, options);
     fields.forEach((field) => fieldset.addField(field));
 

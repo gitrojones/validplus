@@ -27,7 +27,7 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
   }
 
   if (typeof formatter === 'function') {
-    formatter(self.$input.value, self.$input, (event_name) =>
+    self.$input.value = formatter(self.$input.value, self.$input, (event_name) =>
       (self.$input as ValidInput).dispatchEvent(self.createEvent(event_name)));
 
     let event_type = 'input';
@@ -39,7 +39,6 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
     } else if (self.$input instanceof HTMLSelectElement) event_type = 'change';
 
     self.$input.dispatchEvent(self.createEvent(event_type));
-    self.$formatterEvent[type] = true // Mark the value as formatted
   }
 }
 
@@ -92,7 +91,7 @@ export class VPField extends Validatable<FieldOptions> {
   $observer: MutationObserver | undefined
   $formatterEvent: { pre: boolean, post: boolean }
 
-  constructor (element: HTMLElement, options: (VPFieldOptions|FieldOptions) = {} as VPFieldOptions) {
+  constructor (element: HTMLElement, options: VPFieldOptions = {}) {
     if (!(element instanceof HTMLElement)) throw new Error('[VPField] Expected element')
     super(element, new VPField.Options(options, element))
 
@@ -114,6 +113,7 @@ export class VPField extends Validatable<FieldOptions> {
   set $isValid (isValid: boolean | null) {
     super.$isValid = isValid;
     this.$canValidate = true;
+
     if (this.$options.Notify) {
       debug('[VPField] Notify parent')
       this.dispatchEvent(this.createEvent('VPValidate'), this)
@@ -152,7 +152,6 @@ export class VPField extends Validatable<FieldOptions> {
    * @description
    * Binds to standard input lifecycle hooks and handles how/when validation occurs based
    * up on the event type fired and the internal state of the Field instance.
-   * @todo Audit behavior
    * @private
    */
   $inputHandler(e: Event): void {
@@ -163,17 +162,13 @@ export class VPField extends Validatable<FieldOptions> {
     const dirty: boolean = this.$options.DirtyOn[eventType] || false
 
     if (dirty) this.$dirty = true;
-    const formatterEvent = this.$formatterEvent.pre || this.$formatterEvent.post
-
-    // We alias this for our purposes
-    if (format && !formatterEvent) this.formatInputPre()
     if (this.$canValidate && this.$dirty && validate) {
-      this.isValid(true)
+      this.isValid()
     }
-    if (format && !formatterEvent) this.formatInputPost()
-
-    this.$formatterEvent.pre = false
-    this.$formatterEvent.post = false
+    else if (format) {
+      this.formatInputPre();
+      this.formatInputPost()
+    }
   }
 
   /**
@@ -320,7 +315,7 @@ export class VPField extends Validatable<FieldOptions> {
    */
   isValid (): (boolean | Promise<boolean>) {
     this.$canValidate = false
-    if (!this.$formatterEvent.pre) this.formatInputPre();
+    this.formatInputPre();
     this.clearMessages()
 
     // Main validation loop
@@ -482,7 +477,7 @@ export class VPField extends Validatable<FieldOptions> {
       return this.$isValid
     }
 
-    if (!this.$formatterEvent.post) this.formatInputPost();
+    this.formatInputPost();
     if (hasAsync(customErrors)) {
       debug('Returning Async')
 
@@ -555,10 +550,28 @@ export class VPField extends Validatable<FieldOptions> {
   }
 
   formatInputPre(): void {
-    InputFormatter(this, 'pre');
+    if (this.$formatterEvent.pre) {
+      debug('[VPField] Skipping pre formatter',
+        this.$formatterEvent.pre, this.$formatterEvent.post)
+      return
+    }
+    console.log('FORMAT PRE');
+
+    this.$formatterEvent.pre = true
+    InputFormatter(this, 'pre')
+    this.$formatterEvent.post = false
   }
 
   formatInputPost(): void {
-    InputFormatter(this, 'post');
+    if (this.$formatterEvent.post || !this.$formatterEvent.pre) {
+      debug('[VPField] Skipping post formatter',
+        this.$formatterEvent.pre, this.$formatterEvent.post)
+      return
+    }
+    console.log('FORMAT POST');
+
+    this.$formatterEvent.post = true
+    InputFormatter(this, 'post')
+    this.$formatterEvent.pre = false
   }
 }

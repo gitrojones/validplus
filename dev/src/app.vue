@@ -14,12 +14,17 @@
           <simple-form />
         </sui-accordion-content>
 
+        <sui-accordion-title>Complex Form (Input Formatters/Custom Synchronous Rules)</sui-accordion-title>
+        <sui-accordion-content>
+          <formatter-form />
+        </sui-accordion-content>
+
         <sui-accordion-title>Rebind Form (Observers IE11+)</sui-accordion-title>
         <sui-accordion-content>
           <rebind-form />
         </sui-accordion-content>
 
-        <sui-accordion-title>Complex Form (Async Operations)</sui-accordion-title>
+        <sui-accordion-title>Complex Form (Input Formatters/Custom Async Rules)</sui-accordion-title>
         <sui-accordion-content>
           <h1>TODO</h1>
         </sui-accordion-content>
@@ -37,11 +42,13 @@
 <script>
 import simpleForm from './components/forms/simple-form';
 import rebindForm from './components/forms/rebind-form';
+import formatterForm from './components/forms/formatter-form';
 
 export default {
   components: {
     simpleForm,
-    rebindForm
+    rebindForm,
+    formatterForm
   }
 };
 </script>
