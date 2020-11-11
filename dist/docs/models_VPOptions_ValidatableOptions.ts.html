@@ -1,0 +1,218 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> models/VPOptions/ValidatableOptions.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>models/VPOptions/ValidatableOptions.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import merge from 'lodash/merge'
+import {VPOptions} from 'src/interfaces/VPOptions'
+
+import {ValidationLifecycle} from 'src/interfaces/validation/ValidationLifecycle'
+import {VerticalPosition} from 'src/enums/Positions'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
+import {toBoolean} from 'src/util/casts/toBoolean'
+
+/**
+ * Validatable Options generic for VPOptions
+ * @category Options
+ * @description
+ * Base generic ValidatableOption class all VPOption instances extend from. Implements the generic
+ * VPOptions interface and applies standard defaults sourced from the DOM bindings or statically defined.
+ *
+ * __NOTE:__ See property descriptions for DOM binding attribute names, if implemented
+ * @prop {string} [Lifecycle.Valid.Message=''] - vp-valid
+ * @prop {string} [Lifecycle.Invalid.Message=''] - vp-invalid
+ * @prop {string} [ErrorClassName='-isError'] - vp-error-class
+ * @prop {string} [ValidClassName='-isValid'] - vp-valid-class
+ * @prop {string} [MessageClassName='VPMessage'] - vp-msg-class
+ * @prop {string} [MessageContainerClassName='VPMessages'] - vp-msgs-class
+ * @prop {string} [MessagePos=VerticalPosition.bottom] - vp-msg-top || vp-msg-bottom
+ * @prop {boolean} [ScrollTo=false] - vp-scroll
+ * @prop {HTMLElement|null} [MessageAnchor]
+ * @prop {HTMLElement|null} [ScrollAnchor]
+ * @prop {ValidationLifecycle} [Lifecycle]
+ * @prop {ScrollIntoViewOptions|boolean} [ScrollOptions]
+ *
+ * @see {@link VPOptions} For more information on properties defined
+ */
+export class ValidatableOptions&lt;T extends ValidatableOptions&lt;T>> implements VPOptions&lt;T> {
+  Lifecycle: ValidationLifecycle&lt;T> = {
+    Valid: {
+      CB: [],
+      Message: ''
+    },
+    Invalid: {
+      CB: [],
+      Message: ''
+    }
+  };
+  ErrorClassName = '-isError';
+  ValidClassName = '-isValid';
+  MessageClassName = 'VPMessage';
+  MessageContainerClassName = 'VPMessages';
+  MessageAnchor: (HTMLElement | null) = null;
+  MessagePOS: VerticalPosition = VerticalPosition.bottom;
+  ScrollTo = false;
+  ScrollAnchor: (HTMLElement | null) = null;
+  ScrollOptions: (ScrollIntoViewOptions|boolean) = {
+    behavior: 'smooth'
+  };
+
+  constructor(options: VPOptions&lt;T>, element: HTMLElement) {
+    if (!(options.MessageAnchor instanceof HTMLElement)) {
+      options.MessageAnchor = element;
+    }
+    if (!(options.ScrollAnchor instanceof HTMLElement)) {
+      options.ScrollAnchor = element;
+    }
+
+    const _options = {
+      Lifecycle: {
+        Valid: {
+          Message: getAttributeIfSet(element, 'vp-valid', this.Lifecycle.Valid.Message)
+        },
+        Invalid: {
+          Message: getAttributeIfSet(element, 'vp-invalid', this.Lifecycle.Invalid.Message)
+        }
+      },
+      ErrorClassName: getAttributeIfSet(element, 'vp-error-class', this.ErrorClassName),
+      ValidClassName: getAttributeIfSet(element, 'vp-valid-class', this.ValidClassName),
+      MessageClassName: getAttributeIfSet(element, 'vp-msg-class', this.MessageClassName),
+      MessageContainerClassName: getAttributeIfSet(element, 'vp-msgs-class', this.MessageContainerClassName),
+      MessagePOS: getAttributeIfSet(element, 'vp-msg-bottom',
+        getAttributeIfSet(element, 'vp-msg-top', this.MessagePOS)),
+      ScrollTo: toBoolean(getAttributeIfSet(element, 'vp-scroll', this.ScrollTo))
+    }
+
+    merge(this, _options, options);
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

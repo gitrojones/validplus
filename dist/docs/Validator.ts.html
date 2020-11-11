@@ -1,4 +1,108 @@
-import { debug } from 'src/util/debug'
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Validator.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>Validator.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { debug } from 'src/util/debug'
 import { hasAsync } from 'src/util/hasAsync'
 import { isAsync } from 'src/util/isAsync'
 
@@ -17,7 +121,7 @@ import IEVersion from 'src/util/IEVersion'
  *
  * @name VPValidator
  */
-export class VPValidator extends Validatable<ValidatorOptions> {
+export class VPValidator extends Validatable&lt;ValidatorOptions> {
   static Options = ValidatorOptions;
 
   $emitFieldsets: VPFieldset[]
@@ -42,7 +146,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
       element.setAttribute('novalidate', 'true');
     }
 
-    if (this.$options.FindFieldsets && this.$options.FieldsetClass) {
+    if (this.$options.FindFieldsets &amp;&amp; this.$options.FieldsetClass) {
       this.findFieldsets();
     }
 
@@ -69,7 +173,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
           const node = nodes.pop();
           if (!node) break;
 
-          for (let i = 0, l = this.$fieldsets.length; i < l; i += 1) {
+          for (let i = 0, l = this.$fieldsets.length; i &lt; l; i += 1) {
             const fieldset = this.$fieldsets[i];
             if (fieldset.$element === node) {
               this.removeFieldset(fieldset);
@@ -98,17 +202,17 @@ export class VPValidator extends Validatable<ValidatorOptions> {
    *
    * @see {@link ValidatorOptions}
    */
-  isValid (): (Promise<boolean> | boolean) {
+  isValid (): (Promise&lt;boolean> | boolean) {
     this.clearMessages()
     const fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
-    let isValid: (boolean | Promise<boolean>) = true
-    const resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
-      .reduce((resolved: (boolean|Promise<boolean>)[], fieldset, index) => {
-        if (isValid === false && this.$options.ValidateLazy) return resolved
+    let isValid: (boolean | Promise&lt;boolean>) = true
+    const resolvedIsValid: (boolean | Promise&lt;boolean>)[] = fieldsets
+      .reduce((resolved: (boolean|Promise&lt;boolean>)[], fieldset, index) => {
+        if (isValid === false &amp;&amp; this.$options.ValidateLazy) return resolved
 
-        let valid: (boolean | Promise<boolean>)
-        if (this.$emitFieldsets.indexOf(fieldset) !== -1 && typeof fieldset.$valid === 'boolean') {
+        let valid: (boolean | Promise&lt;boolean>)
+        if (this.$emitFieldsets.indexOf(fieldset) !== -1 &amp;&amp; typeof fieldset.$valid === 'boolean') {
           debug('[VPValidator] Cached Valid', index)
           valid = fieldset.$valid
         } else {
@@ -124,8 +228,8 @@ export class VPValidator extends Validatable<ValidatorOptions> {
       }, [])
 
     if (hasAsync(resolvedIsValid)) {
-      let asyncIsValid: Promise<boolean[]>;
-      const promises: Promise<boolean>[] = resolvedIsValid.map((result) => Promise.resolve(result));
+      let asyncIsValid: Promise&lt;boolean[]>;
+      const promises: Promise&lt;boolean>[] = resolvedIsValid.map((result) => Promise.resolve(result));
 
       if (this.$options.ValidateLazy) {
         // Return early if we're already invalid and lazy
@@ -136,7 +240,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
 
         // Resolve one at a time, unless we abort, then finish
         let abort = false;
-        asyncIsValid = promises.reduce((results: Promise<boolean[]>, promise) => {
+        asyncIsValid = promises.reduce((results: Promise&lt;boolean[]>, promise) => {
           if (abort) return results;
           return results.then((res: boolean[]) =>
             promise.then((isValid) => {
@@ -225,3 +329,34 @@ export class VPValidator extends Validatable<ValidatorOptions> {
     });
   }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

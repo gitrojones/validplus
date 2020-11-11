@@ -1,4 +1,108 @@
-import merge from 'lodash/merge'
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Field.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>Field.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import merge from 'lodash/merge'
 import {debug} from 'src/util/debug'
 import {hasAsync} from 'src/util/hasAsync'
 import {isAsync} from 'src/util/isAsync'
@@ -32,7 +136,7 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
 
     let event_type = 'input';
     if (self.$input instanceof HTMLInputElement) {
-      const input_type = ''+getAttributeIfSet<string>(self.$input, 'type', '');
+      const input_type = ''+getAttributeIfSet&lt;string>(self.$input, 'type', '');
       // Select/Radio/Checkbox/Date/File inputs validate on change. This is a helper to make this
       // distinction a bit less cumbersome for users
       if (['radio', 'checkbox', 'date', 'file'].includes(input_type)) event_type = 'change';
@@ -50,15 +154,15 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
  * are capable of formatting input and validating input based on various events. See examples for more information.
  * @example
  * // Simple DOM Binding, Field will be required
- * <div class="VPField">
- *   <input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
- * </div>
+ * &lt;div class="VPField">
+ *   &lt;input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
+ * &lt;/div>
  * @example
  * // Simple DOM Binding, pattern matching an email
- * <div class="VPField">
- *   <label for="email">Email Address</label>
- *   <input id="email" name="email" type="text" pattern="/.+@.+\..+/" />
- * </div>
+ * &lt;div class="VPField">
+ *   &lt;label for="email">Email Address&lt;/label>
+ *   &lt;input id="email" name="email" type="text" pattern="/.+@.+\..+/" />
+ * &lt;/div>
  * @example
  * // Programmic bindings, phone number w/ input formatter
  * const field = new VP.Field(document.getElementById('phone'), {
@@ -84,7 +188,7 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
  *    }
  * });
  */
-export class VPField extends Validatable<FieldOptions> {
+export class VPField extends Validatable&lt;FieldOptions> {
   static Options = FieldOptions
   $input: (ValidInput | null)
   $dirty: boolean
@@ -166,11 +270,11 @@ export class VPField extends Validatable<FieldOptions> {
     const formatterEvent = this.$formatterEvent.pre || this.$formatterEvent.post
 
     // We alias this for our purposes
-    if (format && !formatterEvent) this.formatInputPre()
-    if (this.$canValidate && this.$dirty && validate) {
+    if (format &amp;&amp; !formatterEvent) this.formatInputPre()
+    if (this.$canValidate &amp;&amp; this.$dirty &amp;&amp; validate) {
       this.isValid(true)
     }
-    if (format && !formatterEvent) this.formatInputPost()
+    if (format &amp;&amp; !formatterEvent) this.formatInputPost()
 
     this.$formatterEvent.pre = false
     this.$formatterEvent.post = false
@@ -190,7 +294,7 @@ export class VPField extends Validatable<FieldOptions> {
     const flipflopAttrs = () => {
       [this.$options.ValidateOn, this.$options.DirtyOn, this.$options.FormatOn]
         .forEach((options) => {
-          if (options.input && !options.change) {
+          if (options.input &amp;&amp; !options.change) {
             options.input = false
             options.change = true
           }
@@ -207,7 +311,7 @@ export class VPField extends Validatable<FieldOptions> {
       }, {} as FilteredControllerTypes)
 
     const primaryInputType = this.$options.PrimaryInputType
-    if (primaryInputType !== null && controllers[primaryInputType].length > 0) {
+    if (primaryInputType !== null &amp;&amp; controllers[primaryInputType].length > 0) {
       debug(`[VPField] Picking primary ${primaryInputType} controller`)
       inputs = controllers[primaryInputType];
     } else {
@@ -232,14 +336,14 @@ export class VPField extends Validatable<FieldOptions> {
     }
 
     if (input instanceof HTMLInputElement) {
-      const input_type = ''+getAttributeIfSet<string>(input, 'type', '');
+      const input_type = ''+getAttributeIfSet&lt;string>(input, 'type', '');
       // Select/Radio/Checkbox/Date/File inputs validate on change. This is a helper to make this
       // distinction a bit less cumbersome for users
       if (['radio', 'checkbox', 'date', 'file'].includes(input_type)) flipflopAttrs();
     } else if (input instanceof HTMLSelectElement) flipflopAttrs();
 
 
-    if (input && isValidInput(input)) {
+    if (input &amp;&amp; isValidInput(input)) {
       this.$input = input
       this.$lifecycleElements.push(input);
 
@@ -277,14 +381,14 @@ export class VPField extends Validatable<FieldOptions> {
       throw new Error('[VPField] Input must be Input/Select/TextArea')
     }
 
-    const required = getAttributeIfSet<string|boolean>(this.$input, 'required', false);
+    const required = getAttributeIfSet&lt;string|boolean>(this.$input, 'required', false);
     const inputRules: HTMLValidationRules = filterNullObject({
       min: toNumber(getAttributeIfSet(this.$input, 'min', null)),
       minlength: toNumber(getAttributeIfSet(this.$input, 'minlength', null)),
       max: toNumber(getAttributeIfSet(this.$input, 'max', null)),
       maxlength: toNumber(getAttributeIfSet(this.$input, 'maxlength', null)),
       pattern: toRegexp(getAttributeIfSet(this.$input, 'pattern', null)),
-      required: required === 'required' ? true : toBoolean<null>(required, null)
+      required: required === 'required' ? true : toBoolean&lt;null>(required, null)
     })
 
     const rules = this.$options.ForceRules
@@ -297,8 +401,8 @@ export class VPField extends Validatable<FieldOptions> {
         ? false
         : (this.$input as HTMLInputElement).checked,
       type: this.$input.getAttribute('type'),
-      name: ''+getAttributeIfSet<string|boolean>(this.$input, 'data-name',
-        getAttributeIfSet<string>(this.$input, 'name', this.$input.tagName)),
+      name: ''+getAttributeIfSet&lt;string|boolean>(this.$input, 'data-name',
+        getAttributeIfSet&lt;string>(this.$input, 'name', this.$input.tagName)),
       rules
     }
   }
@@ -316,9 +420,9 @@ export class VPField extends Validatable<FieldOptions> {
    *    - If ValidateAsync option is enabled, isValid will *ALWAYS* be asynchronous
    *
    * This method applies the necessary formatting for input values, if defined.
-   * @returns (boolean|Promise.<boolean>)
+   * @returns (boolean|Promise.&lt;boolean>)
    */
-  isValid (): (boolean | Promise<boolean>) {
+  isValid (): (boolean | Promise&lt;boolean>) {
     this.$canValidate = false
     if (!this.$formatterEvent.pre) this.formatInputPre();
     this.clearMessages()
@@ -333,7 +437,7 @@ export class VPField extends Validatable<FieldOptions> {
           const rule: number = rules.min as number
 
           if (numValue) {
-            return (numValue < +rule)
+            return (numValue &lt; +rule)
               ? `${name} must be more than ${rules.min}.`
               : true
           }
@@ -345,7 +449,7 @@ export class VPField extends Validatable<FieldOptions> {
         if (isSet(rules.max)) {
           const rule: number = rules.max as number
 
-          return (+value <= +rule)
+          return (+value &lt;= +rule)
             ? true
             : `${name} must be less than ${rules.max}.`
         }
@@ -365,7 +469,7 @@ export class VPField extends Validatable<FieldOptions> {
       () => {
         if (isSet(rules.maxlength)) {
           const rule: number = rules.maxlength as number
-          return (value.length <= +rule)
+          return (value.length &lt;= +rule)
             ? true
             : `${name} must be ${rules.maxlength} characters or less.`
         }
@@ -390,12 +494,12 @@ export class VPField extends Validatable<FieldOptions> {
         case 'radio':
         case 'checkbox':
           // One should always be selected if required
-          if (isSet(rules.required) && rules.required) {
+          if (isSet(rules.required) &amp;&amp; rules.required) {
             return checked ? true : `${name} is required.`
           }
           break
         default:
-          if (isSet(rules.required) && rules.required) {
+          if (isSet(rules.required) &amp;&amp; rules.required) {
             return value.length > 0 ? true : `${name} is required.`
           }
         }
@@ -431,7 +535,7 @@ export class VPField extends Validatable<FieldOptions> {
     if (this.$options.ShowFieldRuleErrors) {
       debug('ShowFieldRuleErrors')
       const messages: string[] = errors.filter((error) =>
-        typeof error === 'string' && error.length > 0) as string[]
+        typeof error === 'string' &amp;&amp; error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
     }
 
@@ -444,15 +548,15 @@ export class VPField extends Validatable<FieldOptions> {
 
     // Custom validation loop
     const customRules = this.$options.CustomRules
-    let customErrors: (boolean | string | Promise<boolean | string>)[]
+    let customErrors: (boolean | string | Promise&lt;boolean | string>)[]
     let hasCustomErrors = false
     if (this.$options.ValidateLazyCustomRules) {
       debug('ValidateLazyCustomRules')
       customErrors = customRules
-        .reduce((errors: (boolean | string | Promise<(boolean | string)>)[], rule: CustomValidationRule) => {
+        .reduce((errors: (boolean | string | Promise&lt;(boolean | string)>)[], rule: CustomValidationRule) => {
           if (hasCustomErrors) return errors
           const isValid = rule(attributes, this.$element, this.$input as HTMLInputElement)
-          if (!isAsync(isValid) && isValid !== true) {
+          if (!isAsync(isValid) &amp;&amp; isValid !== true) {
             debug('EndEvaluationEarly')
             hasCustomErrors = true
           }
@@ -471,7 +575,7 @@ export class VPField extends Validatable<FieldOptions> {
     if (this.$options.ShowCustomRuleErrors) {
       debug('ShowCustomRuleErrors')
       const messages: string[] = customErrors
-        .filter((error) => typeof error === 'string' && error.length > 0) as string[]
+        .filter((error) => typeof error === 'string' &amp;&amp; error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
     }
 
@@ -493,12 +597,12 @@ export class VPField extends Validatable<FieldOptions> {
       }
 
       return new Promise((resolve) => {
-        let promises: Promise<(boolean | string)>[]
+        let promises: Promise&lt;(boolean | string)>[]
 
         // Abort on first issue, omit existing values
         if (this.$options.ValidateLazyCustomRules) {
-          promises = (customErrors.filter(isAsync) as Promise<(boolean | string)>[])
-            .map((promise: Promise<(boolean | string)>) => {
+          promises = (customErrors.filter(isAsync) as Promise&lt;(boolean | string)>[])
+            .map((promise: Promise&lt;(boolean | string)>) => {
               return new Promise((resolve, reject) => {
                 promise.then((isValid) => {
                   if (isValid === true) {
@@ -516,7 +620,7 @@ export class VPField extends Validatable<FieldOptions> {
           promises = customErrors.map((error) => {
             if (isAsync(error)) return error
             else return Promise.resolve(error as (boolean | string))
-          }) as Promise<(boolean | string)>[]
+          }) as Promise&lt;(boolean | string)>[]
         }
 
         Promise.all(promises)
@@ -525,7 +629,7 @@ export class VPField extends Validatable<FieldOptions> {
             const customErrors = isValid.filter((e) => e !== true)
 
             if (this.$options.ShowCustomRuleErrors) {
-              const messages = customErrors.filter((e) => typeof e === 'string' && e.length > 0) as string[]
+              const messages = customErrors.filter((e) => typeof e === 'string' &amp;&amp; e.length > 0) as string[]
               this.addMessages(messages, this.$options.ErrorClassName)
             }
 
@@ -536,9 +640,9 @@ export class VPField extends Validatable<FieldOptions> {
             debug('[VPField] Failed CustomRule Validation', err)
 
             if (this.$options.ShowCustomRuleErrors) {
-              if (err instanceof Error && err.message.length > 0) {
+              if (err instanceof Error &amp;&amp; err.message.length > 0) {
                 this.addMessage(err.message, this.$options.ErrorClassName)
-              } else if (typeof err === 'string' && err.length > 0) {
+              } else if (typeof err === 'string' &amp;&amp; err.length > 0) {
                 this.addMessage(err, this.$options.ErrorClassName)
               }
             }
@@ -562,3 +666,34 @@ export class VPField extends Validatable<FieldOptions> {
     InputFormatter(this, 'post');
   }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

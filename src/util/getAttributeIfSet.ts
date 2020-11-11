@@ -1,4 +1,7 @@
-export function getAttributeIfSet(element: Element, attribute: string, default_value: unknown) : unknown {
+export function getAttributeIfSet<T extends unknown>(
+  element: Element,
+  attribute: string,
+  default_value: T = undefined as T) : (T|boolean) {
   if (element instanceof Element && element.hasAttribute(attribute)) {
     const value = element.getAttribute(attribute);
     if (value === '' || value === null) {
@@ -6,7 +9,7 @@ export function getAttributeIfSet(element: Element, attribute: string, default_v
       return true;
     }
 
-    return value;
+    return value as T;
   }
 
   return default_value;

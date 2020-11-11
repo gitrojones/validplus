@@ -1,15 +1,19 @@
 <template>
   <sui-form ref="form" @submit="validationCheck" vp-find>
-    <sui-form-field class="VPFieldset" vp-find>
+    <sui-form-field class="VPFieldset" vp-find v-if="active_field">
       <div class="VPField">
         <sui-label for="full-name">Full Name</sui-label>
-        <sui-input
+        <sui-input v-if="active_input"
             type="text"
             id="full-name"
             placeholder="Full Name"
             v-model="data.name"
             required/>
       </div>
+
+      <sui-button type="button" @click="toggleActiveInputs">
+        Remove Input
+      </sui-button>
     </sui-form-field>
 
     <sui-form-field class="VPFieldset" vp-find>
@@ -85,10 +89,15 @@
       </div>
     </sui-form-field>
 
-    <sui-button type="submit">
-      Submit Form
-    </sui-button>
+    <div class="sui-container">
+      <sui-button type="submit">
+        Submit Form
+      </sui-button>
 
+      <sui-button type="button" @click="toggleActiveFields">
+        Toggle Active Fields
+      </sui-button>
+    </div>
     <h1 class="title">Form Valid: {{typeof isValid === 'boolean' ? isValid : true}}</h1>
   </sui-form>
 </template>
@@ -105,6 +114,8 @@ export default {
       },
       validator: undefined,
       isValid: undefined,
+      active_field: true,
+      active_input: true,
       data: {
         name: undefined,
         age: undefined,
@@ -121,6 +132,15 @@ export default {
   methods: {
     initValidator() {
       this.validator = new VP.Validator(this.$refs.form.$el);
+    },
+    toggleActiveInputs() {
+      this.active_input = !this.active_input;
+    },
+    toggleActiveFields() {
+      this.active_field = !this.active_field;
+
+      // Rebind fields which were removed
+      this.$nextTick(() => this.validator.findFieldsets());
     },
     validationCheck(e) {
       e.preventDefault();

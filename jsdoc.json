@@ -10,15 +10,15 @@
       "test",
       "node_modules"
     ],
-    "includePattern": ".(js|ts|vue)$"
+    "includePattern": "\\.(js|ts|vue)x?$"
   },
   "recurseDepth": 10,
   "sourceType": "module",
   "plugins": [
-    "plugins/markdown",
     "node_modules/better-docs/typescript",
+    "node_modules/better-docs/component",
     "node_modules/better-docs/category",
-    "node_modules/better-docs/component"
+    "plugins/markdown"
   ],
   "opts": {
     "template": "node_modules/better-docs",
@@ -28,12 +28,9 @@
     "recurse": true
   },
   "tags": {
-    "allowUnknownTags": true,
-    "dictionaries": ["jsdoc", "closure"]
+    "allowUnknownTags": true
   },
   "templates": {
-    "cleverLinks": false,
-    "monospaceLinks": false,
     "search": true,
     "default": {
       "staticFiles": {

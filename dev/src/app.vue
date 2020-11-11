@@ -14,9 +14,14 @@
           <simple-form />
         </sui-accordion-content>
 
+        <sui-accordion-title>Rebind Form (Observers IE11+)</sui-accordion-title>
+        <sui-accordion-content>
+          <rebind-form />
+        </sui-accordion-content>
+
         <sui-accordion-title>Complex Form (Async Operations)</sui-accordion-title>
         <sui-accordion-content>
-          <simple-form />
+          <h1>TODO</h1>
         </sui-accordion-content>
       </sui-accordion>
     </sui-grid-column>
@@ -30,11 +35,13 @@
 </template>
 
 <script>
-import simpleForm from './components/forms/simple-form.vue';
+import simpleForm from './components/forms/simple-form';
+import rebindForm from './components/forms/rebind-form';
 
 export default {
   components: {
-    simpleForm
+    simpleForm,
+    rebindForm
   }
 };
 </script>

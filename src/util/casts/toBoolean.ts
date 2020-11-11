@@ -1,4 +1,4 @@
-export function toBoolean (param: any, _default: boolean | null = null): (boolean | null) {
+export function toBoolean<T extends unknown> (param: any, _default: boolean | T = false): (boolean | T) {
   switch (typeof param) {
   case 'boolean':
     return param;

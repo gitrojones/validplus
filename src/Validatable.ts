@@ -2,7 +2,6 @@ import merge from 'lodash/merge'
 
 import {debug} from 'src/util/debug'
 import {isSet} from 'src/util/isSet'
-import {toBoolean} from 'src/util/casts/toBoolean'
 
 import {VPOptions} from 'src/interfaces/VPOptions'
 import {ValidationStrategies} from 'src/interfaces/validation/ValidationStrategy'
@@ -39,12 +38,7 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
       }) as T;
     }
 
-    if (element && element instanceof HTMLElement) {
-      this.$options.Watch = toBoolean(element.getAttribute('vp-watch'), true) as boolean
-    }
-
     this.setLifecycle(this.$options.Lifecycle)
-
     this.$strategies = {
       all: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => f),
       some: (fieldstatus: boolean[]) => fieldstatus.some((f: boolean) => f),
@@ -108,21 +102,21 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
         )
       }
 
-      if (this.$options.ScrollTo && this.$options.ScrollAnchor instanceof Element) {
-        // While always true, we check due to limitations with JSDOM
-        if (typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
-          this.$options.ScrollAnchor.scrollIntoView(this.$options.ScrollOptions);
-        } else {
-          debug('[VP] Element Scrolling failed.')
-        }
-      }
-    }
-
-    if (this.$options.Watch) {
-      debug('[Validatable] Emit watch')
-      this.dispatchEvent(this.createEvent('onValidate'), this)
+      if (this.$options.ScrollTo) this.$scrollTo();
     }
   }
+
+  $scrollTo (): void {
+    // While always true in a modern browser, we check due to limitations with JSDOM
+    if (this.$options.ScrollAnchor instanceof Element
+      && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
+      this.$options.ScrollAnchor.scrollIntoView(this.$options.ScrollOptions);
+    }
+    else {
+      debug('[VP] Element Scrolling is unavailable.')
+    }
+  }
+
 
   setLifecycle (lifecycle: ValidationLifecycle<T>): void {
     const isValidationLifecycle = function (lifecycle: ValidationLifecycle<T>) {
