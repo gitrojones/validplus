@@ -274,9 +274,9 @@ export class VPField extends Validatable<FieldOptions> {
 
     const required = getAttributeIfSet<string|boolean>(this.$input, 'required', false);
     const inputRules: HTMLValidationRules = filterNullObject({
-      min: toNumber(getAttributeIfSet(this.$input, 'min', null)),
+      min: ''+getAttributeIfSet<string|null>(this.$input, 'min', null),
       minlength: toNumber(getAttributeIfSet(this.$input, 'minlength', null)),
-      max: toNumber(getAttributeIfSet(this.$input, 'max', null)),
+      max: ''+getAttributeIfSet<string|null>(this.$input, 'max', null),
       maxlength: toNumber(getAttributeIfSet(this.$input, 'maxlength', null)),
       pattern: toRegexp(getAttributeIfSet(this.$input, 'pattern', null)),
       required: required === 'required' ? true : toBoolean<null>(required, null)
@@ -286,14 +286,21 @@ export class VPField extends Validatable<FieldOptions> {
       ? merge({}, inputRules, this.$options.InputRules)
       : merge({}, this.$options.InputRules, inputRules)
 
+    let name = getAttributeIfSet<string|boolean>(this.$input, 'data-name');
+    if (typeof name !== 'string') {
+      const label = this.$element.querySelector('label[for="' + this.$input.id + '"]');
+      if (label) name = label.textContent as string;
+      if (!name) name = getAttributeIfSet<string>(this.$input, 'name', 'Field');
+    }
+
     return {
       value: this.$input.value,
       checked: (this.$input instanceof HTMLSelectElement)
         ? false
         : (this.$input as HTMLInputElement).checked,
+      title: ''+getAttributeIfSet<string>(this.$input, 'title', ''),
       type: this.$input.getAttribute('type'),
-      name: ''+getAttributeIfSet<string|boolean>(this.$input, 'data-name',
-        getAttributeIfSet<string>(this.$input, 'name', this.$input.tagName)),
+      name: name as string,
       rules
     }
   }
@@ -320,82 +327,96 @@ export class VPField extends Validatable<FieldOptions> {
 
     // Main validation loop
     const attributes = this.parseInput()
-    const { value, checked, type, name, rules } = attributes
+    const { value, checked, type, name, rules, title } = attributes
     const attributeRules: (() => (boolean | string))[] = [
       () => {
+        let valid = true;
         if (isSet(rules.min)) {
-          const numValue = toNumber(value)
-          const rule: number = rules.min as number
+          const DateTest = /[0-9]{4}-[0-9]{2}(-[0-9]{2})/;
 
-          if (numValue) {
-            return (numValue < +rule)
-              ? `${name} must be more than ${rules.min}.`
-              : true
-          }
+          let numValue: (number|null);
+          if (DateTest.test(value)) numValue = toNumber(new Date(value));
+          else numValue = toNumber(value);
+
+          let rule: (number|null);
+          if (DateTest.test(rules.min as string)) rule = toNumber(new Date(rules.min as string));
+          else rule = toNumber(rules.min)
+
+          if (typeof numValue === 'number' && typeof rule === 'number') valid = numValue >= rule;
+          debug('[VPField] Malformed rule', numValue, rule);
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at least ${rules.min}.`;
       },
       () => {
+        let valid = true;
         if (isSet(rules.max)) {
-          const rule: number = rules.max as number
+          const DateTest = /[0-9]{4}-[0-9]{2}(-[0-9]{2})/;
 
-          return (+value <= +rule)
-            ? true
-            : `${name} must be less than ${rules.max}.`
+          let numValue: (number|null);
+          if (DateTest.test(value)) numValue = toNumber(new Date(value));
+          else numValue = toNumber(value);
+
+          let rule: (number|null);
+          if (DateTest.test(rules.max as string)) rule = toNumber(new Date(rules.max as string));
+          else rule = toNumber(rules.max)
+
+          if (typeof numValue === 'number' && typeof rule === 'number') valid = numValue <= rule;
+          debug('[VPField] Malformed rule', numValue, rule);
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at most ${rules.max}.`;
       },
       () => {
+        let valid = true;
         if (isSet(rules.minlength)) {
           const rule: number = rules.minlength as number
-          return (value.length >= +rule)
-            ? true
-            : `${name} must be ${rules.minlength} characters or more.`
+          valid = value.length >= +rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at least ${rules.minlength} characters.`
       },
       () => {
+        let valid = true;
         if (isSet(rules.maxlength)) {
           const rule: number = rules.maxlength as number
-          return (value.length <= +rule)
-            ? true
-            : `${name} must be ${rules.maxlength} characters or less.`
+          valid = value.length <= +rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at most ${rules.maxlength} characters.`
       },
       () => {
-        if (isSet(rules.pattern)) {
-          const rule: (RegExp | string) = rules.pattern as RegExp
-
-          return (rules.pattern instanceof RegExp)
-            ? rules.pattern.test(value)
-            : (new RegExp(rule).test(value))
-              ? true
-              : `${name} is incorrectly formatted.`
+        let valid = true;
+        let error_message = `${name} is malformed.`
+        if (type === 'email') valid = /.+@.+\..+/.test(value)
+        if (valid && isSet(rules.pattern)) {
+          if (title) error_message += ' ' + title
+          let rule: (RegExp | string) = rules.pattern as RegExp
+          if (!(rule instanceof RegExp)) rule = new RegExp(rule)
+          valid = rule.test(value);
         }
 
-        return true
+        if (valid) return true;
+        return error_message;
       },
       () => {
+        let valid;
         switch (type) {
         case 'radio':
         case 'checkbox':
           // One should always be selected if required
-          if (isSet(rules.required) && rules.required) {
-            return checked ? true : `${name} is required.`
-          }
+          if (isSet(rules.required) && rules.required) valid = checked;
           break
         default:
-          if (isSet(rules.required) && rules.required) {
-            return value.length > 0 ? true : `${name} is required.`
-          }
+          if (isSet(rules.required) && rules.required) valid = value.length > 0;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} is required.`
       }
     ]
 

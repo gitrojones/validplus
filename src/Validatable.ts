@@ -101,12 +101,10 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
           this.$options.ErrorClassName
         )
       }
-
-      if (this.$options.ScrollTo) this.$scrollTo();
     }
   }
 
-  $scrollTo (): void {
+  scrollTo (): void {
     // While always true in a modern browser, we check due to limitations with JSDOM
     if (this.$options.ScrollAnchor instanceof Element
       && typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {

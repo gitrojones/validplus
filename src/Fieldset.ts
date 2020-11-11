@@ -64,6 +64,8 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
   get $isValid (): boolean | null { return super.$isValid; }
   set $isValid (isValid: boolean | null) {
     super.$isValid = isValid;
+    if (!isValid && this.$options.ScrollTo) this.scrollTo();
+
     this.$cached = [];
     this.$canValidate = true;
   }
@@ -136,18 +138,15 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
         .then((statuses) => {
           debug('[VPFieldset] Resolved deferred', statuses)
           this.$isValid = this.$strategy(statuses)
-          if (!this.$isValid) this.$scrollTo()
           return this.$isValid;
         })
         .catch((err) => {
           debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
           this.$isValid = false
-          this.$scrollTo()
           return this.$isValid
         });
     } else {
       this.$isValid = this.$strategy(fieldsetStatus as boolean[])
-      if (!this.$isValid) this.$scrollTo()
       return this.$isValid
     }
   }
