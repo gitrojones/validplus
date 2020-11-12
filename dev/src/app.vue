@@ -26,7 +26,7 @@
 
         <sui-accordion-title>Complex Form (Input Formatters/Custom Async Rules)</sui-accordion-title>
         <sui-accordion-content>
-          <h1>TODO</h1>
+          <complex-form />
         </sui-accordion-content>
       </sui-accordion>
     </sui-grid-column>
@@ -43,12 +43,14 @@
 import simpleForm from './components/forms/simple-form';
 import rebindForm from './components/forms/rebind-form';
 import formatterForm from './components/forms/formatter-form';
+import complexForm from './components/forms/complex-form';
 
 export default {
   components: {
     simpleForm,
     rebindForm,
-    formatterForm
+    formatterForm,
+    complexForm
   }
 };
 </script>

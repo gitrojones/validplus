@@ -1,87 +1,32 @@
 <template>
-  <sui-form ref="form" @submit="validationCheck" vp-find>
-    <sui-form-field class="VPFieldset" vp-find>
-      <div class="VPField">
-        <sui-label for="full-name">Full Name</sui-label>
-        <sui-input
+  <sui-form ref="form" @submit="validationCheck">
+    <sui-label @click="active_validatable = validator">
+      <sui-icon name="caret left" />
+      Validator Controls
+    </sui-label>
+    <ValidationControls :validatable="active_validatable" />
+
+    <sui-form-field ref="zipcode" class="VPFieldset">
+      <sui-label @click="active_validatable = nth(validator.$fieldsets, 0)">
+        <sui-icon name="caret left" />
+        Fieldset Controls
+      </sui-label>
+
+      <div ref="zipcode_field" class="VPField">
+        <sui-label @click="active_validatable = nth(nth(validator.$fieldsets, 0).$fields, 0)">
+          <sui-icon name="caret left" />
+          Field Controls
+        </sui-label>
+
+        <div class="wrapper">
+          <label for="zipcode">ZIP Code</label>
+          <sui-input
+            id="zipcode"
             type="text"
-            id="full-name"
-            placeholder="Full Name"
-            v-model="data.name"
-            required/>
-      </div>
-    </sui-form-field>
-
-    <sui-form-field class="VPFieldset" vp-find>
-      <div class="VPField">
-        <sui-label for="email">Email Address</sui-label>
-        <sui-input
-            type="text"
-            id="email"
-            placeholder="Email Address"
-            v-model="data.email"
-            :pattern="emailRegex"
-            required/>
-      </div>
-    </sui-form-field>
-
-    <sui-form-field class="VPFieldset" vp-find>
-      <div class="VPField">
-        <sui-label for="age">Age</sui-label>
-        <sui-input
-            id="age"
-            type="number"
-            placeholder="Age"
-            step="1"
-            min="13"
-            max="120"
-            v-model.number="data.age"
-            required/>
-      </div>
-    </sui-form-field>
-
-    <sui-form-field class="VPFieldset" vp-strategy="one" vp-find>
-      <div class="VPField">
-        <sui-label for="option-one">Option #1</sui-label>
-        <sui-input
-            id="option-one"
-            name="option"
-            type="radio"
-            value="one"
-            @input="data.option_select = $event"
+            placeholder="ZIP Code"
+            v-model="data.zipcode"
             required />
-      </div>
-      <div class="VPField">
-        <sui-label for="option-two">Option #2</sui-label>
-        <sui-input
-            id="option-two"
-            name="option"
-            type="radio"
-            value="two"
-            @input="data.option_select = $event"
-            required />
-      </div>
-      <div class="VPField">
-        <sui-label for="option-three">Option #3</sui-label>
-        <sui-input
-            id="option-three"
-            name="option"
-            type="radio"
-            value="three"
-            @input="data.option_select = $event"
-            required />
-      </div>
-    </sui-form-field>
-
-    <sui-form-field class="VPFieldset" vp-find>
-      <div class="VPField">
-        <sui-label for="confirm">I agree with the <a href="#">Terms & Conditions</a> and have read the <a href="#">Privacy
-          Policy</a></sui-label>
-        <sui-checkbox
-            id="confirm"
-            type="checkbox"
-            v-model.number="data.compliance"
-            required/>
+        </div>
       </div>
     </sui-form-field>
 
@@ -89,45 +34,70 @@
       Submit Form
     </sui-button>
 
-    <h1 class="title">Form Valid: {{typeof isValid === 'boolean' ? isValid : true}}</h1>
+    <h1 class="title">Form Valid: {{isAsync ? 'Resolving...' : typeof isValid === 'boolean' ? isValid : true}}</h1>
   </sui-form>
 </template>
 
 <script>
 import * as VP from 'validplus';
+import ValidationControls from "../ValidationControls";
 
 export default {
   data() {
     return {
-      default_config: {
-        ErrorClassName: 'error',
-        ValidClassName: 'success'
-      },
+      active_validatable: undefined,
       validator: undefined,
       isValid: undefined,
+      isAsync: false,
+      options: [
+        { text: 'Option #1', value: 1 },
+        { text: 'Option #2', value: 2 },
+        { text: 'Option #3', value: 3 }
+      ],
       data: {
-        name: undefined,
-        age: undefined,
-        email: undefined,
-        compliance: undefined,
-        option_select: undefined
-      },
-      emailRegex: /.+@.+\..+/
+        zipcode: undefined
+      }
     }
   },
   mounted() {
     this.initValidator();
+    this.active_validatable = this.validator;
   },
   methods: {
+    nth(coll, index) {
+      if (coll.length > index) return coll[index];
+      return undefined;
+    },
     initValidator() {
       this.validator = new VP.Validator(this.$refs.form.$el);
+      this.validator.createFieldset(this.$refs.zipcode.$el, {}, [
+          new VP.Field(this.$refs.zipcode_field, {
+            ValidateAsync: true,
+            ValidateOn: {
+              blur: false
+            },
+            CustomRules: [
+              () => new Promise((resolve) => setTimeout(() => resolve('Please enter a Valid ZIP Code'), 5000))
+            ],
+            InputFormatter: {
+              pre: (value) => value.replace(/[^0-9]/g, '').substr(0, 5)
+            }
+          })
+      ])
     },
     validationCheck(e) {
       e.preventDefault();
       e.stopPropagation();
 
-      this.isValid = this.validator.isValid();
+      this.isAsync = true
+      this.validator.isValid().then((isValid) => {
+        this.isAsync = false
+        this.isValid = isValid
+      });
     }
+  },
+  components: {
+    ValidationControls
   }
 }
 </script>
