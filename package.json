@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "NODE_ENV=development node --inspect ./dev/server.js",
-    "build": "NODE_ENV=production $(npm bin)/webpack --config ./build.webpack.js --progress --color && npm run build:types",
+    "build": "npm run build:types && NODE_ENV=production $(npm bin)/webpack --config ./build.webpack.js --progress --color",
     "build:dev": "NODE_ENV=development $(npm bin)/webpack --config ./build.webpack.js --progress --color",
     "build:types": "NODE_ENV=production ttsc --noUnusedLocals --noUnusedParameters --emitDeclarationOnly",
     "test": "$(npm bin)/jest",

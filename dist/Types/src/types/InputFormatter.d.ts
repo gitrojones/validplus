@@ -1,4 +1,4 @@
-import { EventBuilderHelper } from './events/EventBuilderHelper';
+import { EventBuilderHelper } from "./events/EventBuilderHelper";
 /**
  * Input formatter
  * @description
