@@ -3,7 +3,13 @@
  * @author: Ryann Jones<gitrojones>
  * @license: GPL 3.0
  */
-import "./lib/polyfills/index.js";
+import 'mdn-polyfills/Array.from';
+import 'mdn-polyfills/Node.prototype.remove';
+import 'mdn-polyfills/Element.prototype.classList';
+import 'mdn-polyfills/Array.prototype.includes';
+import 'mdn-polyfills/NodeList.prototype.forEach';
+import 'mdn-polyfills/Node.prototype.prepend';
+import 'mdn-polyfills/Number.isNaN';
 /**
  * Main export
  * @param {VPValidator} Validator - ValidPlus Validator

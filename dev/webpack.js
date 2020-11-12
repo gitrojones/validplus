@@ -29,6 +29,8 @@ module.exports = {
     }
   },
 
+  mode: process.env.NODE_ENV,
+
   resolve: {
     alias: {
       'vue$': path.resolve(__dirname, '../node_modules/vue/dist/vue.js'),
@@ -42,8 +44,6 @@ module.exports = {
   },
 
   target: ['web', 'es5'],
-
-  mode: 'development',
 
   devtool: 'source-map',
 

@@ -1,13 +1,12 @@
-import { debug } from 'src/util/debug'
-import { hasAsync } from 'src/util/hasAsync'
+import {hasAsync} from 'src/util/hasAsync'
 
-import { VPValidatorOptions, VPFieldsetOptions } from 'src/interfaces/VPOptions'
+import {VPValidatorOptions, VPFieldsetOptions} from 'src/interfaces/VPOptions'
 
-import { Validatable } from 'src/Validatable'
-import { VPFieldset } from 'src/Fieldset'
-import { VPField } from 'src/Field'
+import {Validatable} from 'src/Validatable'
+import {VPFieldset} from 'src/Fieldset'
+import {VPField} from 'src/Field'
 
-import { ValidatorOptions } from 'src/models/VPOptions/ValidatorOptions'
+import {ValidatorOptions} from 'src/models/VPOptions/ValidatorOptions'
 import IEVersion from 'src/util/IEVersion'
 
 /**
@@ -18,8 +17,6 @@ import IEVersion from 'src/util/IEVersion'
  */
 export class VPValidator extends Validatable<ValidatorOptions> {
   static Options = ValidatorOptions;
-
-  $emitFieldsets: VPFieldset[]
   $fieldsets: VPFieldset[]
   $observer: MutationObserver | undefined
 
@@ -32,8 +29,6 @@ export class VPValidator extends Validatable<ValidatorOptions> {
   constructor (element: HTMLElement, options: VPValidatorOptions|ValidatorOptions = {} as VPValidatorOptions) {
     if (!(element instanceof HTMLElement)) throw new Error('[VPValidator] Expected element');
     super(element, new VPValidator.Options(options,element))
-
-    this.$emitFieldsets = []
     this.$fieldsets = []
 
     // Disable HTML Validation in favor of ValidPlus validation
@@ -60,7 +55,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
    * helpers defined on this instance.
    * @param mutations
    */
-  $observe (mutations: MutationRecord[]) {
+  $observe (mutations: MutationRecord[]): void {
     for (const mutation of mutations) {
       if (mutation.type === 'childList') {
         const nodes = Array.from(mutation.removedNodes);
@@ -102,23 +97,19 @@ export class VPValidator extends Validatable<ValidatorOptions> {
     const fieldsets = this.$options.ValidateVisible ? this.$visibleFieldsets : this.$fieldsets
     // Bad practice to mutate outwards, but exception for now
     let isValid: (boolean | Promise<boolean>) = true
+    let isInvalidIndex = 0;
     const resolvedIsValid: (boolean | Promise<boolean>)[] = fieldsets
       .reduce((resolved: (boolean|Promise<boolean>)[], fieldset, index) => {
         if (isValid === false && this.$options.ValidateLazy) return resolved
 
-        let valid: (boolean | Promise<boolean>)
-        if (this.$emitFieldsets.indexOf(fieldset) !== -1 && typeof fieldset.$valid === 'boolean') {
-          debug('[VPValidator] Cached Valid', index)
-          valid = fieldset.$valid
-        } else {
-          // Concat to the emitFieldsets watch to prevent
-          // further loops of validation as they trigger
-          this.$emitFieldsets.push(fieldset)
-          valid = fieldset.isValid()
-        }
+        // Toggle ScrollTo so we only go to the first error
+        const ScrollTo = fieldset.$options.ScrollTo;
+        if (index !== isInvalidIndex) fieldset.$options.ScrollTo = false;
+        isValid = fieldset.isValid();
+        if (index !== isInvalidIndex) fieldset.$options.ScrollTo = ScrollTo;
+        if (isValid) isInvalidIndex += 1;
 
-        isValid = valid
-        resolved.push(valid)
+        resolved.push(isValid)
         return resolved
       }, [])
 
@@ -157,13 +148,11 @@ export class VPValidator extends Validatable<ValidatorOptions> {
       return asyncIsValid
         .then((results) => {
           this.$isValid = results.every((valid) => valid)
-          this.$emitFieldsets = []
           return this.$isValid;
         })
         .catch((err) => {
-          debug('[VPValidator] Async Validation failed: ' + err.message, err)
+          console.debug('[VPValidator] Async Validation failed: ' + err.message, err)
           this.$isValid = false
-          this.$emitFieldsets = []
           return this.$isValid;
         })
     } else {
@@ -174,7 +163,6 @@ export class VPValidator extends Validatable<ValidatorOptions> {
 
       // Otherwise business as usual
       this.$isValid = isValid
-      this.$emitFieldsets = []
       return isValid
     }
   }
@@ -209,7 +197,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
   findFieldsets (fieldsetOptions: (VPFieldsetOptions | VPFieldsetOptions[]) = {} as VPFieldsetOptions) : void {
     const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldsetClass))
     if (fields.length === 0) {
-      debug('[VPValidator] Failed to find child fieldsets')
+      console.debug('[VPValidator] Failed to find child fieldsets')
       return;
     }
 

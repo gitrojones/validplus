@@ -1,5 +1,4 @@
 import merge from 'lodash/merge'
-import {debug} from 'src/util/debug'
 import {hasAsync} from 'src/util/hasAsync'
 import {isAsync} from 'src/util/isAsync'
 import {isValidInput} from 'src/util/isValidInput'
@@ -115,7 +114,7 @@ export class VPField extends Validatable<FieldOptions> {
     this.$canValidate = true;
 
     if (this.$options.Notify) {
-      debug('[VPField] Notify parent')
+      console.debug('[VPField] Notify parent')
       this.dispatchEvent(this.createEvent('VPValidate'), this)
     }
   }
@@ -129,7 +128,7 @@ export class VPField extends Validatable<FieldOptions> {
    * @see {@link VPField.remove}
    * @private
    */
-  $observe (mutations: MutationRecord[]) {
+  $observe (mutations: MutationRecord[]): void {
     for (const mutation of mutations) {
       if (mutation.type === 'childList') {
         const nodes = Array.from(mutation.removedNodes);
@@ -193,20 +192,20 @@ export class VPField extends Validatable<FieldOptions> {
     }
 
     let inputs;
-    debug('[VPField] Querying controllers')
+    console.debug('[VPField] Querying controllers')
     const controllers: FilteredControllerTypes = this.$options.InputTypes
       .reduce((items: FilteredControllerTypes, type: string) => {
         items[type] = Array.from(this.$element.getElementsByTagName(type)) as ValidInput[];
-        debug(`[VPField] Fetched ${type} controllers`, items[type])
+        console.debug(`[VPField] Fetched ${type} controllers`, items[type])
         return items
       }, {} as FilteredControllerTypes)
 
     const primaryInputType = this.$options.PrimaryInputType
     if (primaryInputType !== null && controllers[primaryInputType].length > 0) {
-      debug(`[VPField] Picking primary ${primaryInputType} controller`)
+      console.debug(`[VPField] Picking primary ${primaryInputType} controller`)
       inputs = controllers[primaryInputType];
     } else {
-      debug('[VPField] Picking from all controllers')
+      console.debug('[VPField] Picking from all controllers')
       inputs = Object.keys(controllers)
         .reduce((elements: ValidInput[], type: string) => elements.concat(controllers[type]), []);
     }
@@ -222,7 +221,7 @@ export class VPField extends Validatable<FieldOptions> {
         }, null)
     }
     else {
-      debug('[VPField] Using provided input')
+      console.debug('[VPField] Using provided input')
       input = this.$options.PrimaryInput;
     }
 
@@ -393,9 +392,8 @@ export class VPField extends Validatable<FieldOptions> {
         if (type === 'email') valid = /.+@.+\..+/.test(value)
         if (valid && isSet(rules.pattern)) {
           if (title) error_message += ' ' + title
-          let rule: (RegExp | string) = rules.pattern as RegExp
-          if (!(rule instanceof RegExp)) rule = new RegExp(rule)
-          valid = rule.test(value);
+          const rule = rules.pattern;
+          if (rule instanceof RegExp) valid = rule.test(value);
         }
 
         if (valid) return true;
@@ -421,13 +419,13 @@ export class VPField extends Validatable<FieldOptions> {
     let errors: (boolean | string)[]
     let hasErrors = false
     if (this.$options.ValidateLazyFieldRules) {
-      debug('ValidateLazyFieldRules')
+      console.debug('ValidateLazyFieldRules')
       errors = attributeRules
         .reduce((errors: (boolean | string)[], rule: () => (boolean | string)) => {
           if (hasErrors) return errors
           const isValid = rule()
           if (isValid !== true) {
-            debug('EndEvaluationEarly')
+            console.debug('EndEvaluationEarly')
             hasErrors = true
           }
 
@@ -435,7 +433,7 @@ export class VPField extends Validatable<FieldOptions> {
           return errors
         }, [])
     } else {
-      debug('ValidateFullFieldRules')
+      console.debug('ValidateFullFieldRules')
       errors = attributeRules
         .map((rule: () => (boolean | string)) => {
           return rule()
@@ -443,7 +441,7 @@ export class VPField extends Validatable<FieldOptions> {
     }
 
     if (this.$options.ShowFieldRuleErrors) {
-      debug('ShowFieldRuleErrors')
+      console.debug('ShowFieldRuleErrors')
       const messages: string[] = errors.filter((error) =>
         typeof error === 'string' && error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
@@ -451,7 +449,7 @@ export class VPField extends Validatable<FieldOptions> {
 
     // Abort early if we have errors
     if (hasErrors) {
-      debug('AbortFieldEarly', this.$isValid)
+      console.debug('AbortFieldEarly', this.$isValid)
       this.$isValid = false
       return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
@@ -461,13 +459,13 @@ export class VPField extends Validatable<FieldOptions> {
     let customErrors: (boolean | string | Promise<boolean | string>)[]
     let hasCustomErrors = false
     if (this.$options.ValidateLazyCustomRules) {
-      debug('ValidateLazyCustomRules')
+      console.debug('ValidateLazyCustomRules')
       customErrors = customRules
         .reduce((errors: (boolean | string | Promise<(boolean | string)>)[], rule: CustomValidationRule) => {
           if (hasCustomErrors) return errors
           const isValid = rule(attributes, this.$element, this.$input as HTMLInputElement)
           if (!isAsync(isValid) && isValid !== true) {
-            debug('EndEvaluationEarly')
+            console.debug('EndEvaluationEarly')
             hasCustomErrors = true
           }
 
@@ -475,7 +473,7 @@ export class VPField extends Validatable<FieldOptions> {
           return errors
         }, [])
     } else {
-      debug('ValidateFullCustomRules')
+      console.debug('ValidateFullCustomRules')
       customErrors = customRules.map((func: CustomValidationRule) => {
         return func(attributes, this.$element, this.$input as HTMLInputElement)
       })
@@ -483,7 +481,7 @@ export class VPField extends Validatable<FieldOptions> {
 
     // Show custom error messages up to this point
     if (this.$options.ShowCustomRuleErrors) {
-      debug('ShowCustomRuleErrors')
+      console.debug('ShowCustomRuleErrors')
       const messages: string[] = customErrors
         .filter((error) => typeof error === 'string' && error.length > 0) as string[]
       this.addMessages(messages, this.$options.ErrorClassName)
@@ -491,14 +489,14 @@ export class VPField extends Validatable<FieldOptions> {
 
     // Abort early if we have errors
     if (hasCustomErrors) {
-      debug('AbortCustomEarly')
+      console.debug('AbortCustomEarly')
       this.$isValid = false
       return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
 
     this.formatInputPost();
     if (hasAsync(customErrors)) {
-      debug('Returning Async')
+      console.debug('Returning Async')
 
       // NOTE: If skipping asyncResolved, validation will waterfall the promise.
       // It is the developers responsibility to manage the behavior on their custom rules
@@ -535,7 +533,7 @@ export class VPField extends Validatable<FieldOptions> {
 
         Promise.all(promises)
           .then((isValid) => {
-            debug('Resolved Async', isValid)
+            console.debug('Resolved Async', isValid)
             const customErrors = isValid.filter((e) => e !== true)
 
             if (this.$options.ShowCustomRuleErrors) {
@@ -547,7 +545,7 @@ export class VPField extends Validatable<FieldOptions> {
             return resolve(this.$isValid)
           })
           .catch((err: (boolean | string | Error)) => {
-            debug('[VPField] Failed CustomRule Validation', err)
+            console.debug('[VPField] Failed CustomRule Validation', err)
 
             if (this.$options.ShowCustomRuleErrors) {
               if (err instanceof Error && err.message.length > 0) {
@@ -571,11 +569,10 @@ export class VPField extends Validatable<FieldOptions> {
 
   formatInputPre(): void {
     if (this.$formatterEvent.pre) {
-      debug('[VPField] Skipping pre formatter',
+      console.debug('[VPField] Skipping pre formatter',
         this.$formatterEvent.pre, this.$formatterEvent.post)
       return
     }
-    console.log('FORMAT PRE');
 
     this.$formatterEvent.pre = true
     InputFormatter(this, 'pre')
@@ -584,11 +581,10 @@ export class VPField extends Validatable<FieldOptions> {
 
   formatInputPost(): void {
     if (this.$formatterEvent.post || !this.$formatterEvent.pre) {
-      debug('[VPField] Skipping post formatter',
+      console.debug('[VPField] Skipping post formatter',
         this.$formatterEvent.pre, this.$formatterEvent.post)
       return
     }
-    console.log('FORMAT POST');
 
     this.$formatterEvent.post = true
     InputFormatter(this, 'post')

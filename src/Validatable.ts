@@ -1,6 +1,5 @@
 import merge from 'lodash/merge'
 
-import {debug} from 'src/util/debug'
 import {isSet} from 'src/util/isSet'
 
 import {VPOptions} from 'src/interfaces/VPOptions'
@@ -111,7 +110,7 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
       this.$options.ScrollAnchor.scrollIntoView(this.$options.ScrollOptions);
     }
     else {
-      debug('[VP] Element Scrolling is unavailable.')
+      console.debug('[VP] Element Scrolling is unavailable.')
     }
   }
 

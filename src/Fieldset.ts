@@ -1,5 +1,4 @@
 import merge from 'lodash/merge'
-import {debug} from 'src/util/debug'
 import {hasAsync} from 'src/util/hasAsync'
 
 import {VPFieldsetOptions, VPFieldOptions} from 'src/interfaces/VPOptions'
@@ -76,7 +75,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
    * helpers defined on this instance.
    * @param mutations
    */
-  $observe (mutations: MutationRecord[]) {
+  $observe (mutations: MutationRecord[]): void {
     for (const mutation of mutations) {
       if (mutation.type === 'childList') {
         const nodes = Array.from(mutation.removedNodes);
@@ -114,12 +113,12 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
     const fields = this.$options.ValidateVisible ? this.$visibleFields : this.$fields;
     const fieldsetStatus: (boolean | Promise<boolean>)[] = fields
       .map((field: VPField, index: number) => {
-        debug('[VPFieldset] Validating field', field)
+        console.debug('[VPFieldset] Validating field', field)
 
         // We already validated this, just take the value
         let valid: (boolean | Promise<boolean>)
         if (this.$cached.indexOf(field) !== -1 && typeof field.$valid === 'boolean') {
-          debug('[VPFieldset] Cached Valid', index)
+          console.debug('[VPFieldset] Cached Valid', index)
           valid = field.$valid
         }
         else {
@@ -135,12 +134,12 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
 
       return Promise.all(deferredFieldsetStatus)
         .then((statuses) => {
-          debug('[VPFieldset] Resolved deferred', statuses)
+          console.debug('[VPFieldset] Resolved deferred', statuses)
           this.$isValid = this.$strategy(statuses)
           return this.$isValid;
         })
         .catch((err) => {
-          debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
+          console.debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
           this.$isValid = false
           return this.$isValid
         });
@@ -151,7 +150,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
   }
 
   removeField (field: VPField): (VPField | undefined) {
-    debug('[VPFieldset] Removing field', field)
+    console.debug('[VPFieldset] Removing field', field)
 
     const index = this.$fields.indexOf(field)
     if (index !== -1) {
@@ -170,7 +169,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
   }
 
   addField (field: VPField, index = this.$fields.length): void {
-    debug('[VPFieldset] Adding field', field)
+    console.debug('[VPFieldset] Adding field', field)
     this.$fields.splice(index, 0, field);
 
     field.addEventListener('VPValidate', this.$fieldWatch.bind(this))
@@ -190,7 +189,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
   findFields (fieldOptions: (VPFieldOptions | VPFieldOptions[]) = {} as VPFieldOptions) : void {
     const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldClass))
     if (fields.length === 0) {
-      debug('[VPFieldset] Failed to find child fields')
+      console.debug('[VPFieldset] Failed to find child fields')
       return;
     }
 

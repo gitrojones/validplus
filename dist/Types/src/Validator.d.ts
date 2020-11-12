@@ -11,7 +11,6 @@ import { ValidatorOptions } from "./models/VPOptions/ValidatorOptions";
  */
 export declare class VPValidator extends Validatable<ValidatorOptions> {
     static Options: typeof ValidatorOptions;
-    $emitFieldsets: VPFieldset[];
     $fieldsets: VPFieldset[];
     $observer: MutationObserver | undefined;
     private get $visibleFieldsets();

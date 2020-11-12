@@ -6,7 +6,7 @@ module.exports = {
 	entry: {
 		validplus: path.resolve(__dirname, './validplus'),
 		vpvue: path.resolve(__dirname, './src/vue'),
-		'ssr/vpvue': path.resolve(__dirname, './src/vue/index.ssr')
+		'ssr/vpvue': path.resolve(__dirname, './src/vue/index.ssr'),
 	},
 
 	target: ['web', 'es5'],
@@ -42,10 +42,7 @@ module.exports = {
 		  new TerserPlugin({
 				terserOptions: {
 					compress: {
-						pure_funcs: ['debug']
-					},
-					mangle: {
-						reserved: [ 'debug' ]
+						// drop_console: true
 					}
 				}
 			})
