@@ -8,21 +8,21 @@ declare const EEMessaging: {
         $listeners: import("./interfaces/events/EventListener").EventListener;
         addEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): void;
         removeEventListener(type: string, callback: import("./interfaces/events/EventCallback").EventCallback): import("./interfaces/events/EventCallback").EventCallback | null;
-        dispatchEvent(event: Event, data?: any): boolean;
+        dispatchEvent(event: Event, data?: unknown): boolean;
         createEvent(eventName: string, options?: import("./interfaces/events/EventOptions").EventOptions | undefined): Event;
     };
 } & typeof DOMMessaging;
-export declare class Validatable extends EEMessaging {
-    static Options: typeof ValidatableOptions;
-    $options: VPOptions;
+export declare class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
+    $options: T;
     $element: HTMLElement;
     $lifecycleElements: HTMLElement[];
     $strategies: ValidationStrategies;
     $valid: boolean | null;
-    constructor(element: HTMLElement, options: VPOptions);
+    constructor(element: HTMLElement, options: (VPOptions<T> | ValidatableOptions<T>));
     get $isValid(): boolean | null;
     set $isValid(isValid: boolean | null);
-    setLifecycle(lifecycle: ValidationLifecycle): void;
+    scrollTo(): void;
+    setLifecycle(lifecycle: ValidationLifecycle<T>): void;
     isElementVisible(element: HTMLElement): boolean;
 }
 export {};

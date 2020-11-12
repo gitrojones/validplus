@@ -12,7 +12,7 @@ export declare function EventEmitter<TBase extends Constructor>(Base: TBase): {
          * @param event - the Event object to dispatch
          * @param data - Data to be passed to the callback
          */
-        dispatchEvent(event: Event, data?: any): boolean;
+        dispatchEvent(event: Event, data?: unknown): boolean;
         createEvent(eventName: string, options?: EventOptions | undefined): Event;
     };
 } & TBase;

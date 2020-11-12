@@ -1,6 +1,5 @@
 import { debug } from 'src/util/debug'
 import { hasAsync } from 'src/util/hasAsync'
-import { isAsync } from 'src/util/isAsync'
 
 import { VPValidatorOptions, VPFieldsetOptions } from 'src/interfaces/VPOptions'
 

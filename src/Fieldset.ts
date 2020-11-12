@@ -1,7 +1,6 @@
 import merge from 'lodash/merge'
 import {debug} from 'src/util/debug'
 import {hasAsync} from 'src/util/hasAsync'
-import {isAsync} from 'src/util/isAsync'
 
 import {VPFieldsetOptions, VPFieldOptions} from 'src/interfaces/VPOptions'
 import {ValidationStrategy} from 'src/interfaces/validation/ValidationStrategy'

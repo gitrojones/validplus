@@ -131,7 +131,7 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
   }
 
   if (typeof formatter === 'function') {
-    formatter(self.$input.value, self.$input, (event_name) =>
+    self.$input.value = formatter(self.$input.value, self.$input, (event_name) =>
       (self.$input as ValidInput).dispatchEvent(self.createEvent(event_name)));
 
     let event_type = 'input';
@@ -143,7 +143,6 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
     } else if (self.$input instanceof HTMLSelectElement) event_type = 'change';
 
     self.$input.dispatchEvent(self.createEvent(event_type));
-    self.$formatterEvent[type] = true // Mark the value as formatted
   }
 }
 
@@ -196,7 +195,7 @@ export class VPField extends Validatable&lt;FieldOptions> {
   $observer: MutationObserver | undefined
   $formatterEvent: { pre: boolean, post: boolean }
 
-  constructor (element: HTMLElement, options: (VPFieldOptions|FieldOptions) = {} as VPFieldOptions) {
+  constructor (element: HTMLElement, options: VPFieldOptions = {}) {
     if (!(element instanceof HTMLElement)) throw new Error('[VPField] Expected element')
     super(element, new VPField.Options(options, element))
 
@@ -218,6 +217,7 @@ export class VPField extends Validatable&lt;FieldOptions> {
   set $isValid (isValid: boolean | null) {
     super.$isValid = isValid;
     this.$canValidate = true;
+
     if (this.$options.Notify) {
       debug('[VPField] Notify parent')
       this.dispatchEvent(this.createEvent('VPValidate'), this)
@@ -256,7 +256,6 @@ export class VPField extends Validatable&lt;FieldOptions> {
    * @description
    * Binds to standard input lifecycle hooks and handles how/when validation occurs based
    * up on the event type fired and the internal state of the Field instance.
-   * @todo Audit behavior
    * @private
    */
   $inputHandler(e: Event): void {
@@ -267,17 +266,13 @@ export class VPField extends Validatable&lt;FieldOptions> {
     const dirty: boolean = this.$options.DirtyOn[eventType] || false
 
     if (dirty) this.$dirty = true;
-    const formatterEvent = this.$formatterEvent.pre || this.$formatterEvent.post
-
-    // We alias this for our purposes
-    if (format &amp;&amp; !formatterEvent) this.formatInputPre()
     if (this.$canValidate &amp;&amp; this.$dirty &amp;&amp; validate) {
-      this.isValid(true)
+      this.isValid()
     }
-    if (format &amp;&amp; !formatterEvent) this.formatInputPost()
-
-    this.$formatterEvent.pre = false
-    this.$formatterEvent.post = false
+    else if (format) {
+      this.formatInputPre();
+      this.formatInputPost()
+    }
   }
 
   /**
@@ -383,9 +378,9 @@ export class VPField extends Validatable&lt;FieldOptions> {
 
     const required = getAttributeIfSet&lt;string|boolean>(this.$input, 'required', false);
     const inputRules: HTMLValidationRules = filterNullObject({
-      min: toNumber(getAttributeIfSet(this.$input, 'min', null)),
+      min: ''+getAttributeIfSet&lt;string|null>(this.$input, 'min', null),
       minlength: toNumber(getAttributeIfSet(this.$input, 'minlength', null)),
-      max: toNumber(getAttributeIfSet(this.$input, 'max', null)),
+      max: ''+getAttributeIfSet&lt;string|null>(this.$input, 'max', null),
       maxlength: toNumber(getAttributeIfSet(this.$input, 'maxlength', null)),
       pattern: toRegexp(getAttributeIfSet(this.$input, 'pattern', null)),
       required: required === 'required' ? true : toBoolean&lt;null>(required, null)
@@ -395,14 +390,21 @@ export class VPField extends Validatable&lt;FieldOptions> {
       ? merge({}, inputRules, this.$options.InputRules)
       : merge({}, this.$options.InputRules, inputRules)
 
+    let name = getAttributeIfSet&lt;string|boolean>(this.$input, 'data-name');
+    if (typeof name !== 'string') {
+      const label = this.$element.querySelector('label[for="' + this.$input.id + '"]');
+      if (label) name = label.textContent as string;
+      if (!name) name = getAttributeIfSet&lt;string>(this.$input, 'name', 'Field');
+    }
+
     return {
       value: this.$input.value,
       checked: (this.$input instanceof HTMLSelectElement)
         ? false
         : (this.$input as HTMLInputElement).checked,
+      title: ''+getAttributeIfSet&lt;string>(this.$input, 'title', ''),
       type: this.$input.getAttribute('type'),
-      name: ''+getAttributeIfSet&lt;string|boolean>(this.$input, 'data-name',
-        getAttributeIfSet&lt;string>(this.$input, 'name', this.$input.tagName)),
+      name: name as string,
       rules
     }
   }
@@ -424,87 +426,99 @@ export class VPField extends Validatable&lt;FieldOptions> {
    */
   isValid (): (boolean | Promise&lt;boolean>) {
     this.$canValidate = false
-    if (!this.$formatterEvent.pre) this.formatInputPre();
+    this.formatInputPre();
     this.clearMessages()
 
     // Main validation loop
     const attributes = this.parseInput()
-    const { value, checked, type, name, rules } = attributes
+    const { value, checked, type, name, rules, title } = attributes
     const attributeRules: (() => (boolean | string))[] = [
       () => {
+        let valid = true;
         if (isSet(rules.min)) {
-          const numValue = toNumber(value)
-          const rule: number = rules.min as number
+          const DateTest = /[0-9]{4}-[0-9]{2}(-[0-9]{2})/;
 
-          if (numValue) {
-            return (numValue &lt; +rule)
-              ? `${name} must be more than ${rules.min}.`
-              : true
-          }
+          let numValue: (number|null);
+          if (DateTest.test(value)) numValue = toNumber(new Date(value));
+          else numValue = toNumber(value);
+
+          let rule: (number|null);
+          if (DateTest.test(rules.min as string)) rule = toNumber(new Date(rules.min as string));
+          else rule = toNumber(rules.min)
+
+          if (typeof numValue === 'number' &amp;&amp; typeof rule === 'number') valid = numValue >= rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at least ${rules.min}.`;
       },
       () => {
+        let valid = true;
         if (isSet(rules.max)) {
-          const rule: number = rules.max as number
+          const DateTest = /[0-9]{4}-[0-9]{2}(-[0-9]{2})/;
 
-          return (+value &lt;= +rule)
-            ? true
-            : `${name} must be less than ${rules.max}.`
+          let numValue: (number|null);
+          if (DateTest.test(value)) numValue = toNumber(new Date(value));
+          else numValue = toNumber(value);
+
+          let rule: (number|null);
+          if (DateTest.test(rules.max as string)) rule = toNumber(new Date(rules.max as string));
+          else rule = toNumber(rules.max)
+
+          if (typeof numValue === 'number' &amp;&amp; typeof rule === 'number') valid = numValue &lt;= rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at most ${rules.max}.`;
       },
       () => {
+        let valid = true;
         if (isSet(rules.minlength)) {
           const rule: number = rules.minlength as number
-          return (value.length >= +rule)
-            ? true
-            : `${name} must be ${rules.minlength} characters or more.`
+          valid = value.length >= +rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at least ${rules.minlength} characters.`
       },
       () => {
+        let valid = true;
         if (isSet(rules.maxlength)) {
           const rule: number = rules.maxlength as number
-          return (value.length &lt;= +rule)
-            ? true
-            : `${name} must be ${rules.maxlength} characters or less.`
+          valid = value.length &lt;= +rule;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} must be at most ${rules.maxlength} characters.`
       },
       () => {
-        if (isSet(rules.pattern)) {
-          const rule: (RegExp | string) = rules.pattern as RegExp
-
-          return (rules.pattern instanceof RegExp)
-            ? rules.pattern.test(value)
-            : (new RegExp(rule).test(value))
-              ? true
-              : `${name} is incorrectly formatted.`
+        let valid = true;
+        let error_message = `${name} is malformed.`
+        if (type === 'email') valid = /.+@.+\..+/.test(value)
+        if (valid &amp;&amp; isSet(rules.pattern)) {
+          if (title) error_message += ' ' + title
+          let rule: (RegExp | string) = rules.pattern as RegExp
+          if (!(rule instanceof RegExp)) rule = new RegExp(rule)
+          valid = rule.test(value);
         }
 
-        return true
+        if (valid) return true;
+        return error_message;
       },
       () => {
+        let valid;
         switch (type) {
         case 'radio':
         case 'checkbox':
           // One should always be selected if required
-          if (isSet(rules.required) &amp;&amp; rules.required) {
-            return checked ? true : `${name} is required.`
-          }
+          if (isSet(rules.required) &amp;&amp; rules.required) valid = checked;
           break
         default:
-          if (isSet(rules.required) &amp;&amp; rules.required) {
-            return value.length > 0 ? true : `${name} is required.`
-          }
+          if (isSet(rules.required) &amp;&amp; rules.required) valid = value.length > 0;
         }
 
-        return true
+        if (valid) return true;
+        return `${name} is required.`
       }
     ]
 
@@ -543,7 +557,7 @@ export class VPField extends Validatable&lt;FieldOptions> {
     if (hasErrors) {
       debug('AbortFieldEarly', this.$isValid)
       this.$isValid = false
-      return this.$isValid
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
 
     // Custom validation loop
@@ -583,10 +597,10 @@ export class VPField extends Validatable&lt;FieldOptions> {
     if (hasCustomErrors) {
       debug('AbortCustomEarly')
       this.$isValid = false
-      return this.$isValid
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
 
-    if (!this.$formatterEvent.post) this.formatInputPost();
+    this.formatInputPost();
     if (hasAsync(customErrors)) {
       debug('Returning Async')
 
@@ -654,16 +668,35 @@ export class VPField extends Validatable&lt;FieldOptions> {
     } else {
       this.$isValid = [...errors, ...customErrors]
         .every((err) => err === true)
-      return this.$isValid
+
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
   }
 
   formatInputPre(): void {
-    InputFormatter(this, 'pre');
+    if (this.$formatterEvent.pre) {
+      debug('[VPField] Skipping pre formatter',
+        this.$formatterEvent.pre, this.$formatterEvent.post)
+      return
+    }
+    console.log('FORMAT PRE');
+
+    this.$formatterEvent.pre = true
+    InputFormatter(this, 'pre')
+    this.$formatterEvent.post = false
   }
 
   formatInputPost(): void {
-    InputFormatter(this, 'post');
+    if (this.$formatterEvent.post || !this.$formatterEvent.pre) {
+      debug('[VPField] Skipping post formatter',
+        this.$formatterEvent.pre, this.$formatterEvent.post)
+      return
+    }
+    console.log('FORMAT POST');
+
+    this.$formatterEvent.post = true
+    InputFormatter(this, 'post')
+    this.$formatterEvent.pre = false
   }
 }
 </code></pre>

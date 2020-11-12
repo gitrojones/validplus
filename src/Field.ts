@@ -343,7 +343,6 @@ export class VPField extends Validatable<FieldOptions> {
           else rule = toNumber(rules.min)
 
           if (typeof numValue === 'number' && typeof rule === 'number') valid = numValue >= rule;
-          debug('[VPField] Malformed rule', numValue, rule);
         }
 
         if (valid) return true;
@@ -363,7 +362,6 @@ export class VPField extends Validatable<FieldOptions> {
           else rule = toNumber(rules.max)
 
           if (typeof numValue === 'number' && typeof rule === 'number') valid = numValue <= rule;
-          debug('[VPField] Malformed rule', numValue, rule);
         }
 
         if (valid) return true;
@@ -455,7 +453,7 @@ export class VPField extends Validatable<FieldOptions> {
     if (hasErrors) {
       debug('AbortFieldEarly', this.$isValid)
       this.$isValid = false
-      return this.$isValid
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
 
     // Custom validation loop
@@ -495,7 +493,7 @@ export class VPField extends Validatable<FieldOptions> {
     if (hasCustomErrors) {
       debug('AbortCustomEarly')
       this.$isValid = false
-      return this.$isValid
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
 
     this.formatInputPost();
@@ -566,7 +564,8 @@ export class VPField extends Validatable<FieldOptions> {
     } else {
       this.$isValid = [...errors, ...customErrors]
         .every((err) => err === true)
-      return this.$isValid
+
+      return this.$options.ValidateAsync ? Promise.resolve(this.$isValid) : this.$isValid
     }
   }
 

@@ -1,7 +1,7 @@
 export interface HTMLValidationRules {
     required: (boolean | null);
-    min?: number;
-    max?: number;
+    min?: string;
+    max?: string;
     minlength?: number;
     maxlength?: number;
     pattern?: RegExp;

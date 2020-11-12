@@ -1,1 +1,1 @@
-export declare function toBoolean(param: any, _default?: boolean | null): (boolean | null);
+export declare function toBoolean<T extends unknown>(param: any, _default?: boolean | T): (boolean | T);

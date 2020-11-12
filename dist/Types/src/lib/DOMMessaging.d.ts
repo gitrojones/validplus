@@ -61,9 +61,6 @@ export declare class DOMMessaging {
      * @throws If the $MessageNode isn't set or isn't an HTMLElement
      */
     removeMessage(message: string): void;
-    /**
-     * Clear all messages from the $MessageNode
-     * @throws If the $MessageNode isn't set or isn't an HTMLElement
-     */
+    /** Clear all messages from the $MessageNode (If set) */
     clearMessages(): void;
 }

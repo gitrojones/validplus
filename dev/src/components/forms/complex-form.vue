@@ -23,6 +23,8 @@
           <sui-input
             id="zipcode"
             type="text"
+            minlength="5"
+            maxlength="5"
             placeholder="ZIP Code"
             v-model="data.zipcode"
             required />
@@ -77,7 +79,8 @@ export default {
               blur: false
             },
             CustomRules: [
-              () => new Promise((resolve) => setTimeout(() => resolve('Please enter a Valid ZIP Code'), 5000))
+              () => new Promise((resolve) => setTimeout(() =>
+                  resolve(Math.random() > 0.5 ? 'Please enter a Valid ZIP Code' : true), 2000))
             ],
             InputFormatter: {
               pre: (value) => value.replace(/[^0-9]/g, '').substr(0, 5)
