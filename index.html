@@ -118,54 +118,43 @@
 
     <section>
         <article><h1>ValidPlus</h1>
-<p>Simple validation library designed to be platform agnostic. Features three levels of granularity allowing for Form-wide validation, Fieldset-wide validation and Field validation. Each level allows for onValid/onInvalid lifecycle hooks. Fields include basic support for DOM properties allowing you to couple validation as it makes sense.</p>
-<p>Fields are designed to validate on the same HTML validation properties which allows for fallback support in the case that javascript isn't available or is blocked.</p>
-<h2>PRs and Support</h2>
-<p>Pull requests are welcome. New functionality should be covered by tests if possible. Bug fixes are welcome but it is recommended you include a reproducible example test for the bug to speed up PRs. IE, if validation fails in a specific case, include an example test which is expected to fail on the current master and pass with the PR.</p>
-<h2>Test Coverage</h2>
-<p>Test coverage is focused on feature coverage. In order for a feature to be merged, it must have test coverage.
-<strong>All tests must pass in order for a PR to be merged</strong></p>
-<h2>Usage</h2>
-<p><code>import ValidPlus from 'validplus'</code></p>
-<h3>Validator</h3>
-<p>The main validation object. Marshals validation to descendants</p>
-<h5>API</h5>
-<p>See <a href="https://gitrojones.github.io/validplus/">Docs</a></p>
-<p>Option classes are provided for each Layer.
-<code>IE. (Valiator.Options, Fieldset.Options, Field.Options)</code></p>
-<p>These clases are optional, but provide support for typehinting outside of instantiation.</p>
-<h3>Package Size</h3>
+<p>Validplus is a validation enhancement library targeted at extending basic HTML DOM validation with smart features.</p>
+<h2>Enhancement Explanation</h2>
+<p>ValidPlus is designed to conform to the standard HTML5 validation spec for DOM Elements. This means, in cases where
+Javascript is disabled, validation will continue to function based on the browsers' validation implementation.</p>
+<h2>Package Size</h2>
 <p>The library comes in at:</p>
-<h4>ValidPlus</h4>
+<h3>ValidPlus</h3>
 <p>Core validation library</p>
 <pre class="prettyprint source"><code>|----------------------|
 | Raw  | GZip | Brotli |
 |------|------|--------|
-| 58kb | 18kb | 16kb   |
+| 52kb | 14kb | 13kb   |
 |------|------|--------|
 </code></pre>
-<h4>VPVue (Alpha)</h4>
+<h3>VPVue (Alpha)</h3>
 <p>VueJS Validation bindings</p>
 <pre class="prettyprint source"><code>|-----------------------|
 | Raw  | GZip  | Brotli |
 |------|-------|--------|
-| 14kb | 4.7kb | 4.2kb  |
+| 14kb | 5.3kb | 4.7kb  |
 |------|-------|--------|
 </code></pre>
-<h2>Notes</h2>
-<p>Required on inputs functions as usual <em>except</em> we support <code>required=&quot;false&quot;</code> in cases where an attribute is using data-binding. If the attribute resolves to null, required is ignored.</p>
+<h2>Test Coverage</h2>
+<p>Test coverage is an ongoing focus for this library. Pull requests must include test coverage in order to be considered.</p>
+<p><strong>All existing tests must pass in order for a PR to be merged</strong></p>
+<h2>Usage</h2>
+<pre class="prettyprint source"><code>import * as VP from 'validplus'
+const Validator = new VP.Validator(&lt;form_element>)
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>import { Validator, Fieldset, Field } from 'validplus'
+const Validator = new Validator(&lt;form_element>)
+</code></pre>
+<h3>API</h3>
+<p>See <a href="https://gitrojones.github.io/validplus/">Docs</a></p>
 <h3>Browser Support</h3>
-<p>Browser support extends to IE 9 tested. Might work on earlier versions, but has not been tested.
-Polyfills are included for:</p>
-<ul>
-<li>Array.From</li>
-<li>ChildNodeRemove</li>
-<li>ClassList (IE 6-9)</li>
-<li>Array.includes &amp;&amp; String.includes</li>
-<li>NodeList.forEach</li>
-<li>Element.prepend</li>
-</ul>
-<p>Further, this project depends on @babel/runtime as an external dependency as it is using plugin-transform-runtime.</p></article>
+<p>This library targets IE10+</p></article>
     </section>
 
 
