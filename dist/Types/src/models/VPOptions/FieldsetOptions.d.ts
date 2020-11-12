@@ -1,6 +1,6 @@
-import { VPFieldsetOptions } from "../../interfaces/VPOptions";
-import { ValidationOption } from "../../interfaces/validation/ValidationStrategy";
-import { ValidatableOptions } from "./ValidatableOptions";
+import { VPFieldsetOptions } from 'src/interfaces/VPOptions';
+import { ValidationOption } from 'src/interfaces/validation/ValidationStrategy';
+import { ValidatableOptions } from './ValidatableOptions';
 /**
  * Fieldset Options instance for VPFieldset
  * @category Options

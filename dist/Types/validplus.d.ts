@@ -16,6 +16,6 @@ import 'mdn-polyfills/Number.isNaN';
  * @param {VPFieldset} Fieldset - ValidPlus Fieldset
  * @param {VPField} Field - ValidPlus Field
  */
-export { VPValidator as Validator } from "./src/Validator";
-export { VPFieldset as Fieldset } from "./src/Fieldset";
-export { VPField as Field } from "./src/Field";
+export { VPValidator as Validator } from 'src/Validator';
+export { VPFieldset as Fieldset } from 'src/Fieldset';
+export { VPField as Field } from 'src/Field';

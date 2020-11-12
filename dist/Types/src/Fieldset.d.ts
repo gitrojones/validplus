@@ -1,8 +1,8 @@
-import { VPFieldsetOptions, VPFieldOptions } from "./interfaces/VPOptions";
-import { ValidationStrategy } from "./interfaces/validation/ValidationStrategy";
-import { VPField } from "./Field";
-import { Validatable } from "./Validatable";
-import { FieldsetOptions } from "./models/VPOptions/FieldsetOptions";
+import { VPFieldsetOptions, VPFieldOptions } from 'src/interfaces/VPOptions';
+import { ValidationStrategy } from 'src/interfaces/validation/ValidationStrategy';
+import { VPField } from 'src/Field';
+import { Validatable } from 'src/Validatable';
+import { FieldsetOptions } from 'src/models/VPOptions/FieldsetOptions';
 export declare class VPFieldset extends Validatable<FieldsetOptions> {
     static Options: typeof FieldsetOptions;
     $strategy: ValidationStrategy;

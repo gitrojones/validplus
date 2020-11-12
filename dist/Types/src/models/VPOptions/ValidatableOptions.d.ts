@@ -1,6 +1,6 @@
-import { VPOptions } from "../../interfaces/VPOptions";
-import { ValidationLifecycle } from "../../interfaces/validation/ValidationLifecycle";
-import { VerticalPosition } from "../../enums/Positions";
+import { VPOptions } from 'src/interfaces/VPOptions';
+import { ValidationLifecycle } from 'src/interfaces/validation/ValidationLifecycle';
+import { VerticalPosition } from 'src/enums/Positions';
 /**
  * Validatable Options generic for VPOptions
  * @category Options
