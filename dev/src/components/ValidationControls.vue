@@ -100,7 +100,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-import * as VP from 'validplus';
+// import * as VP from 'validplus';
 
 export default {
   props: {

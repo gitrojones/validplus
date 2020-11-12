@@ -278,7 +278,7 @@
 </template>
 
 <script>
-import * as VP from 'validplus';
+// import * as VP from 'validplus';
 import ValidationControls from "../ValidationControls";
 
 export default {

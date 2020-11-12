@@ -33,6 +33,7 @@ Test coverage is an ongoing focus for this library. Pull requests must include t
 **All existing tests must pass in order for a PR to be merged**
 
 ## Usage
+### Standard
 ```
 import * as VP from 'validplus'
 const Validator = new VP.Validator(<form_element>)
@@ -44,9 +45,27 @@ _or_
 import { Validator, Fieldset, Field } from 'validplus'
 const Validator = new Validator(<form_element>)
 ```
+### Browser
+```
+<script src="node_modules/validplus/dist/validplus.browser.js"> 
+```
+Exports `VP` to window.
+```
+const Validator = new VP.Validator(<form_element>)
+```
 
 ### API
 See [Docs](https://gitrojones.github.io/validplus/)
 
 ### Browser Support
-This library targets IE10+
+ValidPlus targets IE10+. 
+
+#### Standard Version
+This version targets a minimum bundle size, meaning it is the responsibility of the consuming project
+to include the proper polyfills via core-js and babel.
+
+#### Browser Version
+This version exports directly to the window and is intended to be used via a script tag. This version
+maximizes compatibility and includes all the necessary shims to run properly in IE10+.
+
+__NOTE__: It is highly recommended you utilize the standard version to minimize package size

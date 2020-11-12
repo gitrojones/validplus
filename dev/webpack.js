@@ -1,8 +1,21 @@
 const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const isDev = process.env.NODE_ENV === 'development';
+const babel_loader = {
+  loader: 'babel-loader',
+  options: {
+    presets: [
+      ['@babel/preset-env', {
+        targets: '>0.25%, not dead',
+        useBuiltIns: 'usage',
+        corejs: '3.6'
+      }]
+    ]
+  }
+}
 
 module.exports = {
   context: __dirname,
@@ -34,8 +47,8 @@ module.exports = {
   resolve: {
     alias: {
       'vue$': path.resolve(__dirname, '../node_modules/vue/dist/vue.js'),
-      'validplus': isDev ? path.resolve(__dirname, '../validplus.ts') : path.resolve(__dirname, '../dist/validplus.js'),
-      'vpvue': isDev ? path.resolve(__dirname, '../src/vue') : path.resolve(__dirname, '../dist/vpvue.js'),
+      'validplus': isDev ? path.resolve(__dirname, '../validplus.ts') : path.resolve(__dirname, '../dist/validplus-poly.js'),
+      'vpvue': isDev ? path.resolve(__dirname, '../src/vue') : path.resolve(__dirname, '../dist/vpvue-poly.js'),
       'dev': path.resolve(__dirname, './src'),
       'src': path.resolve(__dirname, '../src'),
       'lib': path.resolve(__dirname, '../lib')
@@ -62,7 +75,7 @@ module.exports = {
         test: /\.tsx?$/,
         exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file) && !/\/dist\//.test(file),
         use: [
-          'babel-loader',
+          babel_loader,
           {
             loader: 'ts-loader',
             options: {
@@ -74,7 +87,9 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file) && !/\/dist\//.test(file),
-        loader: 'babel-loader'
+        use: [
+          babel_loader
+        ]
       },
       {
         test: /\.css$/,
@@ -123,6 +138,11 @@ module.exports = {
     ]
   },
   plugins: [
+    new CopyPlugin({
+      patterns: [
+        { from: '../dist/validplus.browser.js' }
+      ]
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new VueLoaderPlugin()
   ]

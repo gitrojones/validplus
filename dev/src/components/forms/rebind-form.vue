@@ -103,7 +103,7 @@
 </template>
 
 <script>
-import * as VP from 'validplus';
+// import * as VP from 'validplus';
 
 export default {
   data() {
