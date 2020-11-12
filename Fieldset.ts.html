@@ -105,7 +105,6 @@
             <pre class="prettyprint source linenums"><code>import merge from 'lodash/merge'
 import {debug} from 'src/util/debug'
 import {hasAsync} from 'src/util/hasAsync'
-import {isAsync} from 'src/util/isAsync'
 
 import {VPFieldsetOptions, VPFieldOptions} from 'src/interfaces/VPOptions'
 import {ValidationStrategy} from 'src/interfaces/validation/ValidationStrategy'
@@ -168,6 +167,8 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
   get $isValid (): boolean | null { return super.$isValid; }
   set $isValid (isValid: boolean | null) {
     super.$isValid = isValid;
+    if (!isValid &amp;&amp; this.$options.ScrollTo) this.scrollTo();
+
     this.$cached = [];
     this.$canValidate = true;
   }
@@ -240,18 +241,15 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
         .then((statuses) => {
           debug('[VPFieldset] Resolved deferred', statuses)
           this.$isValid = this.$strategy(statuses)
-          if (!this.$isValid) this.$scrollTo()
           return this.$isValid;
         })
         .catch((err) => {
           debug('[VPFieldset] Failed to resolve deferred FieldSet Status', err)
           this.$isValid = false
-          this.$scrollTo()
           return this.$isValid
         });
     } else {
       this.$isValid = this.$strategy(fieldsetStatus as boolean[])
-      if (!this.$isValid) this.$scrollTo()
       return this.$isValid
     }
   }

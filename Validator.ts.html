@@ -104,7 +104,6 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { debug } from 'src/util/debug'
 import { hasAsync } from 'src/util/hasAsync'
-import { isAsync } from 'src/util/isAsync'
 
 import { VPValidatorOptions, VPFieldsetOptions } from 'src/interfaces/VPOptions'
 
@@ -303,7 +302,7 @@ export class VPValidator extends Validatable&lt;ValidatorOptions> {
     return undefined
   }
 
-  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[]) : VPFieldset {
+  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[] = []) : VPFieldset {
     const fieldset = new VPFieldset(fs, options);
     fields.forEach((field) => fieldset.addField(field));
 
