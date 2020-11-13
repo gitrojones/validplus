@@ -85,7 +85,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Validatable.html">Validatable</a></li><li><a href="VPField.html">VPField</a></li><li><a href="VPFieldset.html">VPFieldset</a></li><li><a href="VPValidator.html">VPValidator</a></li></ul></div><div class="category"><h2>Interfaces</h2><h3>Interfaces</h3><ul><li><a href="CustomValidationRule.html">CustomValidationRule</a></li><li><a href="HTMLValidationRules.html">HTMLValidationRules</a></li><li><a href="InputFormatters.html">InputFormatters</a></li><li><a href="ValidationAttributes.html">ValidationAttributes</a></li><li><a href="ValidationLifecycle.html">ValidationLifecycle</a></li><li><a href="ValidationStrategies.html">ValidationStrategies</a></li><li><a href="ValidationStrategy.html">ValidationStrategy</a></li></ul></div><div class="category"><h2>Lib</h2><h3>Modules</h3><ul><li><a href="module-EventEmitter.html">EventEmitter</a></li></ul><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div><div class="category"><h2>Types</h2><h3><a href="global.html">Global</a></h3></div>
                 
             </nav>
         </div>
@@ -116,6 +116,60 @@ import {toBoolean} from 'src/util/casts/toBoolean'
 import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
 import IEVersion from 'src/util/IEVersion'
 
+/**
+ * VPFieldset Instance
+ * @description
+ * Fieldset instances are responsible for managing the relationship between fields. Fieldset instances
+ * are capable of validating fields based upon a relationship, such as checkbox/radio fields being interdependent.
+ * @example
+ * // DOM Bindings, All Fields must validate true
+ * &lt;div id="sample_fieldset" class="VPFieldset" vp-find>
+ *   &lt;div class="VPField" vp-notify="false">
+ *     &lt;input id="first-name" aria-label="First Name" name="first-name" type="text" required="required" />
+ *   &lt;/div>
+ *
+ *   &lt;div class="VPField" vp-notify="false">
+ *     &lt;input id="last-name" aria-label="Last Name" name="last-name" type="text" required="required" />
+ *   &lt;/div>
+ * &lt;/div>
+ *
+ * @example
+ * // DOM Bindings, One field must be true
+ * &lt;div id="sample_fieldset" class="VPFieldset" vp-strategy="one" vp-find>
+ *  &lt;div class="VPField">
+ *    &lt;label for="option_one">
+ *      &lt;input id="option_one" name="option-one" type="radio" value="one" required="required" />
+ *      Option #1
+ *    &lt;/label>
+ *  &lt;/div>
+ *
+ *  &lt;div class="VPField">
+ *    &lt;label for="option_two">
+ *      &lt;input id="option_two" name="option-two" type="radio" value="two" required="required" />
+ *      Option #2
+ *    &lt;/label>
+ *  &lt;/div>
+ *
+ *  &lt;div class="VPField">
+ *    &lt;label for="option_three">
+ *      &lt;input id="option_three" name="option-three" type="radio" value="three" required="required" />
+ *      Option #3
+ *    &lt;/label>
+ *  &lt;/div>
+ * &lt;/div>
+ * @example
+ * // Programmic bindings
+ * const fieldset = new VP.Fieldset(document.getElementById('sample_fieldset'), {
+ *    ValidationStrategy: "one"
+ * });
+ * const option_one_field = new VP.Field(document.getElementsById('field_one'))
+ * const option_two_field = new VP.Field(document.getElementsById('field_two'))
+ * const option_three_field = new VP.Field(document.getElementsById('field_three'))
+ * fieldset.addField(option_one_field);
+ * fieldset.addField(option_two_field);
+ * fieldset.addField(option_three_field);
+ * @augments Validatable
+ */
 export class VPFieldset extends Validatable&lt;FieldsetOptions> {
   static Options = FieldsetOptions;
 
@@ -177,7 +231,7 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
    * handle removing tracked nodes which are removed from the DOM.
    * If supporting sub IE11, you must do this yourself using the removeField
    * helpers defined on this instance.
-   * @param mutations
+   * @private
    */
   $observe (mutations: MutationRecord[]): void {
     for (const mutation of mutations) {
@@ -211,6 +265,16 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
     this.removeField(field);
   }
 
+  /**
+   * Validation Cycle
+   * @description
+   * Standard Validation cycle for the Fieldset instance.
+   *
+   * + Validation will validate all tracked Fields
+   * + Validation will return as either synchronous validation or asynchronous based on field responses.
+   * + If Lazy, validation will stop at the first error
+   * @returns (boolean|Promise.&lt;boolean>)
+   */
   isValid (): (boolean | Promise&lt;boolean>) {
     this.$canValidate = false;
     this.clearMessages()
@@ -253,6 +317,10 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
     }
   }
 
+  /**
+   * Remove a tracked field from this fieldset
+   * @param {VPField} field - Field instance to remove
+   */
   removeField (field: VPField): (VPField | undefined) {
     console.debug('[VPFieldset] Removing field', field)
 
@@ -272,6 +340,11 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
     return;
   }
 
+  /**
+   * Add a field instance to be tracked
+   * @param {VPField} field - Field to track
+   * @param {number} [index] - Indicate the field order to track by
+   */
   addField (field: VPField, index = this.$fields.length): void {
     console.debug('[VPFieldset] Adding field', field)
     this.$fields.splice(index, 0, field);
@@ -280,6 +353,11 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
     field.addEventListener('VPRemove', this.$fieldRemove.bind(this));
   }
 
+  /**
+   * Helper method for creating a new Field to automatically track
+   * @param {HTMLElement} el - Field Element
+   * @param {VPFieldOptions} options - Options to apply to the field instance
+   */
   createField (el: HTMLElement, options: VPFieldOptions): VPField {
     if (!(el instanceof Element)) {
       throw new Error('[VPFieldset] Field Element must be a valid DOMElement.')
@@ -290,6 +368,10 @@ export class VPFieldset extends Validatable&lt;FieldsetOptions> {
     return field
   }
 
+  /**
+   * Helper for automatically parsing child elements for Fields
+   * @param {VPFieldOptions|VPFieldOptions[]} [fieldOptions] - Options to apply to the found fields. If array, options will apply based on index
+   */
   findFields (fieldOptions: (VPFieldOptions | VPFieldOptions[]) = {} as VPFieldOptions) : void {
     const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldClass))
     if (fields.length === 0) {

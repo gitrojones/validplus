@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> VPField</title>
+  <title> Validatable</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -91,7 +91,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>VPField</h1>
+                    <h1>Validatable</h1>
                 </header>
                 
 
@@ -102,9 +102,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>VPField<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Validatable<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description"><p>VPField Instance</p></div>
+            <div class="class-description"><p>VPValidatable Generic</p></div>
         
     
 </header>
@@ -123,12 +123,12 @@
 
 
     
-    <h4 class="name" id="VPField">
-        <a class="href-link" href="#VPField">#</a>
+    <h4 class="name" id="Validatable">
+        <a class="href-link" href="#Validatable">#</a>
         
         <span class="code-name">
             
-                new VPField<span class="signature">()</span><span class="type-signature"></span>
+                new Validatable<span class="signature">()</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -137,8 +137,7 @@
     
     
     <div class="description">
-        <p>Field instances are responsible for managing the internal state of individual fields. Field instances
-are capable of formatting input and validating input based on various events. See examples for more information.</p>
+        <p>Generic instance all Validatable instances inherit from. Defines default shared logic and interfaces.</p>
     </div>
     
 
@@ -187,9 +186,9 @@ are capable of formatting input and validating input based on various events. Se
 
     
         <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
+            <a href="Validatable.ts.html" class="button">View Source</a>
             <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line71">line 71</a>
+                <a href="Validatable.ts.html">Validatable.ts</a>, <a href="Validatable.ts.html#line16">line 16</a>
             </span>
         </p>
     
@@ -215,44 +214,6 @@ are capable of formatting input and validating input based on various events. Se
 
 
 
-    <h5>Examples</h5>
-    
-    
-        <pre class="prettyprint"><code>// Simple DOM Binding, Field will be required
-&lt;div class="VPField">
-  &lt;input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
-&lt;/div></code></pre>
-    
-
-    
-        <pre class="prettyprint"><code>// Simple DOM Binding, pattern matching an email /.+@.+\..+/
-&lt;div class="VPField">
-  &lt;label for="email">Email Address&lt;/label>
-  &lt;input id="email" name="email" type="email" />
-&lt;/div></code></pre>
-    
-
-    
-        <pre class="prettyprint"><code>// Programmic bindings, phone number w/ input formatter
-const field = new VP.Field(document.getElementById('phone'), {
-   InputFormatter: {
-     pre: (value) => value.replace(/[^0-9]/g, ''),
-     post: (value) => {
-       const areaCode = value.substr(0, 3)
-       const local = value.substr(3, 3)
-       const number = value.substr(6, 4)
-
-       let mask = '('
-       if (areaCode.length > 0) mask += areaCode
-       if (local.length > 0) mask += ') ' + local
-       if (number.length > 0) mask += '-' + number
-       return mask
-     }
-   }
-});</code></pre>
-    
-
-
 
                     </div>
                 </div>
@@ -268,7 +229,9 @@ const field = new VP.Field(document.getElementById('phone'), {
 
 
     <ul>
-        <li><a href="Validatable.html">Validatable</a></li>
+        <li><a href="module-EventEmitter.html">module:EventEmitter</a></li>
+    
+        <li><a href="DOMMessaging.html">DOMMessaging</a></li>
     </ul>
 
 
@@ -280,7 +243,7 @@ const field = new VP.Field(document.getElementById('phone'), {
         <h3 class="subsection-title">Classes</h3>
 
         <dl>
-            <dt><a href="VPField.html">VPField</a></dt>
+            <dt><a href="Validatable.html">Validatable</a></dt>
             <dd></dd>
         </dl>
     
@@ -419,7 +382,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#addEventListener">Validatable#addEventListener</a>
+        <a href="module-EventEmitter.html#addEventListener">module:EventEmitter#addEventListener</a>
     </li></ul></dd>
     
 
@@ -607,7 +570,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#addMessage">Validatable#addMessage</a>
+        <a href="DOMMessaging.html#addMessage">DOMMessaging#addMessage</a>
     </li></ul></dd>
     
 
@@ -812,7 +775,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#addMessages">Validatable#addMessages</a>
+        <a href="DOMMessaging.html#addMessages">DOMMessaging#addMessages</a>
     </li></ul></dd>
     
 
@@ -931,7 +894,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#clearMessages">Validatable#clearMessages</a>
+        <a href="DOMMessaging.html#clearMessages">DOMMessaging#clearMessages</a>
     </li></ul></dd>
     
 
@@ -1109,7 +1072,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#createEvent">Validatable#createEvent</a>
+        <a href="module-EventEmitter.html#createEvent">module:EventEmitter#createEvent</a>
     </li></ul></dd>
     
 
@@ -1310,7 +1273,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#dispatchEvent">Validatable#dispatchEvent</a>
+        <a href="module-EventEmitter.html#dispatchEvent">module:EventEmitter#dispatchEvent</a>
     </li></ul></dd>
     
 
@@ -1523,7 +1486,7 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#generateMessageNode">Validatable#generateMessageNode</a>
+        <a href="DOMMessaging.html#generateMessageNode">DOMMessaging#generateMessageNode</a>
     </li></ul></dd>
     
 
@@ -1705,11 +1668,6 @@ const field = new VP.Field(document.getElementById('phone'), {
     
 
     
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#isElementVisible">Validatable#isElementVisible</a>
-    </li></ul></dd>
-    
 
     
 
@@ -1775,330 +1733,6 @@ const field = new VP.Field(document.getElementById('phone'), {
                 
         </div>
     </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="isValid">
-        <a class="href-link" href="#isValid">#</a>
-        
-        <span class="code-name">
-            
-                isValid<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Standard Validation cycle for the Field instance.</p>
-<ul>
-<li>Validation can occur as either synchronous validation or asynchronous validation.</li>
-<li>Validation emulates standard DOM validation</li>
-<li>Validation consumes custom validation rules
-<ul>
-<li>If Validation rules are all synchronous, isValid will be synchronous</li>
-<li>If Validation rules are async, isValid will be asynchronous</li>
-<li>If ValidateAsync option is enabled, isValid will <em>ALWAYS</em> be asynchronous</li>
-</ul>
-</li>
-</ul>
-<p>This method applies the necessary formatting for input values, if defined.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
-            <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line291">line 291</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>(boolean|Promise.<boolean>)</p></div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="parseInput">
-        <a class="href-link" href="#parseInput">#</a>
-        
-        <span class="code-name">
-            
-                parseInput<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Parses the internally tracked input and returns a standard interface used internally for
-the validation cycle.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
-            <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line241">line 241</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="remove">
-        <a class="href-link" href="#remove">#</a>
-        
-        <span class="code-name">
-            
-                remove<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Notify parent that this field should be removed from tracking. This is handled automatically
-if using a modern browser where MutationObservers are support (IE11+). For most use-cases,
-this can be safely ignored; This method is provided for very specific edge cases where
-the internally tracked input may be removed after initialization.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
-            <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line232">line 232</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2226,7 +1860,7 @@ the internally tracked input may be removed after initialization.</p>
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#removeEventListener">Validatable#removeEventListener</a>
+        <a href="module-EventEmitter.html#removeEventListener">module:EventEmitter#removeEventListener</a>
     </li></ul></dd>
     
 
@@ -2400,7 +2034,7 @@ the internally tracked input may be removed after initialization.</p>
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#removeMessage">Validatable#removeMessage</a>
+        <a href="DOMMessaging.html#removeMessage">DOMMessaging#removeMessage</a>
     </li></ul></dd>
     
 
@@ -2519,7 +2153,7 @@ the internally tracked input may be removed after initialization.</p>
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#removeMessageNode">Validatable#removeMessageNode</a>
+        <a href="DOMMessaging.html#removeMessageNode">DOMMessaging#removeMessageNode</a>
     </li></ul></dd>
     
 
@@ -2635,11 +2269,6 @@ the internally tracked input may be removed after initialization.</p>
 
     
 
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="Validatable.html#scrollTo">Validatable#scrollTo</a>
-    </li></ul></dd>
     
 
     

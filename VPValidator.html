@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> VPField</title>
+  <title> VPValidator</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -91,7 +91,7 @@
             <div class="content">
                 <header class="page-title">
                     <p>Class</p>
-                    <h1>VPField</h1>
+                    <h1>VPValidator</h1>
                 </header>
                 
 
@@ -102,9 +102,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>VPField<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>VPValidator<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description"><p>VPField Instance</p></div>
+            <div class="class-description"><p>VPValidator Instance</p></div>
         
     
 </header>
@@ -123,12 +123,12 @@
 
 
     
-    <h4 class="name" id="VPField">
-        <a class="href-link" href="#VPField">#</a>
+    <h4 class="name" id="VPValidator">
+        <a class="href-link" href="#VPValidator">#</a>
         
         <span class="code-name">
             
-                new VPField<span class="signature">()</span><span class="type-signature"></span>
+                new VPValidator<span class="signature">()</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -137,8 +137,8 @@
     
     
     <div class="description">
-        <p>Field instances are responsible for managing the internal state of individual fields. Field instances
-are capable of formatting input and validating input based on various events. See examples for more information.</p>
+        <p>Validator instances are responsible for managing fieldsets. Validator instances
+are capable of dispatching validation on all fieldsets (and fields), allowing for a single &quot;isValid&quot; check.</p>
     </div>
     
 
@@ -187,9 +187,9 @@ are capable of formatting input and validating input based on various events. Se
 
     
         <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
+            <a href="Validator.ts.html" class="button">View Source</a>
             <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line71">line 71</a>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line21">line 21</a>
             </span>
         </p>
     
@@ -215,41 +215,15 @@ are capable of formatting input and validating input based on various events. Se
 
 
 
-    <h5>Examples</h5>
+    <h5>Example</h5>
     
     
-        <pre class="prettyprint"><code>// Simple DOM Binding, Field will be required
-&lt;div class="VPField">
-  &lt;input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
-&lt;/div></code></pre>
-    
+        <pre class="prettyprint"><code>&lt;form id="sample_form">
+  ...
+&lt;/form>
 
-    
-        <pre class="prettyprint"><code>// Simple DOM Binding, pattern matching an email /.+@.+\..+/
-&lt;div class="VPField">
-  &lt;label for="email">Email Address&lt;/label>
-  &lt;input id="email" name="email" type="email" />
-&lt;/div></code></pre>
-    
-
-    
-        <pre class="prettyprint"><code>// Programmic bindings, phone number w/ input formatter
-const field = new VP.Field(document.getElementById('phone'), {
-   InputFormatter: {
-     pre: (value) => value.replace(/[^0-9]/g, ''),
-     post: (value) => {
-       const areaCode = value.substr(0, 3)
-       const local = value.substr(3, 3)
-       const number = value.substr(6, 4)
-
-       let mask = '('
-       if (areaCode.length > 0) mask += areaCode
-       if (local.length > 0) mask += ') ' + local
-       if (number.length > 0) mask += '-' + number
-       return mask
-     }
-   }
-});</code></pre>
+const Validator = new VP.Validator(
+ document.getElementById('sample_form'), &lt;options>);</code></pre>
     
 
 
@@ -280,7 +254,7 @@ const field = new VP.Field(document.getElementById('phone'), {
         <h3 class="subsection-title">Classes</h3>
 
         <dl>
-            <dt><a href="VPField.html">VPField</a></dt>
+            <dt><a href="VPValidator.html">VPValidator</a></dt>
             <dd></dd>
         </dl>
     
@@ -449,6 +423,199 @@ const field = new VP.Field(document.getElementById('phone'), {
             <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
                 <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line22">line 22</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="addFieldset">
+        <a class="href-link" href="#addFieldset">#</a>
+        
+        <span class="code-name">
+            
+                addFieldset<span class="signature">(fieldset, index<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Add a fieldset instance to be tracked</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fieldset</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="VPFieldset.html">VPFieldset</a></span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Fieldset to track</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>index</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">number</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Indicate the fieldset order to track by</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Validator.ts.html" class="button">View Source</a>
+            <span>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line166">line 166</a>
             </span>
         </p>
     
@@ -1193,6 +1360,232 @@ const field = new VP.Field(document.getElementById('phone'), {
 
 
     
+    <h4 class="name" id="createFieldset">
+        <a class="href-link" href="#createFieldset">#</a>
+        
+        <span class="code-name">
+            
+                createFieldset<span class="signature">(el, options, fields<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Helper method for creating a new Fieldset to automatically track</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>el</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">HTMLElement</span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Fieldset element</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>options</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Options to apply to the fieldset instance</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fields</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">Array.&lt;<a href="VPField.html">VPField</a>></span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Fields to append to the fieldset</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Validator.ts.html" class="button">View Source</a>
+            <span>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line191">line 191</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
     <h4 class="name" id="dispatchEvent">
         <a class="href-link" href="#dispatchEvent">#</a>
         
@@ -1384,6 +1777,169 @@ const field = new VP.Field(document.getElementById('phone'), {
                 
         </div>
     </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="findFieldsets">
+        <a class="href-link" href="#findFieldsets">#</a>
+        
+        <span class="code-name">
+            
+                findFieldsets<span class="signature">(fieldsetOptions<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Helper for automatically parsing child elements for Fieldsets</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+            <th>Attributes</th>
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fieldsetOptions</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></span>
+|
+
+<span class="param-type">Array.&lt;<a href="VPFieldsetOptions.html">VPFieldsetOptions</a>></span>
+
+
+  
+  </td>
+
+  
+      <td class="attributes">
+      
+          &lt;optional><br>
+      
+
+      
+
+      
+      </td>
+  
+
+  
+
+  <td class="description last"><p>Options to apply to the found fieldsets. If array, options will apply based on index</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Validator.ts.html" class="button">View Source</a>
+            <span>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line201">line 201</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1799,19 +2355,14 @@ const field = new VP.Field(document.getElementById('phone'), {
     
     
     <div class="description">
-        <p>Standard Validation cycle for the Field instance.</p>
-<ul>
-<li>Validation can occur as either synchronous validation or asynchronous validation.</li>
-<li>Validation emulates standard DOM validation</li>
-<li>Validation consumes custom validation rules
-<ul>
-<li>If Validation rules are all synchronous, isValid will be synchronous</li>
-<li>If Validation rules are async, isValid will be asynchronous</li>
-<li>If ValidateAsync option is enabled, isValid will <em>ALWAYS</em> be asynchronous</li>
-</ul>
-</li>
-</ul>
-<p>This method applies the necessary formatting for input values, if defined.</p>
+        <p>IsValid is a standard method for validating the internal state
+of a validator and all it's associated fieldsets (and fields). This method supports dynamic
+checks for determining if validation should be performed async or sync.</p>
+<p>If any custom validation rules resolve async, validation will be performed async. Otherwise,
+all validation is performed synchronously. Optionally, You may enforce async validation through
+a validation option. This will enforce all validation is returned as a promise.</p>
+<p>Further, this validation library is capable of short-circuit validation. Lazy validation will
+stop validation on the first instance of an error.</p>
     </div>
     
 
@@ -1855,229 +2406,21 @@ const field = new VP.Field(document.getElementById('phone'), {
     
 
     
-
-    
-
-    
-        <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
-            <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line291">line 291</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Returns:</label></div>
-        <div class="column is-10">
-            
-                    
-
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>(boolean|Promise.<boolean>)</p></div>
-    
-    
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="parseInput">
-        <a class="href-link" href="#parseInput">#</a>
-        
-        <span class="code-name">
-            
-                parseInput<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Parses the internally tracked input and returns a standard interface used internally for
-the validation cycle.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="ValidatorOptions.html">ValidatorOptions</a></li>
+        </ul>
+    </dd>
     
 
     
 
     
         <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
+            <a href="Validator.ts.html" class="button">View Source</a>
             <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line241">line 241</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="remove">
-        <a class="href-link" href="#remove">#</a>
-        
-        <span class="code-name">
-            
-                remove<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Notify parent that this field should be removed from tracking. This is handled automatically
-if using a modern browser where MutationObservers are support (IE11+). For most use-cases,
-this can be safely ignored; This method is provided for very specific edge cases where
-the internally tracked input may be removed after initialization.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="Field.ts.html" class="button">View Source</a>
-            <span>
-                <a href="Field.ts.html">Field.ts</a>, <a href="Field.ts.html#line232">line 232</a>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line90">line 90</a>
             </span>
         </p>
     
@@ -2303,6 +2646,154 @@ the internally tracked input may be removed after initialization.</p>
                 
         </div>
     </div>
+
+
+
+
+</div>
+            
+                <div class="member">
+
+
+    
+    <h4 class="name" id="removeFieldset">
+        <a class="href-link" href="#removeFieldset">#</a>
+        
+        <span class="code-name">
+            
+                removeFieldset<span class="signature">(fieldset)</span><span class="type-signature"></span>
+            
+        </span>
+    </h4>
+    
+
+    
+    
+    <div class="description">
+        <p>Remove a tracked fieldset from this validator</p>
+    </div>
+    
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>fieldset</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type"><a href="VPFieldset.html">VPFieldset</a></span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Fieldset instance to remove</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+
+    
+
+    
+        <p class="tag-source">
+            <a href="Validator.ts.html" class="button">View Source</a>
+            <span>
+                <a href="Validator.ts.html">Validator.ts</a>, <a href="Validator.ts.html#line173">line 173</a>
+            </span>
+        </p>
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

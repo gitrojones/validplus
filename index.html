@@ -83,7 +83,7 @@
             
             <nav>
                 
-                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li><li><a href="VPField.html">VPField</a></li></ul><h3>Global</h3><ul><li><a href="global.html#dispatchEvent">dispatchEvent</a></li><li><a href="global.html#VPValidator">VPValidator</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div>
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Validatable.html">Validatable</a></li><li><a href="VPField.html">VPField</a></li><li><a href="VPFieldset.html">VPFieldset</a></li><li><a href="VPValidator.html">VPValidator</a></li></ul></div><div class="category"><h2>Interfaces</h2><h3>Interfaces</h3><ul><li><a href="CustomValidationRule.html">CustomValidationRule</a></li><li><a href="HTMLValidationRules.html">HTMLValidationRules</a></li><li><a href="InputFormatters.html">InputFormatters</a></li><li><a href="ValidationAttributes.html">ValidationAttributes</a></li><li><a href="ValidationLifecycle.html">ValidationLifecycle</a></li><li><a href="ValidationStrategies.html">ValidationStrategies</a></li><li><a href="ValidationStrategy.html">ValidationStrategy</a></li></ul></div><div class="category"><h2>Lib</h2><h3>Modules</h3><ul><li><a href="module-EventEmitter.html">EventEmitter</a></li></ul><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div><div class="category"><h2>Types</h2><h3><a href="global.html">Global</a></h3></div>
                 
             </nav>
         </div>
@@ -205,6 +205,23 @@ const Fieldset = Validator.createFieldset(
 Fieldset.createField(
     document.getElementsById('sample_field'), &lt;options>)
 </code></pre>
+<h3>Validation</h3>
+<p>Form submit validation check</p>
+<pre class="prettyprint source"><code>// Submit Event
+(e) => {
+    if (!Validator.isValid()) e.preventDefault();
+}
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>// Submit Event
+(e) => {
+    e.preventDefault()
+    Validator.isValid().then((isValid) => {
+        if (isValid) e.submit()
+    });
+}
+</code></pre>
+<p><strong>NOTE</strong>: When using async rules, you must interrupt form submission to await results.</p>
 <h3>Options</h3>
 <h4>All</h4>
 <ul>
@@ -394,6 +411,25 @@ Fieldset.createField(
 </ul>
 </li>
 </ul>
+<h3>Validation Lifecycle</h3>
+<p>All validatable instances can define additional lifecycle messages and hooks to fire based on the outcome of validation.</p>
+<p>ValidationLifeycle is defined as:</p>
+<pre class="prettyprint source"><code>ValidationLifecycle: {
+    Valid: {
+        Message: '',
+        CB: [
+            (instance) => {
+                // Some action, such as commit to store,
+                // or save to localstorage state.
+            }
+        ],
+    },
+    Invalid: {
+        Message: 'Field is invalid!',
+        CB: []
+    }
+}
+</code></pre>
 <h3>Standard Validation</h3>
 <p>Standard validation emulates the regular validation a modern web browser will do on basic HTML inputs.</p>
 <p>This validation includes the following properties:</p>
@@ -440,15 +476,6 @@ synchronous or asynchronous.</p>
 <p>Custom rules may return a boolean to indicate validity, or a string to provide a failure message.</p>
 <p><strong>NOTE</strong>: if using async rules and not enforcing AsyncResolved, isValid may return
 a <code>boolean</code> or a <code>Promise&lt;boolean&gt;</code>, depending on whether the async rule is resolved or not.</p>
-<p><strong>NOTE2</strong>: When using async rules, you must interrupt form submission to await results.</p>
-<pre class="prettyprint source"><code>// Submit Event
-(e) => {
-    e.preventDefault()
-    Validator.isValid().then((isValid) => {
-        if (isValid) e.submit()
-    });
-}
-</code></pre>
 <h3>Input Formatter</h3>
 <p>Input formatters allow for formatting a value for pretty output to users. Common use cases
 include phone number masks or enforcing maximum value lengths.</p>

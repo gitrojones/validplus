@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> DOMMessaging</title>
+  <title> EventEmitter</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,8 +90,8 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Class</p>
-                    <h1>DOMMessaging</h1>
+                    <p>Module</p>
+                    <h1>EventEmitter</h1>
                 </header>
                 
 
@@ -102,9 +102,8 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>DOMMessaging<span class="signature">()</span><span class="type-signature"></span></h2>
         
-            <div class="class-description"><p>Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement</p></div>
+            
         
     
 </header>
@@ -113,140 +112,23 @@
     <div class="container-overview">
     
         
-            <div class='vertical-section'>
-                <div class="members">
-                    <div class="member">
-                        <div class=name>
-                            <span class="tag">Constructor</span>
-                        </div>
-                        
-
-
-    
-    <h4 class="name" id="DOMMessaging">
-        <a class="href-link" href="#DOMMessaging">#</a>
+            <div class="description"><p>Implements a basic version of the Event interface, allowing for
+messages and data to be passed between child/parent.</p></div>
         
-        <span class="code-name">
-            
-                new DOMMessaging<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>$MessageAnchor</code></td>
-    
-
-    <td class="type">
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>The anchor element where the $MessageNode will be rigged to</p></td>
-</tr>
 
         
             
-<tr class="deep-level-0">
-    
-        <td class="name"><code>$MessageContainerClassName</code></td>
-    
 
-    <td class="type">
-    
-    </td>
 
-    
 
-    
 
-    <td class="description last"><p>The $MessageNode default class name</p></td>
-</tr>
 
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>$MessageClassName</code></td>
-    
 
-    <td class="type">
-    
-    </td>
 
-    
 
-    
 
-    <td class="description last"><p>The individual message nodes default class name</p></td>
-</tr>
 
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>$MessageNode</code></td>
-    
 
-    <td class="type">
-    
-    </td>
-
-    
-
-    
-
-    <td class="description last"><p>The node where messages will be appended</p></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
 
 
 
@@ -283,9 +165,9 @@
 
     
         <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
+            <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line12">line 12</a>
+                <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line3">line 3</a>
             </span>
         </p>
     
@@ -312,9 +194,6 @@
 
 
 
-                    </div>
-                </div>
-            </div>
         
     
     </div>
@@ -323,13 +202,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="DOMMessaging.html">DOMMessaging</a></dt>
-            <dd></dd>
-        </dl>
     
 
     
@@ -349,12 +221,12 @@
 
 
     
-    <h4 class="name" id="addMessage">
-        <a class="href-link" href="#addMessage">#</a>
+    <h4 class="name" id="addEventListener">
+        <a class="href-link" href="#addEventListener">#</a>
         
         <span class="code-name">
             
-                addMessage<span class="signature">(message, status<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+                addEventListener<span class="signature">(event_name, callback)</span><span class="type-signature"></span>
             
         </span>
     </h4>
@@ -363,7 +235,7 @@
     
     
     <div class="description">
-        <p>Adds a unique message to the $MessageNode</p>
+        <p>Add an event listener</p>
     </div>
     
 
@@ -388,8 +260,6 @@
             <th>Type</th>
 
             
-            <th>Attributes</th>
-            
 
             
 
@@ -403,26 +273,23 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>message</code></td>
+      <td class="name"><code>event_name</code></td>
   
 
   <td class="type">
   
+      
+<span class="param-type">string</span>
+
+
+  
   </td>
 
   
-      <td class="attributes">
-      
-
-      
-
-      
-      </td>
-  
 
   
 
-  <td class="description last"><p>The message to append</p></td>
+  <td class="description last"><p>Name of the event</p></td>
 </tr>
 
 
@@ -431,28 +298,23 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>status</code></td>
+      <td class="name"><code>callback</code></td>
   
 
   <td class="type">
   
+      
+<span class="param-type">EventCallback</span>
+
+
+  
   </td>
 
   
-      <td class="attributes">
-      
-          &lt;optional><br>
-      
-
-      
-
-      
-      </td>
-  
 
   
 
-  <td class="description last"><p>An optional class to append indicating message status</p></td>
+  <td class="description last"><p>Event callback to fire</p></td>
 </tr>
 
 
@@ -498,9 +360,9 @@
 
     
         <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
+            <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line104">line 104</a>
+                <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line22">line 22</a>
             </span>
         </p>
     
@@ -521,23 +383,6 @@
 
 
 
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-        
-            <div class='param-desc column is-12'><p>If the $MessageNode isn't set or isn't an HTMLElement</p></div>
-        
-    
-</div>
-
-                
-        </div>
-    </div>
-
 
 
 
@@ -549,12 +394,12 @@
 
 
     
-    <h4 class="name" id="addMessages">
-        <a class="href-link" href="#addMessages">#</a>
+    <h4 class="name" id="createEvent">
+        <a class="href-link" href="#createEvent">#</a>
         
         <span class="code-name">
             
-                addMessages<span class="signature">(messages, status<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
+                createEvent<span class="signature">(event_name, options)</span><span class="type-signature"> &rarr; {Event}</span>
             
         </span>
     </h4>
@@ -563,7 +408,7 @@
     
     
     <div class="description">
-        <p>Batch append messages</p>
+        <p>Helper for creating a new event, supporting IE9</p>
     </div>
     
 
@@ -588,8 +433,6 @@
             <th>Type</th>
 
             
-            <th>Attributes</th>
-            
 
             
 
@@ -603,26 +446,23 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>messages</code></td>
+      <td class="name"><code>event_name</code></td>
   
 
   <td class="type">
   
+      
+<span class="param-type">string</span>
+
+
+  
   </td>
 
   
-      <td class="attributes">
-      
-
-      
-
-      
-      </td>
-  
 
   
 
-  <td class="description last"><p>The messages to append</p></td>
+  <td class="description last"><p>Name of the event</p></td>
 </tr>
 
 
@@ -631,28 +471,23 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>status</code></td>
+      <td class="name"><code>options</code></td>
   
 
   <td class="type">
   
+      
+<span class="param-type">EventOptions</span>
+
+
+  
   </td>
 
   
-      <td class="attributes">
-      
-          &lt;optional><br>
-      
-
-      
-
-      
-      </td>
-  
 
   
 
-  <td class="description last"><p>An optional class to append indicating message status</p></td>
+  <td class="description last"><p>Event options</p></td>
 </tr>
 
 
@@ -698,13 +533,15 @@
 
     
         <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
+            <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line125">line 125</a>
+                <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line70">line 70</a>
             </span>
         </p>
     
 </dl>
+
+
 
 
 
@@ -722,325 +559,18 @@
 
 
     <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-2"><label>Returns:</label></div>
         <div class="column is-10">
             
                     
+
 <div class="columns">
     
-        
-            <div class='param-desc column is-12'><p>If the $MessageNode isn't set or isn't an HTMLElement</p></div>
-        
     
-</div>
-
-                
-        </div>
-    </div>
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="clearMessages">
-        <a class="href-link" href="#clearMessages">#</a>
-        
-        <span class="code-name">
-            
-                clearMessages<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Clear all messages from the $MessageNode (If set)</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
-            <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line146">line 146</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div>
-            
-                <div class="member">
-
-
-    
-    <h4 class="name" id="generateMessageNode">
-        <a class="href-link" href="#generateMessageNode">#</a>
-        
-        <span class="code-name">
-            
-                generateMessageNode<span class="signature">(anchor<span class="signature-attributes">opt</span>, pos<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Generate a messageNode where messages can be added and removed in a managed way.</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-<div class="table-container">
-    <table class="params table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-            <th>Attributes</th>
-            
-
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>anchor</code></td>
-  
-
-  <td class="type">
-  
-  </td>
-
-  
-      <td class="attributes">
-      
-          &lt;optional><br>
-      
-
-      
-
-      
-      </td>
-  
-
-  
-
-  <td class="description last"><p>The anchor to use for the $MessageNode (Defaults to $MessageAnchor)</p></td>
-</tr>
-
-
-        
-
-            
-<tr class="deep-level-0">
-  
-      <td class="name"><code>pos</code></td>
-  
-
-  <td class="type">
-  
-  </td>
-
-  
-      <td class="attributes">
-      
-          &lt;optional><br>
-      
-
-      
-
-      
-      </td>
-  
-
-  
-
-  <td class="description last"><p>The position to set $MessageNode inside the $MessageAnchor</p></td>
-</tr>
-
-
-        
-        </tbody>
-    </table>
-</div>
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-    
-        <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
-            <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line68">line 68</a>
-            </span>
-        </p>
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
-        <div class="column is-10">
-            
-                    
-<div class="columns">
-    
-        
-            <div class='param-desc column is-12'><p>If anchor isn't an Element</p></div>
-        
-    
-</div>
-
-                
-                    
-<div class="columns">
-    
-    <div class='param-desc column is-7'><p>If pos isn't a valid</p></div>
     <div class='column is-5 has-text-left'>
         <label>Type: </label>
-<span class="param-type">VerticalPosition</span>
+        
+<span class="param-type">Event</span>
 
 
     </div>
@@ -1054,20 +584,18 @@
 
 
 
-
-
 </div>
             
                 <div class="member">
 
 
     
-    <h4 class="name" id="removeMessage">
-        <a class="href-link" href="#removeMessage">#</a>
+    <h4 class="name" id="dispatchEvent">
+        <a class="href-link" href="#dispatchEvent">#</a>
         
         <span class="code-name">
             
-                removeMessage<span class="signature">(message)</span><span class="type-signature"></span>
+                dispatchEvent<span class="signature">(event, data)</span><span class="type-signature"> &rarr; {boolean}</span>
             
         </span>
     </h4>
@@ -1076,7 +604,7 @@
     
     
     <div class="description">
-        <p>Remove a message</p>
+        <p>Include support for passing data along event</p>
     </div>
     
 
@@ -1114,10 +642,15 @@
             
 <tr class="deep-level-0">
   
-      <td class="name"><code>message</code></td>
+      <td class="name"><code>event</code></td>
   
 
   <td class="type">
+  
+      
+<span class="param-type">Event</span>
+
+
   
   </td>
 
@@ -1125,7 +658,32 @@
 
   
 
-  <td class="description last"><p>The message to remove</p></td>
+  <td class="description last"><p>the Event object to dispatch</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>data</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">any</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Data to be passed to the callback</p></td>
 </tr>
 
 
@@ -1171,9 +729,9 @@
 
     
         <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
+            <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line135">line 135</a>
+                <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line52">line 52</a>
             </span>
         </p>
     
@@ -1194,16 +752,24 @@
 
 
 
+
+
     <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-2"><label>Returns:</label></div>
         <div class="column is-10">
             
                     
+
 <div class="columns">
     
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
         
-            <div class='param-desc column is-12'><p>If the $MessageNode isn't set or isn't an HTMLElement</p></div>
-        
+<span class="param-type">boolean</span>
+
+
+    </div>
     
 </div>
 
@@ -1214,20 +780,18 @@
 
 
 
-
-
 </div>
             
                 <div class="member">
 
 
     
-    <h4 class="name" id="removeMessageNode">
-        <a class="href-link" href="#removeMessageNode">#</a>
+    <h4 class="name" id="removeEventListener">
+        <a class="href-link" href="#removeEventListener">#</a>
         
         <span class="code-name">
             
-                removeMessageNode<span class="signature">()</span><span class="type-signature"></span>
+                removeEventListener<span class="signature">(event_name, callback)</span><span class="type-signature"> &rarr; {EventCallback|null}</span>
             
         </span>
     </h4>
@@ -1236,7 +800,7 @@
     
     
     <div class="description">
-        <p>Removes the $MessageNode from the $MessageAnchor</p>
+        <p>Remove an event listener</p>
     </div>
     
 
@@ -1247,6 +811,82 @@
 
 
 
+
+    <h5>Parameters:</h5>
+    
+<div class="table-container">
+    <table class="params table">
+        <thead>
+        <tr>
+            
+            <th>Name</th>
+            
+
+            <th>Type</th>
+
+            
+
+            
+
+            <th class="last">Description</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>event_name</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">string</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>Name of the event</p></td>
+</tr>
+
+
+        
+
+            
+<tr class="deep-level-0">
+  
+      <td class="name"><code>callback</code></td>
+  
+
+  <td class="type">
+  
+      
+<span class="param-type">EventCallback</span>
+
+
+  
+  </td>
+
+  
+
+  
+
+  <td class="description last"><p>The event callback to remove</p></td>
+</tr>
+
+
+        
+        </tbody>
+    </table>
+</div>
 
 
 
@@ -1285,9 +925,9 @@
 
     
         <p class="tag-source">
-            <a href="lib_DOMMessaging.ts.html" class="button">View Source</a>
+            <a href="mixins_EventEmitter.ts.html" class="button">View Source</a>
             <span>
-                <a href="lib_DOMMessaging.ts.html">lib/DOMMessaging.ts</a>, <a href="lib_DOMMessaging.ts.html#line92">line 92</a>
+                <a href="mixins_EventEmitter.ts.html">mixins/EventEmitter.ts</a>, <a href="mixins_EventEmitter.ts.html#line34">line 34</a>
             </span>
         </p>
     
@@ -1308,24 +948,33 @@
 
 
 
+
+
     <div class='columns method-parameter'>
-        <div class="column is-2"><label>Throws:</label></div>
+        <div class="column is-2"><label>Returns:</label></div>
         <div class="column is-10">
             
                     
+
 <div class="columns">
     
+    
+    <div class='column is-5 has-text-left'>
+        <label>Type: </label>
         
-            <div class='param-desc column is-12'><p>If the $MessageNode isn't set or isn't an HTMLElement</p></div>
-        
+<span class="param-type">EventCallback</span>
+|
+
+<span class="param-type">null</span>
+
+
+    </div>
     
 </div>
 
                 
         </div>
     </div>
-
-
 
 
 

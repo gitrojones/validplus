@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Validatable.ts</title>
+
+  <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="./build/entry.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,400,700|Inconsolata,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+  <link type="text/css" rel="stylesheet" href="https://jmblog.github.io/color-themes-for-google-code-prettify/themes/tomorrow-night.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/app.min.css">
+  <link type="text/css" rel="stylesheet" href="styles/iframe.css">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  
+</head>
+
+
+
+<body class="layout small-header">
+    <div id="stickyNavbarOverlay"></div>
+    
+
+<div class="top-nav">
+    <div class="inner">
+        <a id="hamburger" role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+        <div class="logo">
+            
+             
+                <a href="index.html">
+                    <h1 class="navbar-item">ValidPlus Validation Library</h1>
+                </a>
+            
+        </div>
+        <div class="menu">
+            
+            <div class="navigation">
+                <a
+                    href="index.html"
+                    class="link"
+                >
+                    API Documentation
+                </a>
+                
+                 
+                    
+                        <a
+                            class="link user-link "
+                            href="https://github.com/gitrojones/validplus"
+                        >
+                            Repo
+                        </a>
+                    
+                
+                
+            </div>
+        </div>
+    </div>
+</div>
+    <div id="main">
+        <div
+            class="sidebar "
+            id="sidebarNav"
+        >
+            
+                <div class="search-wrapper">
+                    <input id="search" type="text" placeholder="Search docs..." class="input">
+                </div>
+            
+            <nav>
+                
+                    <h2><a href="index.html">Documentation</a></h2><div class="category"><h3>Classes</h3><ul><li><a href="Validatable.html">Validatable</a></li><li><a href="VPField.html">VPField</a></li><li><a href="VPFieldset.html">VPFieldset</a></li><li><a href="VPValidator.html">VPValidator</a></li></ul></div><div class="category"><h2>Interfaces</h2><h3>Interfaces</h3><ul><li><a href="CustomValidationRule.html">CustomValidationRule</a></li><li><a href="HTMLValidationRules.html">HTMLValidationRules</a></li><li><a href="InputFormatters.html">InputFormatters</a></li><li><a href="ValidationAttributes.html">ValidationAttributes</a></li><li><a href="ValidationLifecycle.html">ValidationLifecycle</a></li><li><a href="ValidationStrategies.html">ValidationStrategies</a></li><li><a href="ValidationStrategy.html">ValidationStrategy</a></li></ul></div><div class="category"><h2>Lib</h2><h3>Modules</h3><ul><li><a href="module-EventEmitter.html">EventEmitter</a></li></ul><h3>Classes</h3><ul><li><a href="DOMMessaging.html">DOMMessaging</a></li></ul></div><div class="category"><h2>Options</h2><h3>Classes</h3><ul><li><a href="FieldOptions.html">FieldOptions</a></li><li><a href="FieldsetOptions.html">FieldsetOptions</a></li><li><a href="ValidatableOptions.html">ValidatableOptions</a></li><li><a href="ValidatorOptions.html">ValidatorOptions</a></li></ul><h3>Interfaces</h3><ul><li><a href="VPFieldOptions.html">VPFieldOptions</a></li><li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a></li><li><a href="VPOptions.html">VPOptions</a></li><li><a href="VPValidatorOptions.html">VPValidatorOptions</a></li></ul></div><div class="category"><h2>Types</h2><h3><a href="global.html">Global</a></h3></div>
+                
+            </nav>
+        </div>
+        <div class="core" id="main-content-wrapper">
+            <div class="content">
+                <header class="page-title">
+                    <p>Source</p>
+                    <h1>Validatable.ts</h1>
+                </header>
+                
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import merge from 'lodash/merge'
+
+import {isSet} from 'src/util/isSet'
+
+import {VPOptions} from 'src/interfaces/VPOptions'
+import {ValidationStrategies} from 'src/interfaces/validation/ValidationStrategy'
+import {ValidationLifecycle, ValidationCB} from 'src/interfaces/validation/ValidationLifecycle'
+
+import {DOMMessaging} from 'src/lib/DOMMessaging'
+import {EventEmitter} from 'src/mixins/EventEmitter'
+
+import {ValidatableOptions} from 'src/models/VPOptions/ValidatableOptions'
+import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
+
+const EEMessaging = EventEmitter(DOMMessaging);
+
+/**
+ * VPValidatable Generic
+ * @description
+ * Generic instance all Validatable instances inherit from. Defines default shared logic and interfaces.
+ * @augments module:EventEmitter
+ * @augments DOMMessaging
+ */
+export class Validatable&lt;T extends ValidatableOptions&lt;T>> extends EEMessaging {
+  $options: T
+  $element: HTMLElement
+  $lifecycleElements: HTMLElement[]
+  $strategies: ValidationStrategies
+  $valid: boolean | null
+
+  constructor (element: HTMLElement, options: (VPOptions&lt;T> | ValidatableOptions&lt;T>)) {
+    super()
+
+    this.$lifecycleElements = [];
+    this.$element = element
+    this.$lifecycleElements.push(element);
+    this.$valid = null
+
+    // This is a generic. If options aren't derived from ValidatableOptions, we throw
+    if (!(options instanceof ValidatableOptions)) throw new Error('Options were unset');
+    else {
+      this.$options = merge(options, {
+        ErrorClassName: getAttributeIfSet(element, 'vp-error-class', '-isError'),
+        ValidClassName: getAttributeIfSet(element, 'vp-valid-class', '-isValid')
+      }) as T;
+    }
+
+    this.setLifecycle(this.$options.Lifecycle)
+    this.$strategies = {
+      all: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => f),
+      some: (fieldstatus: boolean[]) => fieldstatus.some((f: boolean) => f),
+      none: (fieldstatus: boolean[]) => fieldstatus.every((f: boolean) => !f),
+      one: (fieldstatus: boolean[]) => fieldstatus.filter((f: boolean) => f).length === 1
+    }
+
+    // DOMMessaging
+    this.$MessageClassName = this.$options.MessageClassName
+    this.$MessageContainerClassName = this.$options.MessageContainerClassName
+
+    // Allow for manually calling the messageNodeBuilder if it cannot be accomplished right away
+    // Used in Vue Bindings
+    if (this.$options.MessageAnchor instanceof HTMLElement) {
+      this.generateMessageNode(this.$options.MessageAnchor, this.$options.MessagePOS)
+    }
+    // END DOMMessaging
+  }
+
+  get $isValid (): boolean | null {
+    return this.$valid
+  }
+
+  set $isValid (isValid: boolean | null) {
+    this.$valid = isValid
+
+    if (isValid) {
+      this.$lifecycleElements.forEach((element) => {
+        element.classList.remove(this.$options.ErrorClassName)
+        element.classList.add(this.$options.ValidClassName)
+      })
+
+      if (Array.isArray(this.$options.Lifecycle.Valid.CB)) {
+        this.$options.Lifecycle.Valid.CB
+          .forEach((CB: ValidationCB&lt;T>) => CB(this))
+      }
+
+      const ValidMessage: (string | undefined) = this.$options.Lifecycle.Valid.Message
+      if (typeof ValidMessage === 'string' &amp;&amp; ValidMessage.length > 0) {
+        this.addMessage(
+          this.$options.Lifecycle.Valid.Message as string,
+          this.$options.ValidClassName
+        )
+      }
+    } else {
+      this.$lifecycleElements.forEach((element) => {
+        element.classList.remove(this.$options.ValidClassName)
+        element.classList.add(this.$options.ErrorClassName)
+      })
+
+      if (Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
+        this.$options.Lifecycle.Invalid.CB
+          .forEach((CB: ValidationCB&lt;T>) => CB(this));
+      }
+
+      const InvalidMessage: (string | undefined) = this.$options.Lifecycle.Invalid.Message
+      if (typeof InvalidMessage === 'string' &amp;&amp; InvalidMessage.length > 0) {
+        this.addMessage(
+          this.$options.Lifecycle.Invalid.Message as string,
+          this.$options.ErrorClassName
+        )
+      }
+    }
+  }
+
+  /**
+   * Scroll to the tracked element
+   */
+  scrollTo (): void {
+    // While always true in a modern browser, we check due to limitations with JSDOM
+    if (this.$options.ScrollAnchor instanceof Element
+      &amp;&amp; typeof this.$options.ScrollAnchor.scrollIntoView === 'function') {
+      this.$options.ScrollAnchor.scrollIntoView(this.$options.ScrollOptions);
+    }
+    else {
+      console.debug('[VP] Element Scrolling is unavailable.')
+    }
+  }
+
+  setLifecycle (lifecycle: ValidationLifecycle&lt;T>): void {
+    const isValidationLifecycle = function (lifecycle: ValidationLifecycle&lt;T>) {
+      return isSet(lifecycle) &amp;&amp;
+        ('Valid' in lifecycle || 'Invalid' in lifecycle)
+    }
+
+    const valid = this.$options.Lifecycle.Valid || {}
+    const invalid = this.$options.Lifecycle.Invalid || {}
+    this.$options.Lifecycle = {
+      Valid: {
+        Message: valid.Message,
+        CB: valid.CB
+      },
+      Invalid: {
+        Message: invalid.Message,
+        CB: invalid.CB
+      }
+    }
+
+    if (isValidationLifecycle(lifecycle)) {
+      if (lifecycle.Valid) {
+        if (typeof lifecycle.Valid.Message === 'string') {
+          this.$options.Lifecycle.Valid.Message = lifecycle.Valid.Message
+        }
+
+        if (Array.isArray(lifecycle.Valid.CB)) {
+          this.$options.Lifecycle.Valid.CB = lifecycle.Valid.CB
+        } else if (typeof lifecycle.Valid.CB === 'function') {
+          if (!Array.isArray(this.$options.Lifecycle.Valid.CB)) {
+            this.$options.Lifecycle.Valid.CB = []
+          }
+
+          this.$options.Lifecycle.Valid.CB.push(lifecycle.Valid.CB)
+        }
+      }
+      if (lifecycle.Invalid) {
+        if (typeof lifecycle.Invalid.Message === 'string') {
+          this.$options.Lifecycle.Invalid.Message = lifecycle.Invalid.Message
+        }
+        if (Array.isArray(lifecycle.Invalid.CB)) {
+          this.$options.Lifecycle.Invalid.CB = lifecycle.Invalid.CB
+        } else if (typeof lifecycle.Invalid.CB === 'function') {
+          if (!Array.isArray(this.$options.Lifecycle.Invalid.CB)) {
+            this.$options.Lifecycle.Invalid.CB = []
+          }
+
+          this.$options.Lifecycle.Invalid.CB.push(lifecycle.Invalid.CB)
+        }
+      }
+    }
+  }
+
+  /**
+   * Helper method to determine if the element is visible within the DOM
+   * @param {HTMLElement} element - Element to test
+   * @returns boolean
+   */
+  isElementVisible (element: HTMLElement): boolean {
+    if (element instanceof HTMLElement) {
+      return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
+    }
+
+    return false
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+            </div>
+            
+            <footer class="footer">
+                <div class="content has-text-centered">
+                    <p>Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a></p>
+                    <p class="sidebar-created-by">
+                        <a href="https://github.com/SoftwareBrothers/better-docs" target="_blank">BetterDocs theme</a> provided with <i class="fas fa-heart"></i> by 
+                        <a href="http://softwarebrothers.co" target="_blank">SoftwareBrothers - JavaScript Development Agency</a>
+                    </p>
+                </div>
+            </footer>
+            
+        </div>
+        <div id="side-nav" class="side-nav">
+        </div>
+    </div>
+<script src="scripts/app.min.js"></script>
+<script>PR.prettyPrint();</script>
+<script src="scripts/linenumber.js"> </script>
+
+<script src="scripts/search.js"> </script>
+
+</body>
+</html>

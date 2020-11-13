@@ -5,7 +5,7 @@
   
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title> FieldsetOptions</title>
+  <title> ValidationStrategies</title>
 
   <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -90,8 +90,8 @@
         <div class="core" id="main-content-wrapper">
             <div class="content">
                 <header class="page-title">
-                    <p>Class</p>
-                    <h1>FieldsetOptions</h1>
+                    <p>Interface</p>
+                    <h1>ValidationStrategies</h1>
                 </header>
                 
 
@@ -102,9 +102,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>FieldsetOptions<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-            <div class="class-description"><p>Fieldset Options instance for VPFieldset</p></div>
+        <h2>ValidationStrategies</h2>
         
     
 </header>
@@ -113,264 +111,10 @@
     <div class="container-overview">
     
         
-            <div class='vertical-section'>
-                <div class="members">
-                    <div class="member">
-                        <div class=name>
-                            <span class="tag">Constructor</span>
-                        </div>
-                        
-
-
-    
-    <h4 class="name" id="FieldsetOptions">
-        <a class="href-link" href="#FieldsetOptions">#</a>
-        
-        <span class="code-name">
-            
-                new FieldsetOptions<span class="signature">()</span><span class="type-signature"></span>
-            
-        </span>
-    </h4>
-    
-
-    
-    
-    <div class="description">
-        <p>Internally created VPFieldset options instance, implementing the VPFieldsetOptions interface w/
-standard defaults applied dynamically from the DOM bindings or statically if undefined.</p>
-<p><strong>NOTE:</strong> See property descriptions for DOM binding attribute names, if implemented</p>
-    </div>
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    
-<div class="table-container">
-    <table class="props table">
-        <thead>
-        <tr>
-            
-            <th>Name</th>
-            
-
-            <th>Type</th>
-
-            
-            <th>Attributes</th>
-            
-
-            
-            <th>Default</th>
-            
-
-            <th class="last">Description</th>
-        </tr>
-        </thead>
-
-        <tbody>
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>FindFields</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
+            <div class="description"><p>Internally supported validation strategies collection interface</p></div>
         
 
         
-        </td>
-    
-
-    
-        <td class="default">
-        
-            false
-        
-        </td>
-    
-
-    <td class="description last"><p>vp-find?</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>FieldClass</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">string</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            'VPField'
-        
-        </td>
-    
-
-    <td class="description last"><p>vp-find</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>ValidateVisible</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            true
-        
-        </td>
-    
-
-    <td class="description last"><p>vp-visible</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>ValidationStrategy</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">ValidationOption</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            'all'
-        
-        </td>
-    
-
-    <td class="description last"><p>vp-strategy</p></td>
-</tr>
-
-        
-            
-<tr class="deep-level-0">
-    
-        <td class="name"><code>ScrollTo</code></td>
-    
-
-    <td class="type">
-    
-        
-<span class="param-type">boolean</span>
-
-
-    
-    </td>
-
-    
-        <td class="attributes">
-        
-            &lt;optional><br>
-        
-
-        
-        </td>
-    
-
-    
-        <td class="default">
-        
-            true
-        
-        </td>
-    
-
-    <td class="description last"><p>vp-scroll</p></td>
-</tr>
-
-        
-        </tbody>
-    </table>
-</div>
-
 
 
 <dl class="details">
@@ -401,76 +145,28 @@ standard defaults applied dynamically from the DOM bindings or statically if und
     
 
     
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><a href="VPFieldsetOptions.html">VPFieldsetOptions</a> For more information on properties defined</li>
-        </ul>
-    </dd>
-    
 
     
 
     
         <p class="tag-source">
-            <a href="models_VPOptions_FieldsetOptions.ts.html" class="button">View Source</a>
+            <a href="interfaces_validation_ValidationStrategy.ts.html" class="button">View Source</a>
             <span>
-                <a href="models_VPOptions_FieldsetOptions.ts.html">models/VPOptions/FieldsetOptions.ts</a>, <a href="models_VPOptions_FieldsetOptions.ts.html#line22">line 22</a>
+                <a href="interfaces_validation_ValidationStrategy.ts.html">interfaces/validation/ValidationStrategy.ts</a>, <a href="interfaces_validation_ValidationStrategy.ts.html#line13">line 13</a>
             </span>
         </p>
     
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                    </div>
-                </div>
-            </div>
         
     
     </div>
     
     
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li><a href="ValidatableOptions.html">ValidatableOptions</a></li>
-    </ul>
-
 
     
 
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="FieldsetOptions.html">FieldsetOptions</a></dt>
-            <dd></dd>
-        </dl>
     
 
     
