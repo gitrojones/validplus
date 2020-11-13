@@ -1,5 +1,6 @@
+import { VPField } from "../../Field";
 export interface ValidationStrategy {
-    (fieldstatus: boolean[]): boolean;
+    (fieldstatus: boolean[], fields: VPField[]): boolean;
 }
 export declare type ValidationOption = ValidationStrategyNames | ValidationStrategy;
 export declare type ValidationStrategyNames = 'all' | 'some' | 'one' | 'none';

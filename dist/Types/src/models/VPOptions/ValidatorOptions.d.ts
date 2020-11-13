@@ -1,5 +1,5 @@
-import { VPValidatorOptions } from 'src/interfaces/VPOptions';
-import { ValidatableOptions } from './ValidatableOptions';
+import { VPValidatorOptions } from "../../interfaces/VPOptions";
+import { ValidatableOptions } from "./ValidatableOptions";
 /**
  * Validator Options instance for VPValidator
  * @category Options
