@@ -122,6 +122,383 @@
 <h2>Enhancement Explanation</h2>
 <p>ValidPlus is designed to conform to the standard HTML5 validation spec for DOM Elements. This means, in cases where
 Javascript is disabled, validation will continue to function based on the browsers' validation implementation.</p>
+<h2>Usage</h2>
+<p><strong>Importing (Module)</strong></p>
+<pre class="prettyprint source"><code>import { Validator, Fieldset, Field } from 'validplus'
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>import * as VP from 'validplus'
+</code></pre>
+<p><strong>Importing (Browser)</strong></p>
+<pre class="prettyprint source"><code>&lt;script src=&quot;node_modules/validplus/dist/validplus.browser.js&quot;> 
+</code></pre>
+<p>Exports <code>VP</code> to window</p>
+<h3>Quick Usage</h3>
+<p>This usage pattern is designed to get you up and running quick without extra boilerplate.
+All options are set using the handy <code>vp-</code> DOM attribute bindings.</p>
+<h4>Sample Form</h4>
+<pre class="prettyprint source"><code>&lt;form id=&quot;sample_form&quot; vp-find>
+    &lt;div class=&quot;VPFieldset&quot; vp-find>
+        &lt;div class=&quot;VPField&quot;>
+            &lt;label for=&quot;sample_input&quot;>Sample Input&lt;/label>
+            &lt;input id=&quot;sample_input&quot; type=&quot;text&quot; placeholder=&quot;Sample&quot; required />
+        &lt;/div>
+    &lt;/div>
+&lt;/form>
+</code></pre>
+<h4>Script</h4>
+<pre class="prettyprint source"><code>const Validator = new VP.Validator(document.getElementsById('sample_form'))
+</code></pre>
+<h3>Standard Usage</h3>
+<p>This usage pattern provides the most functionality but has additional boilerplate requirements.</p>
+<h4>Sample Form</h4>
+<pre class="prettyprint source"><code>&lt;form id=&quot;sample_form&quot;>
+    &lt;div id=&quot;sample_fieldset&quot; class=&quot;VPFieldset&quot;>
+        &lt;div id=&quot;sample_field&quot; class=&quot;VPField&quot;>
+            &lt;label for=&quot;sample_input&quot;>Sample Input&lt;/label>
+            &lt;input id=&quot;sample_input&quot; type=&quot;text&quot; placeholder=&quot;Sample&quot; required />
+        &lt;/div>
+    &lt;/div>
+&lt;/form>
+</code></pre>
+<h4>Script</h4>
+<pre class="prettyprint source"><code>// Validator
+const Validator = new VP.Validator(
+    document.getElementById('sample_form'), &lt;options>)
+
+// Fieldset
+const Fieldset = new VP.Fieldset(
+    document.getElementsById('sample_fieldset'), &lt;options>)
+
+// Field
+const Field = new VP.Field(
+    document.getElementsById('sample_field'), &lt;options>)
+
+// Associate
+Fieldset.addField(Field);
+Validator.addFieldset(Fieldset);
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>// Validator
+const Validator = new VP.Validator(
+    document.getElementById('sample_form'), &lt;options>)
+
+// Fieldset
+Validator.createFieldset(
+    document.getElementsById('sample_fieldset'), &lt;options>, [
+
+    // Field
+    new VP.Field(
+        document.getElementsById('sample_field'), &lt;options>)
+]);
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>// Validator
+const Validator = new VP.Validator(
+    document.getElementById('sample_form'), &lt;options>)
+
+// Fieldset
+const Fieldset = Validator.createFieldset(
+    document.getElementsById('sample_fieldset'), &lt;options>)
+
+// Field
+Fieldset.createField(
+    document.getElementsById('sample_field'), &lt;options>)
+</code></pre>
+<h3>Options</h3>
+<h4>All</h4>
+<ul>
+<li><strong>Lifecycle &lt;ValidationLifecycle&gt;</strong> <code>vp-valid</code> || <code>vp-invalid</code> - Messages only
+<ul>
+<li>Lifecycle bindings to perform actions/messaging for Valid or Invalid outcomes</li>
+</ul>
+</li>
+<li><strong>ErrorClassName &lt;string&gt;</strong> (&quot;-isError&quot;) <code>vp-error-class</code>
+<ul>
+<li>Classname appended when validation is erroneous</li>
+</ul>
+</li>
+<li><strong>ValidClassName &lt;string&gt;</strong> (&quot;-isValid&quot;) <code>vp-valid-class</code>
+<ul>
+<li>Classname appended when validation is successful</li>
+</ul>
+</li>
+<li><strong>MessageClassName &lt;string&gt;</strong> (&quot;VPMessage&quot;) <code>vp-msg-class</code>
+<ul>
+<li>Classname message nodes will bear</li>
+</ul>
+</li>
+<li><strong>MessageContainerClassName &lt;string&gt;</strong> (&quot;VPMessages&quot;) <code>vp-msgs-class</code>
+<ul>
+<li>Classname message node container will bear</li>
+</ul>
+</li>
+<li><strong>MessageAnchor &lt;HTMLElement&gt;</strong> (self)
+<ul>
+<li>An alternate anchor point for message nodes</li>
+</ul>
+</li>
+<li><strong>MessagePOS &lt;&quot;TOP&quot;|&quot;BOTTOM&quot;&gt;</strong> (&quot;BOTTOM&quot;) <code>vp-msg-top</code> || <code>vp-msg-bottom</code>
+<ul>
+<li>Message positioning; Determines how the messaging container is mounted to the anchor point</li>
+</ul>
+</li>
+<li><strong>ScrollAnchor &lt;HTMLElement&gt;</strong> (self)
+<ul>
+<li>An anchor point to scroll to if scrolling to an instance <code>self.scrollTo()</code></li>
+</ul>
+</li>
+<li><strong>ScrollOptions &lt;ScrollIntoViewOptions|boolean&gt;</strong> ({ behavior: 'smooth' })</li>
+</ul>
+<h4>Validator</h4>
+<ul>
+<li><strong>FindFieldsets &lt;boolean&gt;</strong> (false) <code>vp-find?</code>
+<ul>
+<li>Automatically parse children for Fieldsets, relying on DOM bindings for options</li>
+</ul>
+</li>
+<li><strong>FieldsetClass &lt;string&gt;</strong> (&quot;VPFieldset&quot;) <code>vp-find</code>
+<ul>
+<li>Classname signifying a fieldset element</li>
+</ul>
+</li>
+<li><strong>ValidateLazy &lt;boolean&gt;</strong> (true) <code>vp-lazy</code>
+<ul>
+<li>Indicate child fieldsets should validate lazily</li>
+</ul>
+</li>
+<li><strong>ValidateVisible &lt;boolean&gt;</strong> (true) <code>vp-visibile</code>
+<ul>
+<li>Indicate if validation should be enforced for non-visible fieldsets</li>
+</ul>
+</li>
+</ul>
+<h4>Fieldset</h4>
+<ul>
+<li><strong>FindFields &lt;boolean&gt;</strong> (false) <code>vp-find?</code>
+<ul>
+<li>Automatically parse children for Fields, using DOM bindings for options</li>
+</ul>
+</li>
+<li><strong>FieldClass &lt;string&gt;</strong> (&quot;VPField&quot;) <code>vp-find</code>
+<ul>
+<li>Classname signifying a field element</li>
+</ul>
+</li>
+<li><strong>ValidateVisible &lt;boolean&gt;</strong> (true) <code>vp-visibile</code>
+<ul>
+<li>Indicate if validation should be enforced for non-visible fieldsets</li>
+</ul>
+</li>
+<li><strong>ValidationStrategy &lt;string|function&gt;</strong> (&quot;all&quot;) <code>vp-strategy</code>
+<ul>
+<li>Strategy to validate child fields against each other. See <strong>Validation Option</strong></li>
+</ul>
+</li>
+<li><strong>ScrollTo &lt;boolean&gt;</strong> (true) <code>vp-scroll</code>
+<ul>
+<li>Indicate if erroneous fieldsets should be scrolled to on error (first error)</li>
+</ul>
+</li>
+</ul>
+<h4>Field</h4>
+<ul>
+<li><strong>Notify &lt;boolean&gt;</strong> (true) <code>vp-notify</code>
+<ul>
+<li>Notify parent of changes, allowing siblings to validate together.</li>
+</ul>
+</li>
+<li><strong>DirtyOn &lt;ChangeActions&gt;</strong> ({ input: true }) <code>vp-dirty-blur</code>||<code>vp-dirty-input</code>||<code>vp-dirty-change</code>||<code>vp-dirty-mouseleave</code>
+<ul>
+<li>Action state required to mark a field as dirty (can validate)</li>
+</ul>
+</li>
+<li><strong>FormatOn &lt;ChangeActions&gt;</strong> ({ input: true }) <code>vp-format-blur</code>||<code>vp-format-input</code>||<code>vp-format-change</code>||<code>vp-format-mouseleave</code>
+<ul>
+<li>Action state required to trigger field formatting</li>
+</ul>
+</li>
+<li><strong>ValidateOn &lt;ChangeActions&gt;</strong> ({ blur: true }) <code>vp-blur</code>||<code>vp-input</code>||<code>vp-change</code>||<code>vp-mouseleave</code>
+<ul>
+<li>Action state required to trigger validation</li>
+</ul>
+</li>
+<li><strong>ForceRules &lt;boolean&gt;</strong> (false)
+<ul>
+<li>Force rules defined via options to supersede DOM rules</li>
+</ul>
+</li>
+<li><strong>InputRules &lt;HTMLValidationRules&gt;</strong>
+<ul>
+<li>Standard HTML Validation rules to apply to the field input</li>
+</ul>
+</li>
+<li><strong>CustomRules &lt;CustomValidationRule[]&gt;</strong>
+<ul>
+<li>Custom Validation rules to apply. See <strong>Custom Validation</strong></li>
+</ul>
+</li>
+<li><strong>InputFormatter &lt;InputFormatters&gt;</strong>
+<ul>
+<li>Formatters to apply to input value. See <strong>Input Formatter</strong></li>
+</ul>
+</li>
+<li><strong>ValidateAsync &lt;boolean&gt;</strong> (false) <code>vp-async</code>
+<ul>
+<li>Force validation to resolve async, regardless of the presence of async custom rules</li>
+</ul>
+</li>
+<li><strong>ValidateAsyncResolve &lt;boolean&gt;</strong> (true) <code>vp-await</code>
+<ul>
+<li>Await validation results before allowing another validation cycle.</li>
+</ul>
+</li>
+<li><strong>PrimaryInput &lt;HTMLInputElement|HTMLSelectElement|HTMLTextAreaElement&gt;</strong> (auto)
+<ul>
+<li>Indicate the input we will validate against</li>
+</ul>
+</li>
+<li><strong>PrimaryInputIndex &lt;number&gt;</strong> (0)
+<ul>
+<li>If multiple inputs exist within a field, indicate which should be validated against</li>
+</ul>
+</li>
+<li><strong>PrimaryInputType &lt;string&gt;</strong>
+<ul>
+<li>The type of input we should prioritize picking from if multiple eligible inputs of different types are found</li>
+</ul>
+</li>
+<li><strong>InputTypes &lt;string&gt;</strong> ('select'|'input'|'textarea')[]
+<ul>
+<li>The node types to consider when looking for child inputs.</li>
+</ul>
+</li>
+<li><strong>ShowFieldRuleErrors &lt;boolean&gt;</strong> (false)
+<ul>
+<li>Display error results for standard field rules. See <strong>Standard Validation</strong></li>
+</ul>
+</li>
+<li><strong>ShowCustomRuleErrors &lt;boolean&gt;</strong> (true)
+<ul>
+<li>Display custom error results for custom field rules. See <strong>Custom Validation</strong></li>
+</ul>
+</li>
+<li><strong>ValidateLazyFieldRules &lt;boolean&gt;</strong> (true)
+<ul>
+<li>Validate standard field rules lazily.</li>
+</ul>
+</li>
+<li><strong>ValidateLazyCustomRules &lt;boolean&gt;</strong> (true)
+<ul>
+<li>Validate custom field rules lazily.</li>
+</ul>
+</li>
+</ul>
+<h3>Standard Validation</h3>
+<p>Standard validation emulates the regular validation a modern web browser will do on basic HTML inputs.</p>
+<p>This validation includes the following properties:</p>
+<ul>
+<li><strong>required</strong> - Value must be defined</li>
+<li><strong>min</strong> - Cannot go below this value</li>
+<li><strong>max</strong> - Cannot exceed this value</li>
+<li><strong>minlength</strong> - Must be at least this length</li>
+<li><strong>maxlength</strong> - Must be at most this length</li>
+<li><strong>pattern</strong> - Must match this pattern</li>
+</ul>
+<h4>Email</h4>
+<p>Inputs of type <code>email</code> will be enforced to match a standard email format <code>.+@.+\..+</code>. If pattern is defined,
+email input value will <strong>also</strong> be validated against the pattern defined. Allowing for further customization
+such as required domain <code>.+@(validplus)\.com</code>.</p>
+<p>You may specify an additional message to display for this pattern failure via the <code>title</code> attribute.</p>
+<pre class="prettyprint source"><code>&lt;input type=&quot;email&quot; pattern=&quot;.+@(validplus)\.com&quot; title=&quot;A validplus email account is required.&quot; />
+</code></pre>
+<h4>Date</h4>
+<p>Inputs of type <code>date</code> will enforce date values using the <code>min</code> and <code>max</code> attributes.</p>
+<pre class="prettyprint source"><code>&lt;input type=&quot;date&quot; min=&quot;1970-01-01&quot; />
+</code></pre>
+<h3>Custom Validation</h3>
+<p>Custom validation allows for additional validation rules using custom logic. These rules can be both
+synchronous or asynchronous.</p>
+<pre class="prettyprint source"><code>CustomRules: [
+    (attrs, el, input) =>
+        +attrs.value % 2 === 0
+            ? 'Value must be divisible by 2'
+            : true
+]
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>CustomRules: [
+    async (attrs, el, input) => {
+        const result = await API.post('/some/validation/check', attrs.value)
+
+        return !result 
+            ? 'Value is already in use, please try another value.' 
+            : true
+    }
+]
+</code></pre>
+<p>Custom rules may return a boolean to indicate validity, or a string to provide a failure message.</p>
+<p><strong>NOTE</strong>: if using async rules and not enforcing AsyncResolved, isValid may return
+a <code>boolean</code> or a <code>Promise&lt;boolean&gt;</code>, depending on whether the async rule is resolved or not.</p>
+<p><strong>NOTE2</strong>: When using async rules, you must interrupt form submission to await results.</p>
+<pre class="prettyprint source"><code>// Submit Event
+(e) => {
+    e.preventDefault()
+    Validator.isValid().then((isValid) => {
+        if (isValid) e.submit()
+    });
+}
+</code></pre>
+<h3>Input Formatter</h3>
+<p>Input formatters allow for formatting a value for pretty output to users. Common use cases
+include phone number masks or enforcing maximum value lengths.</p>
+<pre class="prettyprint source"><code>InputFormatter: {
+  pre: (value) => value.replace(/[^0-9]/g, ''),
+  post: (value) => {
+    const areaCode = value.substr(0, 3);
+    const local = value.substr(3, 3);
+    const number = value.substr(6, 4);
+
+    let mask = '(';
+    if (areaCode.length > 0) mask += areaCode;
+    if (local.length > 0) mask += ') ' + local;
+    if (number.length > 0) mask += '-' + number;
+    return mask;
+  }
+}
+</code></pre>
+<p><em>or</em></p>
+<pre class="prettyprint source"><code>InputFormatter: {
+  pre: (value) => value.replace(/[^0-9]/g, '').substr(0, 5)
+}
+</code></pre>
+<p>In addition to the formatter events, Input formatters are also called on validation.
+It is your responsibility to prepare the value to be parsed for validation correctly (strip masks, for example).</p>
+<p>Pre is called prior, Post is called following validation.</p>
+<h3>Fieldset Validation Option</h3>
+<p>Fieldset validation is determined using a validation strategy for child fieldset. By default, we define four
+validation strategies which can be referenced by name.</p>
+<ol>
+<li><code>all</code> - All child fields must be valid</li>
+<li><code>some</code> - Some of the child fields must be valid</li>
+<li><code>one</code> - One of the child fields must be valid</li>
+<li><code>none</code> - None of the child fields can be valid</li>
+</ol>
+<p>You may also optionally define your own validation strategy for complex situations.</p>
+<pre class="prettyprint source"><code>(statuses, fields) => &lt;some logic to determine validity>
+</code></pre>
+<p>This strategy must return true/false.</p>
+<h3>API</h3>
+<p>See <a href="https://gitrojones.github.io/validplus/">Docs</a></p>
+<h3>Browser Support</h3>
+<p>ValidPlus targets IE10+.</p>
+<h4>Standard Version</h4>
+<p>This version targets a minimum bundle size, meaning it is the responsibility of the consuming project
+to include the proper polyfills via core-js and babel.</p>
+<h4>Browser Version</h4>
+<p>This version exports directly to the window and is intended to be used via a script tag. This version
+maximizes compatibility and includes all the necessary shims to run properly in IE10+.</p>
+<p><strong>NOTE</strong>: It is highly recommended you utilize the standard version to minimize package size</p>
 <h2>Package Size</h2>
 <p>The library comes in at:</p>
 <h3>ValidPlus</h3>
@@ -132,29 +509,16 @@ Javascript is disabled, validation will continue to function based on the browse
 | 52kb | 14kb | 13kb   |
 |------|------|--------|
 </code></pre>
-<h3>VPVue (Alpha)</h3>
-<p>VueJS Validation bindings</p>
+<p>Browser shimmed</p>
 <pre class="prettyprint source"><code>|-----------------------|
-| Raw  | GZip  | Brotli |
-|------|-------|--------|
-| 14kb | 5.3kb | 4.7kb  |
-|------|-------|--------|
+| Raw   | GZip | Brotli |
+|-------|------|--------|
+| 111kb | 32kb | 28kb   |
+|-------|------|--------|
 </code></pre>
 <h2>Test Coverage</h2>
 <p>Test coverage is an ongoing focus for this library. Pull requests must include test coverage in order to be considered.</p>
-<p><strong>All existing tests must pass in order for a PR to be merged</strong></p>
-<h2>Usage</h2>
-<pre class="prettyprint source"><code>import * as VP from 'validplus'
-const Validator = new VP.Validator(&lt;form_element>)
-</code></pre>
-<p><em>or</em></p>
-<pre class="prettyprint source"><code>import { Validator, Fieldset, Field } from 'validplus'
-const Validator = new Validator(&lt;form_element>)
-</code></pre>
-<h3>API</h3>
-<p>See <a href="https://gitrojones.github.io/validplus/">Docs</a></p>
-<h3>Browser Support</h3>
-<p>This library targets IE10+</p></article>
+<p><strong>All existing tests must pass in order for a PR to be merged</strong></p></article>
     </section>
 
 
