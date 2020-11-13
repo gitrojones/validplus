@@ -135,7 +135,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
       return Promise.all(deferredFieldsetStatus)
         .then((statuses) => {
           console.debug('[VPFieldset] Resolved deferred', statuses)
-          this.$isValid = this.$strategy(statuses)
+          this.$isValid = this.$strategy(statuses, fields)
           return this.$isValid;
         })
         .catch((err) => {
@@ -144,7 +144,7 @@ export class VPFieldset extends Validatable<FieldsetOptions> {
           return this.$isValid
         });
     } else {
-      this.$isValid = this.$strategy(fieldsetStatus as boolean[])
+      this.$isValid = this.$strategy(fieldsetStatus as boolean[], fields)
       return this.$isValid
     }
   }
