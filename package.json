@@ -12,6 +12,7 @@
     "build": "npm run build:types && NODE_ENV=production $(npm bin)/webpack --config ./build.webpack.js --progress --color",
     "build:dev": "NODE_ENV=development $(npm bin)/webpack --config ./build.webpack.js --progress --color",
     "build:types": "NODE_ENV=production ttsc --noUnusedLocals --noUnusedParameters --emitDeclarationOnly",
+    "publish:docs": "git subtree push --prefix dist/docs origin gh-pages",
     "test": "$(npm bin)/jest",
     "docs": "$(npm bin)/jsdoc -c jsdoc.json",
     "lint": "$(npm bin)/eslint . --ext .ts",
