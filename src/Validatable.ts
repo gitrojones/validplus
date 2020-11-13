@@ -13,6 +13,14 @@ import {ValidatableOptions} from 'src/models/VPOptions/ValidatableOptions'
 import {getAttributeIfSet} from 'src/util/getAttributeIfSet'
 
 const EEMessaging = EventEmitter(DOMMessaging);
+
+/**
+ * VPValidatable Generic
+ * @description
+ * Generic instance all Validatable instances inherit from. Defines default shared logic and interfaces.
+ * @augments module:EventEmitter
+ * @augments DOMMessaging
+ */
 export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
   $options: T
   $element: HTMLElement
@@ -103,6 +111,9 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
     }
   }
 
+  /**
+   * Scroll to the tracked element
+   */
   scrollTo (): void {
     // While always true in a modern browser, we check due to limitations with JSDOM
     if (this.$options.ScrollAnchor instanceof Element
@@ -113,7 +124,6 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
       console.debug('[VP] Element Scrolling is unavailable.')
     }
   }
-
 
   setLifecycle (lifecycle: ValidationLifecycle<T>): void {
     const isValidationLifecycle = function (lifecycle: ValidationLifecycle<T>) {
@@ -167,6 +177,11 @@ export class Validatable<T extends ValidatableOptions<T>> extends EEMessaging {
     }
   }
 
+  /**
+   * Helper method to determine if the element is visible within the DOM
+   * @param {HTMLElement} element - Element to test
+   * @returns boolean
+   */
   isElementVisible (element: HTMLElement): boolean {
     if (element instanceof HTMLElement) {
       return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)

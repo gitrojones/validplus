@@ -1,8 +1,8 @@
-import { VPFieldOptions } from "./interfaces/VPOptions";
-import { ValidationAttributes } from "./interfaces/validation/ValidationAttributes";
-import { ValidInput } from "./types/ValidInput";
-import { Validatable } from "./Validatable";
-import { FieldOptions } from "./models/VPOptions/FieldOptions";
+import { VPFieldOptions } from 'src/interfaces/VPOptions';
+import { ValidationAttributes } from 'src/interfaces/validation/ValidationAttributes';
+import { ValidInput } from 'src/types/ValidInput';
+import { Validatable } from 'src/Validatable';
+import { FieldOptions } from 'src/models/VPOptions/FieldOptions';
 /**
  * VPField Instance
  * @description
@@ -14,22 +14,17 @@ import { FieldOptions } from "./models/VPOptions/FieldOptions";
  *   <input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
  * </div>
  * @example
- * // Simple DOM Binding, pattern matching an email
+ * // Simple DOM Binding, pattern matching an email /.+@.+\..+/
  * <div class="VPField">
  *   <label for="email">Email Address</label>
- *   <input id="email" name="email" type="text" pattern="/.+@.+\..+/" />
+ *   <input id="email" name="email" type="email" />
  * </div>
  * @example
  * // Programmic bindings, phone number w/ input formatter
  * const field = new VP.Field(document.getElementById('phone'), {
  *    InputFormatter: {
- *      pre: (input, dispatchEven) => {
- *        input.value = input.value.replace(/[^0-9]/g, ''));
- *        input.value = input.value.substr(0, 5);
- *        dispatchEvent('input');
- *      },
- *      post: (input, dispatchEvent) => {
- *        let value = input.value
+ *      pre: (value) => value.replace(/[^0-9]/g, ''),
+ *      post: (value) => {
  *        const areaCode = value.substr(0, 3)
  *        const local = value.substr(3, 3)
  *        const number = value.substr(6, 4)
@@ -38,14 +33,13 @@ import { FieldOptions } from "./models/VPOptions/FieldOptions";
  *        if (areaCode.length > 0) mask += areaCode
  *        if (local.length > 0) mask += ') ' + local
  *        if (number.length > 0) mask += '-' + number
- *        input.value = mask
- *        dispatchEvent('input')
+ *        return mask
  *      }
  *    }
  * });
+ * @augments Validatable
  */
 export declare class VPField extends Validatable<FieldOptions> {
-    static Options: typeof FieldOptions;
     $input: (ValidInput | null);
     $dirty: boolean;
     $canValidate: boolean;

@@ -103,6 +103,26 @@ Fieldset.createField(
     document.getElementsById('sample_field'), <options>)
 ```
 
+### Validation
+Form submit validation check
+```
+// Submit Event
+(e) => {
+    if (!Validator.isValid()) e.preventDefault();
+}
+```
+_or_
+```
+// Submit Event
+(e) => {
+    e.preventDefault()
+    Validator.isValid().then((isValid) => {
+        if (isValid) e.submit()
+    });
+}
+```
+__NOTE__: When using async rules, you must interrupt form submission to await results.
+
 ### Options
 #### All
 + __Lifecycle \<ValidationLifecycle>__ `vp-valid` || `vp-invalid` - Messages only
@@ -182,6 +202,28 @@ Fieldset.createField(
 + __ValidateLazyCustomRules \<boolean>__ (true)
     - Validate custom field rules lazily.
     
+### Validation Lifecycle
+All validatable instances can define additional lifecycle messages and hooks to fire based on the outcome of validation.
+
+ValidationLifeycle is defined as:
+```
+ValidationLifecycle: {
+    Valid: {
+        Message: '',
+        CB: [
+            (instance) => {
+                // Some action, such as commit to store,
+                // or save to localstorage state.
+            }
+        ],
+    },
+    Invalid: {
+        Message: 'Field is invalid!',
+        CB: []
+    }
+}
+```
+    
 ### Standard Validation
 Standard validation emulates the regular validation a modern web browser will do on basic HTML inputs.
 
@@ -239,17 +281,6 @@ Custom rules may return a boolean to indicate validity, or a string to provide a
 
 __NOTE__: if using async rules and not enforcing AsyncResolved, isValid may return
 a `boolean` or a `Promise<boolean>`, depending on whether the async rule is resolved or not.
-
-__NOTE2__: When using async rules, you must interrupt form submission to await results.
-```
-// Submit Event
-(e) => {
-    e.preventDefault()
-    Validator.isValid().then((isValid) => {
-        if (isValid) e.submit()
-    });
-}
-```
 
 ### Input Formatter
 Input formatters allow for formatting a value for pretty output to users. Common use cases 

@@ -1,18 +1,44 @@
-import { Constructor } from "../types/Constructor";
-import { EventListener } from "../interfaces/events/EventListener";
-import { EventCallback } from "../interfaces/events/EventCallback";
-import { EventOptions } from "../interfaces/events/EventOptions";
+import { Constructor } from 'src/types/Constructor';
+import { EventListener } from 'src/interfaces/events/EventListener';
+import { EventCallback } from 'src/interfaces/events/EventCallback';
+import { EventOptions } from 'src/interfaces/events/EventOptions';
+/**
+ * Basic Event Emitter mixin
+ * @category Lib
+ * @module EventEmitter
+ * @description
+ * Implements a basic version of the Event interface, allowing for
+ * messages and data to be passed between child/parent.
+ */
 export declare function EventEmitter<TBase extends Constructor>(Base: TBase): {
     new (...args: any[]): {
         $listeners: EventListener;
-        addEventListener(type: string, callback: EventCallback): void;
-        removeEventListener(type: string, callback: EventCallback): (EventCallback | null);
+        /**
+         * Add an event listener
+         * @param {string} event_name - Name of the event
+         * @param {EventCallback} callback - Event callback to fire
+         */
+        addEventListener(event_name: string, callback: EventCallback): void;
+        /**
+         * Remove an event listener
+         * @param {string} event_name - Name of the event
+         * @param {EventCallback} callback - The event callback to remove
+         * @return {EventCallback|null}
+         */
+        removeEventListener(event_name: string, callback: EventCallback): (EventCallback | null);
         /**
          * Include support for passing data along event
-         * @param event - the Event object to dispatch
-         * @param data - Data to be passed to the callback
+         * @param {Event} event - the Event object to dispatch
+         * @param {any} data - Data to be passed to the callback
+         * @returns {boolean}
          */
         dispatchEvent(event: Event, data?: unknown): boolean;
-        createEvent(eventName: string, options?: EventOptions | undefined): Event;
+        /**
+         * Helper for creating a new event, supporting IE9
+         * @param {string} event_name - Name of the event
+         * @param {EventOptions} options - Event options
+         * @returns {Event}
+         */
+        createEvent(event_name: string, options?: EventOptions | undefined): Event;
     };
 } & TBase;

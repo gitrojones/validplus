@@ -52,22 +52,17 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
  *   <input id="full-name" aria-label="Full Name" name="name" type="text" required="required" />
  * </div>
  * @example
- * // Simple DOM Binding, pattern matching an email
+ * // Simple DOM Binding, pattern matching an email /.+@.+\..+/
  * <div class="VPField">
  *   <label for="email">Email Address</label>
- *   <input id="email" name="email" type="text" pattern="/.+@.+\..+/" />
+ *   <input id="email" name="email" type="email" />
  * </div>
  * @example
  * // Programmic bindings, phone number w/ input formatter
  * const field = new VP.Field(document.getElementById('phone'), {
  *    InputFormatter: {
- *      pre: (input, dispatchEven) => {
- *        input.value = input.value.replace(/[^0-9]/g, ''));
- *        input.value = input.value.substr(0, 5);
- *        dispatchEvent('input');
- *      },
- *      post: (input, dispatchEvent) => {
- *        let value = input.value
+ *      pre: (value) => value.replace(/[^0-9]/g, ''),
+ *      post: (value) => {
  *        const areaCode = value.substr(0, 3)
  *        const local = value.substr(3, 3)
  *        const number = value.substr(6, 4)
@@ -76,14 +71,13 @@ const InputFormatter = function InputFormatter(self: VPField, type: ('pre'|'post
  *        if (areaCode.length > 0) mask += areaCode
  *        if (local.length > 0) mask += ') ' + local
  *        if (number.length > 0) mask += '-' + number
- *        input.value = mask
- *        dispatchEvent('input')
+ *        return mask
  *      }
  *    }
  * });
+ * @augments Validatable
  */
 export class VPField extends Validatable<FieldOptions> {
-  static Options = FieldOptions
   $input: (ValidInput | null)
   $dirty: boolean
   $canValidate: boolean
@@ -92,7 +86,7 @@ export class VPField extends Validatable<FieldOptions> {
 
   constructor (element: HTMLElement, options: VPFieldOptions = {}) {
     if (!(element instanceof HTMLElement)) throw new Error('[VPField] Expected element')
-    super(element, new VPField.Options(options, element))
+    super(element, new FieldOptions(options, element))
 
     this.$input = null
     this.$dirty = false

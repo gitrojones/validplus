@@ -3,6 +3,7 @@ import { VerticalPosition } from 'src/enums/Positions'
 /**
  * Basic DOMMessaging mixin that supports creating and removing messages from a DOMElement
  *
+ * @category Lib
  * @prop $MessageAnchor - The anchor element where the $MessageNode will be rigged to
  * @prop $MessageContainerClassName - The $MessageNode default class name
  * @prop $MessageClassName - The individual message nodes default class name

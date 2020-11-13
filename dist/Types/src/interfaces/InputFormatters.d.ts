@@ -1,8 +1,13 @@
-import { InputFormatter } from "../types/InputFormatter";
+import { InputFormatter } from 'src/types/InputFormatter';
+/**
+ * Input Formatter Interface
+ * @category Interfaces
+ * @description
+ * Formats input value based on these provided formatters.
+ */
 export interface InputFormatters {
     /**
      * Pre formatter
-     * @category Interfaces
      * @description
      * The Pre formatter is called prior to the validation cycle. This formatter
      * is responsible for preparing the visible value for validation. Common use-cases
@@ -12,7 +17,6 @@ export interface InputFormatters {
     pre?: InputFormatter;
     /**
      * Post formatter
-     * @category Interfaces
      * @description
      * The Post formatter is called following the validation cycle. This formatter is responsible for
      * applying pretty formatting for output values. Examples include masking a phone number or currency

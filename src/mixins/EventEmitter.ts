@@ -7,21 +7,39 @@ import { EventListener } from 'src/interfaces/events/EventListener'
 import { EventCallback } from 'src/interfaces/events/EventCallback'
 import { EventOptions } from 'src/interfaces/events/EventOptions'
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+/**
+ * Basic Event Emitter mixin
+ * @category Lib
+ * @module EventEmitter
+ * @description
+ * Implements a basic version of the Event interface, allowing for
+ * messages and data to be passed between child/parent.
+ */
 export function EventEmitter<TBase extends Constructor> (Base: TBase) {
   return class extends Base implements BasicEventTarget {
     $listeners: EventListener = {}
 
-    addEventListener (type: string, callback: EventCallback): void {
-      if (!Array.isArray(this.$listeners[type])) {
-        this.$listeners[type] = []
+    /**
+     * Add an event listener
+     * @param {string} event_name - Name of the event
+     * @param {EventCallback} callback - Event callback to fire
+     */
+    addEventListener (event_name: string, callback: EventCallback): void {
+      if (!Array.isArray(this.$listeners[event_name])) {
+        this.$listeners[event_name] = []
       }
-      this.$listeners[type].push(callback)
+      this.$listeners[event_name].push(callback)
     }
 
-    removeEventListener (type: string, callback: EventCallback): (EventCallback | null) {
-      if (Array.isArray(this.$listeners[type]) && this.$listeners[type].length > 0) {
-        const stack = this.$listeners[type]
+    /**
+     * Remove an event listener
+     * @param {string} event_name - Name of the event
+     * @param {EventCallback} callback - The event callback to remove
+     * @return {EventCallback|null}
+     */
+    removeEventListener (event_name: string, callback: EventCallback): (EventCallback | null) {
+      if (Array.isArray(this.$listeners[event_name]) && this.$listeners[event_name].length > 0) {
+        const stack = this.$listeners[event_name]
         const stackLength = stack.length
         for (let i = 0; i < stackLength; i++) {
           if (stack[i] === callback) {
@@ -35,8 +53,9 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
 
     /**
      * Include support for passing data along event
-     * @param event - the Event object to dispatch
-     * @param data - Data to be passed to the callback
+     * @param {Event} event - the Event object to dispatch
+     * @param {any} data - Data to be passed to the callback
+     * @returns {boolean}
      */
     dispatchEvent (event: Event, data: unknown = undefined): boolean {
       const listeners = this.$listeners[event.type];
@@ -53,7 +72,13 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
       return true;
     }
 
-    createEvent (eventName: string, options?: EventOptions): Event {
+    /**
+     * Helper for creating a new event, supporting IE9
+     * @param {string} event_name - Name of the event
+     * @param {EventOptions} options - Event options
+     * @returns {Event}
+     */
+    createEvent (event_name: string, options?: EventOptions): Event {
       if (typeof options !== 'object') {
         options = { } as EventOptions;
       }
@@ -61,7 +86,7 @@ export function EventEmitter<TBase extends Constructor> (Base: TBase) {
       if (typeof options.cancelable !== 'boolean') options.cancelable = false;
       if (typeof options.composed !== 'boolean') options.composed = false;
 
-      return createEvent(eventName, options)
+      return createEvent(event_name, options)
     }
   }
 }

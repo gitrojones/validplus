@@ -10,10 +10,18 @@ import {ValidatorOptions} from 'src/models/VPOptions/ValidatorOptions'
 import IEVersion from 'src/util/IEVersion'
 
 /**
- * ValidPlus Validator instance, the container
- * responsible for firing off the validation cycle
+ * VPValidator Instance
+ * @description
+ * Validator instances are responsible for managing fieldsets. Validator instances
+ * are capable of dispatching validation on all fieldsets (and fields), allowing for a single "isValid" check.
+ * @example
+ * <form id="sample_form">
+ *   ...
+ * </form>
  *
- * @name VPValidator
+ * const Validator = new VP.Validator(
+ *  document.getElementById('sample_form'), <options>);
+ * @augments Validatable
  */
 export class VPValidator extends Validatable<ValidatorOptions> {
   static Options = ValidatorOptions;
@@ -53,7 +61,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
    * handle removing tracked nodes which are removed from the DOM.
    * If supporting sub IE11, you must do this yourself using the removeFieldset
    * helpers defined on this instance.
-   * @param mutations
+   * @private
    */
   $observe (mutations: MutationRecord[]): void {
     for (const mutation of mutations) {
@@ -80,7 +88,7 @@ export class VPValidator extends Validatable<ValidatorOptions> {
    * Validate internal state
    * @description
    * IsValid is a standard method for validating the internal state
-   * of a validator and all it's associated children. This method supports dynamic
+   * of a validator and all it's associated fieldsets (and fields). This method supports dynamic
    * checks for determining if validation should be performed async or sync.
    *
    * If any custom validation rules resolve async, validation will be performed async. Otherwise,
@@ -167,10 +175,19 @@ export class VPValidator extends Validatable<ValidatorOptions> {
     }
   }
 
+  /**
+   * Add a fieldset instance to be tracked
+   * @param {VPFieldset} fieldset - Fieldset to track
+   * @param {number} [index] - Indicate the fieldset order to track by
+   */
   addFieldset (fieldset: VPFieldset, index: number = this.$fieldsets.length): void {
     this.$fieldsets.splice(index, 0, fieldset);
   }
 
+  /**
+   * Remove a tracked fieldset from this validator
+   * @param {VPFieldset} fieldset - Fieldset instance to remove
+   */
   removeFieldset (fieldset: VPFieldset) : (VPFieldset | undefined) {
     const index = this.$fieldsets.indexOf(fieldset)
     if (index !== -1) {
@@ -186,14 +203,24 @@ export class VPValidator extends Validatable<ValidatorOptions> {
     return undefined
   }
 
-  createFieldset (fs: HTMLElement, options: VPFieldsetOptions, fields: VPField[] = []) : VPFieldset {
-    const fieldset = new VPFieldset(fs, options);
+  /**
+   * Helper method for creating a new Fieldset to automatically track
+   * @param {HTMLElement} el - Fieldset element
+   * @param {VPFieldsetOptions} options - Options to apply to the fieldset instance
+   * @param {VPField[]} [fields] - Fields to append to the fieldset
+   */
+  createFieldset (el: HTMLElement, options: VPFieldsetOptions, fields: VPField[] = []) : VPFieldset {
+    const fieldset = new VPFieldset(el, options);
     fields.forEach((field) => fieldset.addField(field));
 
     this.addFieldset(fieldset)
     return fieldset
   }
 
+  /**
+   * Helper for automatically parsing child elements for Fieldsets
+   * @param {VPFieldsetOptions|VPFieldsetOptions[]} [fieldsetOptions] - Options to apply to the found fieldsets. If array, options will apply based on index
+   */
   findFieldsets (fieldsetOptions: (VPFieldsetOptions | VPFieldsetOptions[]) = {} as VPFieldsetOptions) : void {
     const fields = Array.from(this.$element.getElementsByClassName(this.$options.FieldsetClass))
     if (fields.length === 0) {
