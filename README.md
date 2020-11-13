@@ -193,13 +193,13 @@ __NOTE__: When using async rules, you must interrupt form submission to await re
     - The type of input we should prioritize picking from if multiple eligible inputs of different types are found
 + __InputTypes \<string>__ ('select'|'input'|'textarea')[]
     - The node types to consider when looking for child inputs.
-+ __ShowFieldRuleErrors \<boolean>__ (false)
++ __ShowFieldRuleErrors \<boolean>__ (false) `vp-field-errors`
     - Display error results for standard field rules. See __Standard Validation__
-+ __ShowCustomRuleErrors \<boolean>__ (true)
++ __ShowCustomRuleErrors \<boolean>__ (true) `vp-custom-errors`
     - Display custom error results for custom field rules. See __Custom Validation__
-+ __ValidateLazyFieldRules \<boolean>__ (true)
++ __ValidateLazyFieldRules \<boolean>__ (true) `vp-lazy-fields` || `vp-lazy`
     - Validate standard field rules lazily.
-+ __ValidateLazyCustomRules \<boolean>__ (true)
++ __ValidateLazyCustomRules \<boolean>__ (true) `vp-lazy-custom` || `vp-lazy`
     - Validate custom field rules lazily.
     
 ### Validation Lifecycle

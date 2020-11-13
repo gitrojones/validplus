@@ -37,7 +37,7 @@ export interface VPOptions<T extends ValidatableOptions<T>> {
   ScrollTo?: boolean,
   /** An anchor point to scroll to if scrolling is enabled and an instance is erroneous */
   ScrollAnchor?: (HTMLElement | null)
-  /** Standard ScrollItnoViewOptions, see MDN */
+  /** Standard ScrollIntoViewOptions, see MDN */
   ScrollOptions?: (ScrollIntoViewOptions|boolean)
 }
 
