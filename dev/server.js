@@ -14,7 +14,16 @@ server.set('views', __dirname + '/views');
 server.use(express.static('public'))
 
 server.get('/', function (req, res) {
-  res.render('app');
+  res.render('jquery');
+});
+server.get('/vue', function (req, res) {
+  res.render('vue');
+});
+server.get('/react', function (req, res) {
+  res.render('react');
+});
+server.get('/angular', function (req, res) {
+  res.render('angular');
 });
 
 server.use(WebpackDevMiddleware(bundle, {

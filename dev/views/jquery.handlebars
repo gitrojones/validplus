@@ -1,0 +1,40 @@
+<div id="app">
+  <div class="ui grid">
+    <div class="two wide">
+      {{> jquery/validation-controls}}
+    </div>
+
+    <div class="two wide">
+      <div class="ui styled exclusive accordion">
+        <div class="active title">
+          Synchronous Operations
+        </div>
+        <div class="active content">
+          {{> jquery/forms/simple-form}}
+        </div>
+
+        <div class="title">
+          Input Formatters/Custom Synchronous Rules
+        </div>
+        <div class="content">
+              {{> jquery/forms/formatter-form}}
+        </div>
+
+        <div class="title">
+          Observers (IE11+)
+        </div>
+        <div class="content">
+              {{> jquery/forms/rebind-form}}
+        </div>
+
+        <div class="title">
+          Asynchronous Operations
+        </div>
+        <div class="content">
+              {{> jquery/forms/async-form}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/vp-jquery.js"></script>

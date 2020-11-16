@@ -4,7 +4,6 @@
       <sui-icon name="caret left" />
       Validator Controls
     </sui-label>
-    <ValidationControls :validatable="active_validatable" />
 
     <sui-form-field ref="zipcode" class="VPFieldset">
       <sui-label @click="active_validatable = nth(validator.$fieldsets, 0)">
@@ -41,10 +40,15 @@
 </template>
 
 <script>
-// import * as VP from 'validplus';
-import ValidationControls from "../ValidationControls";
-
 export default {
+  watch: {
+    active_validatable: {
+      handler (new_val) {
+        this.$emit('validatable', new_val)
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       active_validatable: undefined,
@@ -98,9 +102,6 @@ export default {
         this.isValid = isValid
       });
     }
-  },
-  components: {
-    ValidationControls
   }
 }
 </script>

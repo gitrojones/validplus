@@ -30,9 +30,15 @@
 </template>
 
 <script>
-// import * as VP from 'validplus';
-
 export default {
+  watch: {
+    active_validatable: {
+      handler (new_val) {
+        this.$emit('validatable', new_val)
+      },
+      immediate: true
+    }
+  },
   data() {
     return {
       validator: undefined,

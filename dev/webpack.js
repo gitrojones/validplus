@@ -20,13 +20,30 @@ const babel_loader = {
 module.exports = {
   context: __dirname,
 
-  entry: './src/entry.js',
+  entry: {
+    jquery: [
+      'webpack-hot-middleware/client?reload=true',
+      './src/jquery/entry.js'
+    ],
+    vue: [
+      'webpack-hot-middleware/client?reload=true',
+      './src/vue/entry.js'
+    ],
+    react: [
+      'webpack-hot-middleware/client?reload=true',
+      './src/react/entry.js'
+    ],
+    angular: [
+      'webpack-hot-middleware/client?reload=true',
+      './src/angular/entry.js'
+    ]
+  },
 
   target: ['web', 'es5'],
 
   output: {
     path: path.resolve(__dirname, './public'),
-    filename: 'vp-development.js',
+    filename: 'vp-[name].js',
     publicPath: '/'
   },
 

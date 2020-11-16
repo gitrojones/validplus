@@ -20,10 +20,13 @@
       </sui-form-field>
 
       <sui-form-field>
+        <sui-label>Message Position</sui-label>
         <sui-dropdown
             label="Message Position"
             :options="position_options"
-            v-model="options.MessagePOS" />
+            v-model="options.MessagePOS" selection />
+
+        <sui-divider />
       </sui-form-field>
 
       <sui-form-fields v-if="isValidator">
@@ -100,7 +103,6 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep';
-// import * as VP from 'validplus';
 
 export default {
   props: {
@@ -151,10 +153,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@width: 250px;
 .ValidationControls {
-  position: absolute;
-  width: @width;
-  left: -(@width + 50px);
+  .field {
+    display: flex;
+    flex-flow: column;
+    width: 100%;
+
+    & + .field {
+      margin-top: 0.5em;
+    }
+  }
+
+  label {
+    display: block;
+    margin-bottom: 0.5em;
+    margin-top: 1em;
+  }
 }
 </style>

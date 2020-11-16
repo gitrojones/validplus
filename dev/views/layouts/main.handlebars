@@ -9,9 +9,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
         integrity="sha512-8bHTC73gkZ7rZ7vpqUQThUDhqcNFyYi2xgDgPDHc+GXVGHXq+xPjynxIopALmOPqzo9JZj0k6OqqewdGO3EsrQ=="
         crossorigin="anonymous" />
+  <style>
+    main {
+      margin-top: 2rem;
+    }
+  </style>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+          integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+          crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"
+          integrity="sha512-dqw6X88iGgZlTsONxZK9ePmJEFrmHwpuMrsUChjAw1mRUhUITE5QU9pkcSox+ynfLhL15Sv2al5A0LVyDCmtUw=="
+          crossorigin="anonymous" />
   <script src="validplus.browser.js"></script>
 </head>
+
 <body>
-{{{body}}}
+<div class="ui container">
+  <h1 style="margin-top: 2rem;" class="ui center aligned header">ValidPlus Development</h1>
+  <div id="app-menu" class="ui four item menu">
+    <a id="item-vp" href="/" class="item">ValidPlus</a>
+    <a id="item-vue" href="/vue" class="item">VPVue</a>
+    <a id="item-react" href="/react" class="item">VPReact</a>
+    <a id="item-angular" href="/angular" class="item">VPAngular</a>
+  </div>
+  <div class="ui divider"></div>
+
+  <main class="ui container">
+    {{{body}}}
+  </main>
+</div>
+<script>
+  $(() => {
+    var location = window.location.pathname;
+    $('#app-menu').children('[href="' + location +'"]').addClass('active');
+  });
+</script>
 </body>
 </html>
